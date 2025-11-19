@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VALORANT PROTOCOL: MBTI AGENT FINDER</title>
+    <title>VALORANT PROTOCOL: MBTI AGENT FINDER (Patch 11.10)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,9 @@
                             dark: '#0F1923',
                             light: '#ECE8E1',
                             gray: '#8B978F',
+                            green: '#17e5b0',
+                            yellow: '#fbbf24',
+                            blue: '#3b82f6', // For Rework
                             overlay: 'rgba(15, 25, 35, 0.95)'
                         }
                     },
@@ -28,6 +31,15 @@
                     },
                     backgroundImage: {
                         'grid-pattern': "linear-gradient(to right, #2a3b47 1px, transparent 1px), linear-gradient(to bottom, #2a3b47 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'marquee': 'marquee 30s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
                     }
                 }
             }
@@ -64,6 +76,347 @@
         }
 
         .btn-valo {
+            position: relative;
+            background-color: transparent;
+            border: 1px solid #8B978F;
+            color: #ECE8E1;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-valo::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #FF4655;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-valo:hover {
+            border-color: #FF4655;
+            color: #fff;
+        }
+        .btn-valo:hover::before {
+            width: 100%;
+        }
+
+        .btn-valo.active {
+            background-color: #FF4655;
+            border-color: #FF4655;
+            color: white;
+        }
+
+        /* Reset Button Specific Style */
+        .btn-reset {
+            border-color: #4a5568;
+            color: #9ca3af;
+        }
+        .btn-reset:hover {
+            border-color: #cbd5e1;
+            color: #fff;
+        }
+        .btn-reset:hover::before {
+            background-color: #4a5568;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: #FF4655;
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(236, 232, 225, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        .section-header h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 1rem;
+            line-height: 1;
+        }
+        .section-header .line {
+            flex-grow: 1;
+            height: 1px;
+            background: #FF4655;
+        }
+
+        /* Specific text styles */
+        .valo-text-shadow {
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        /* Status Badges */
+        .status-buff { background-color: #17e5b0; color: #0F1923; }
+        .status-nerf { background-color: #FF4655; color: white; }
+        .status-adjust { background-color: #fbbf24; color: #0F1923; }
+        .status-rework { background-color: #3b82f6; color: white; } /* Blue for Rework */
+        
+        /* Animation */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 70, 85, 0.1) 51%, transparent 52%);
+            background-size: 100% 4px;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+    <div class="fixed top-0 left-0 w-full h-2 bg-valo-red z-50"></div>
+
+    <!-- Patch News Ticker -->
+    <div class="bg-valo-red/90 text-white overflow-hidden whitespace-nowrap py-1 sticky top-2 z-50 border-b border-black/20 backdrop-blur-sm">
+        <div class="inline-block animate-marquee text-xs font-bold font-header tracking-widest">
+            /// PATCH 11.10 DEPLOYED /// HARBOR COMPLETE REWORK: NEW ABILITY "STORM SURGE" ADDED /// CLOVE SIGNIFICANT NERFS /// NEW HEALING INDICATOR UI /// CONSOLE REPLAY SYSTEM LIVE /// CHECK AGENT DATABASE FOR META ANALYSIS ///
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-valo-dark/90 backdrop-blur-md border-b border-white/10 sticky top-8 z-40">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-valo-red flex items-center justify-center font-bold text-white font-header clip-corner">V</div>
+                <h1 class="text-xl md:text-2xl font-bold font-header tracking-wider uppercase">VALORANT <span class="text-valo-red">PROTOCOL</span></h1>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <a href="#finder" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Agent Finder</a>
+                <a href="#explorer" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Database</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 flex-grow">
+
+        <!-- Hero Section -->
+        <section class="text-center mb-20 relative">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
+                PATCH 11.10
+            </div>
+            <h2 class="text-4xl md:text-6xl font-bold mb-6 font-header uppercase tracking-tighter valo-text-shadow">
+                <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Meta</span> <span class="text-valo-red">Analysis</span>
+            </h2>
+            <p class="max-w-2xl mx-auto text-valo-gray text-lg mb-8 font-medium">
+                Harborリワーク・Clove弱体化を含む Patch 11.10 (Nov 2025) 適用済み。<br>
+                最新の戦術データを解析し、あなたのプレイスタイルに最適なエージェントを特定する。
+            </p>
+            <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag">
+                Start Analysis
+            </a>
+        </section>
+
+        <!-- MBTI Finder Section -->
+        <section id="finder" class="mb-24">
+            <div class="section-header">
+                <h3>// Tactical Assessment</h3>
+                <div class="line"></div>
+            </div>
+            
+            <div class="bg-white/5 border border-white/10 p-8 clip-corner-br backdrop-blur-sm relative overflow-hidden">
+                <!-- Decoration -->
+                <div class="absolute top-0 right-0 p-2">
+                    <span class="text-[10px] text-valo-red font-mono">STATUS: ONLINE</span>
+                </div>
+
+                <div id="mbti-selector" class="space-y-8 relative z-10">
+                    <!-- Questions -->
+                    <div class="grid gap-8 md:grid-cols-2">
+                        <!-- E/I -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Energy Source</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="E" data-group="ei">
+                                    <span class="text-2xl font-bold block mb-1">E</span>
+                                    <span class="text-xs text-gray-400 block">外向 / Action</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="I" data-group="ei">
+                                    <span class="text-2xl font-bold block mb-1">I</span>
+                                    <span class="text-xs text-gray-400 block">内向 / Thought</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- S/N -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Information</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="S" data-group="sn">
+                                    <span class="text-2xl font-bold block mb-1">S</span>
+                                    <span class="text-xs text-gray-400 block">感覚 / Reality</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="N" data-group="sn">
+                                    <span class="text-2xl font-bold block mb-1">N</span>
+                                    <span class="text-xs text-gray-400 block">直観 / Theory</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- T/F -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Decisions</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="T" data-group="tf">
+                                    <span class="text-2xl font-bold block mb-1">T</span>
+                                    <span class="text-xs text-gray-400 block">思考 / Logic</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="F" data-group="tf">
+                                    <span class="text-2xl font-bold block mb-1">F</span>
+                                    <span class="text-xs text-gray-400 block">感情 / Values</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- J/P -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Structure</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="J" data-group="jp">
+                                    <span class="text-2xl font-bold block mb-1">J</span>
+                                    <span class="text-xs text-gray-400 block">判断 / Plan</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="P" data-group="jp">
+                                    <span class="text-2xl font-bold block mb-1">P</span>
+                                    <span class="text-xs text-gray-400 block">知覚 / Adapt</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reset Button -->
+                    <div class="flex justify-center pt-6 border-t border-white/10">
+                        <button id="reset-btn" class="btn-valo btn-reset px-8 py-3 text-sm font-bold tracking-widest flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            RESET SEQUENCE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="mb-24 min-h-[200px]">
+            <div id="results-placeholder" class="border-2 border-dashed border-white/10 rounded-lg p-12 text-center">
+                <div class="text-valo-red text-6xl font-header mb-4 opacity-50">///</div>
+                <h3 class="text-2xl font-bold mb-2 uppercase font-header tracking-widest">Awaiting Input</h3>
+                <p class="text-gray-500">MBTIパラメータを入力し、適合エージェントを表示せよ。</p>
+            </div>
+        </section>
+        
+        <!-- Agent Explorer Section -->
+        <section id="explorer" class="mb-12">
+            <div class="section-header">
+                <h3>// Agent Database</h3>
+                <div class="line"></div>
+                <span class="text-xs font-mono text-valo-gray ml-4">VER 11.10</span>
+            </div>
+
+            <div id="role-filters" class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm active" data-role="All">ALL</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="デュエリスト">DUELIST</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="イニシエーター">INITIATOR</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="コントローラー">CONTROLLER</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="センチネル">SENTINEL</button>
+            </div>
+
+            <div id="agent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <!-- Agent cards injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-valo-dark border-t border-white/10 py-8 text-center relative z-10">
+        <div class="container mx-auto px-4 text-xs text-gray-500">
+            <p class="mb-2 tracking-widest uppercase">Valorant Protocol // MBTI Analytics Division</p>
+            <p>&copy; 2025 Unofficial Fan Project. Not affiliated with Riot Games.</p>
+        </div>
+    </footer>
+
+    <!-- Agent Detail Modal -->
+    <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-valo-dark/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-content-wrapper" class="bg-gray-900 border border-white/20 w-full max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 shadow-2xl clip-corner-br relative">
+            
+            <div class="scanline"></div>
+            
+            <!-- Decorative header bar -->
+            <div class="h-2 w-full bg-gradient-to-r from-valo-red to-purple-900 absolute top-0 left-0 z-30"></div>
+            
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition z-40 bg-black/50 rounded-full p-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full">
+                <!-- Content injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+
+<script>
+// Data with Patch 11.10 Meta Info
+// Status: 'buff', 'nerf', 'adjust', 'stable', 'rework'
+// PatchNote: Text explaining the impact of 11.10 (Nov 2025)
+const agentData = [
+    { 
+        name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', 
+        description: '水を操るコントローラー。11.10のリワークにより、攻撃的なエリア確保と敵の強制移動を得意とするイニシエーター的な性質を獲得した。', 
+        difficulty: 3, utility: 3,
+        status: 'rework',
+        patchNote: '【REWORK】完全リワーク実施。Q「コーヴ」がシグネチャー化し、新アビリティ「ストームサージ」（渦巻きによる視界悪化と鈍足）が追加。アルティメットも前方への波状攻撃に変更され、より攻撃的にエリアを切り開くエージェントへ変貌。メタ入り確実。'
+    },
+    { 
+        name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', 
+        description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', 
+        difficulty: 2, utility: 2,
+        status: 'nerf',
+        patchNote: '【NERF】デス後の「ルース（スモーク）」のストックが1つに制限され、「ピック・ミー・アップ」の回復量が100→50に半減。ランクマッチでの圧倒的な継戦能力と影響力が抑制され、より慎重な立ち回りが求められるようになった。'
+    },
+    { 
+        name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', 
+        description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', 
+        difficulty: 1, utility: 3,
+        status: 'stable',
+        patchNote: 'ハーバーのリワークにより競合が増えたが、瞬時に3つのスモークを展開できる唯一無二の性能はラッシュ構成において依然として必須級。'
+    },
+    { 
+        name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', 
+        description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', 
+        difficulty: 1, utility: 2,
+        status: 'stable',
+        patchNote: '11.10での変更はないが、前回パッチでの回復強化により勝率は安定。ハーバーとの同時ピックによる「視界阻害＋フラッシュ」のセットアップが研究され始めている。'
+    },
+    { 
+        name: 'SAGE', jpName: 'セージ', role: 'センチネル', 
+        description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', 
+        difficulty: 1, utility:        .btn-valo {
             position: relative;
             background-color: transparent;
             border: 1px solid #8B978F;
@@ -774,3 +1127,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
