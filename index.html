@@ -3,399 +3,501 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VALORANT MBTI エージェントファインダー</title>
+    <title>VALORANT PROTOCOL: MBTI AGENT FINDER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: このSPAは、ユーザーが自身のMBTIタイプに合ったエージェントを簡単に見つけられるように、タスク指向の構造を採用しています。主要な機能は「MBTIタイプ別ファインダー」で、ユーザーが4つの指標（E/I, S/N, T/F, J/P）を選択すると、即座に対応するエージェントが表示されます。この対話的なアプローチは、16種類のタイプから選ぶよりも直感的でエンゲージメントを高めます。補足情報として、全エージェントを役割（ロール）でフィルタリングできる「エージェント一覧」セクションを設けました。この構造により、ユーザーは自分のペースで情報を探索でき、レポートの膨大な情報を消化しやすくなります。エージェント詳細はモーダルで表示し、ページの遷移なく情報を深掘りできるよう設計しました。 -->
-    <!-- Visualization & Content Choices: レポートの主要な目的は「MBTIタイプとエージェントのマッチング」であるため、中心的なインタラクションとして「MBTIタイプセレクター」を設計しました。これはHTMLのボタンとJavaScriptで実装され、ユーザーの選択に応じてリアルタイムで結果を更新します。Goal: Organize & Interact。結果表示には、エージェントのカードを動的に生成するグリッドレイアウトを使用。Goal: Compare & Inform。全エージェントの一覧と比較を容易にするため、役割に基づいたフィルタリング機能を持つインタラクティブなテーブル（グリッド）を実装しました。Goal: Organize & Compare。エージェント画像は、外部サービスに依存しないHTML/CSSベースのプレースホルダー（エージェント名を直接表示）に変更し、視認性を高めました。これらの選択はすべて、ユーザーが能動的に情報を引き出し、理解を深めることを支援するために行われています。 -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        valo: {
+                            red: '#FF4655',
+                            dark: '#0F1923',
+                            light: '#ECE8E1',
+                            gray: '#8B978F',
+                            overlay: 'rgba(15, 25, 35, 0.95)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        header: ['"Oswald"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #2a3b47 1px, transparent 1px), linear-gradient(to bottom, #2a3b47 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: #FDFBF8; /* Warm Neutral Background */
-            color: #4B4B4B;
+            background-color: #0F1923;
+            color: #ECE8E1;
+            background-image: radial-gradient(circle at 50% 50%, #1f2b36 0%, #0F1923 100%);
         }
-        .mbti-btn {
-            transition: all 0.2s ease-in-out;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .mbti-btn.active {
-            background-color: #D97706; /* Amber-600 */
+        ::-webkit-scrollbar-track {
+            background: #0F1923; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF4655; 
+        }
+
+        /* Utility Classes for Valo Style */
+        .clip-corner {
+            clip-path: polygon(100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
+        }
+        .clip-corner-br {
+            clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 0);
+        }
+        .clip-corner-diag {
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .btn-valo {
+            position: relative;
+            background-color: transparent;
+            border: 1px solid #8B978F;
+            color: #ECE8E1;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-valo::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #FF4655;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-valo:hover {
+            border-color: #FF4655;
+            color: #fff;
+        }
+        .btn-valo:hover::before {
+            width: 100%;
+        }
+
+        .btn-valo.active {
+            background-color: #FF4655;
+            border-color: #FF4655;
             color: white;
-            transform: scale(1.05);
-            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
         }
-        .agent-card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+        /* Reset Button Specific Style */
+        .btn-reset {
+            border-color: #4a5568;
+            color: #9ca3af;
         }
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        .btn-reset:hover {
+            border-color: #cbd5e1;
+            color: #fff;
         }
-        .modal-bg {
-            transition: opacity 0.3s ease;
+        .btn-reset:hover::before {
+            background-color: #4a5568;
         }
-        .modal-content {
-            transition: transform 0.3s ease, opacity 0.3s ease;
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: #FF4655;
         }
-        .section-title {
-            border-bottom: 2px solid #F59E0B; /* Amber-400 */
+
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(236, 232, 225, 0.2);
             padding-bottom: 0.5rem;
         }
-        .role-filter-btn.active {
-            background-color: #1E3A8A; /* Indigo-800 */
-            color: white;
+        .section-header h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 1rem;
+            line-height: 1;
         }
-        .agent-placeholder-image {
-            width: 100%;
-            height: 128px; /* h-32 */
-            background-color: #2D3748; /* Dark background for text */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #F7FAFC; /* Light text color */
-            font-size: 1.25rem; /* text-xl */
-            font-weight: bold;
-            text-align: center;
-            padding: 0.5rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .section-header .line {
+            flex-grow: 1;
+            height: 1px;
+            background: #FF4655;
         }
-        .modal-placeholder-image {
-            width: 100%;
-            height: 256px; /* Example height, adjust as needed */
-            background-color: #2D3748;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #F7FAFC;
-            font-size: 2rem; /* text-3xl */
-            font-weight: bold;
-            text-align: center;
-            padding: 1rem;
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+
+        /* Specific text styles */
+        .valo-text-shadow {
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 200ms, transform 200ms;
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+    <div class="fixed top-0 left-0 w-full h-2 bg-valo-red z-50"></div>
 
     <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800">VALORANT MBTI エージェントファインダー</h1>
-            <nav>
-                <a href="#finder" class="text-sm font-medium text-gray-600 hover:text-amber-600 transition">ファインダー</a>
-                <a href="#explorer" class="ml-4 text-sm font-medium text-gray-600 hover:text-amber-600 transition">エージェント一覧</a>
+    <header class="bg-valo-dark/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-valo-red flex items-center justify-center font-bold text-white font-header clip-corner">V</div>
+                <h1 class="text-xl md:text-2xl font-bold font-header tracking-wider uppercase">VALORANT <span class="text-valo-red">PROTOCOL</span></h1>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <a href="#finder" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Agent Finder</a>
+                <a href="#explorer" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Database</a>
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 flex-grow">
 
-        <!-- Introduction Section -->
-        <section class="text-center mb-12 md:mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">あなたにぴったりのエージェントを見つけよう</h2>
-            <p class="max-w-3xl mx-auto text-gray-600">
-                このツールは、人気タクティカルシューター『VALORANT』のエージェント分析レポートに基づき、あなたの性格タイプ（MBTI）に合ったエージェントを提案します。下の4つの質問に答えて、プレイスタイルに親和性の高いエージェントを発見しましょう。
+        <!-- Hero Section -->
+        <section class="text-center mb-20 relative">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
+                CHOOSE YOUR AGENT
+            </div>
+            <h2 class="text-4xl md:text-6xl font-bold mb-6 font-header uppercase tracking-tighter valo-text-shadow">
+                <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Find Your</span> <span class="text-valo-red">Identity</span>
+            </h2>
+            <p class="max-w-2xl mx-auto text-valo-gray text-lg mb-8 font-medium">
+                MBTI分析に基づき、あなたのプレイスタイルに最適なエージェントを特定する。<br>
+                戦術的適合性を解析し、プロトコルへの参画を要請する。
             </p>
+            <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag">
+                Start Analysis
+            </a>
         </section>
 
         <!-- MBTI Finder Section -->
-        <section id="finder" class="mb-12 md:mb-20 p-6 md:p-8 bg-white rounded-xl shadow-lg">
-            <h3 class="text-2xl font-bold mb-6 text-center section-title max-w-md mx-auto">MBTIタイプ別ファインダー</h3>
-            <p class="text-center text-gray-600 mb-8">各項目で、より自分に当てはまると思う方を選択してください。</p>
-            <div id="mbti-selector" class="space-y-6">
-                <!-- E/I -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <span class="font-bold text-lg w-full sm:w-auto sm:text-right">エネルギーの方向</span>
-                    <div class="flex-grow grid grid-cols-2 gap-2 w-full max-w-md">
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="E" data-group="ei">外向 (E)<br><span class="text-xs">行動と交流</span></button>
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="I" data-group="ei">内向 (I)<br><span class="text-xs">思考と内省</span></button>
+        <section id="finder" class="mb-24">
+            <div class="section-header">
+                <h3>// Tactical Assessment</h3>
+                <div class="line"></div>
+            </div>
+            
+            <div class="bg-white/5 border border-white/10 p-8 clip-corner-br backdrop-blur-sm">
+                <div id="mbti-selector" class="space-y-8">
+                    <!-- Questions -->
+                    <div class="grid gap-8 md:grid-cols-2">
+                        <!-- E/I -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Energy Source</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="E" data-group="ei">
+                                    <span class="text-2xl font-bold block mb-1">E</span>
+                                    <span class="text-xs text-gray-400 block">外向 / Action</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="I" data-group="ei">
+                                    <span class="text-2xl font-bold block mb-1">I</span>
+                                    <span class="text-xs text-gray-400 block">内向 / Thought</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- S/N -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Information</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="S" data-group="sn">
+                                    <span class="text-2xl font-bold block mb-1">S</span>
+                                    <span class="text-xs text-gray-400 block">感覚 / Reality</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="N" data-group="sn">
+                                    <span class="text-2xl font-bold block mb-1">N</span>
+                                    <span class="text-xs text-gray-400 block">直観 / Theory</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- T/F -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Decisions</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="T" data-group="tf">
+                                    <span class="text-2xl font-bold block mb-1">T</span>
+                                    <span class="text-xs text-gray-400 block">思考 / Logic</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="F" data-group="tf">
+                                    <span class="text-2xl font-bold block mb-1">F</span>
+                                    <span class="text-xs text-gray-400 block">感情 / Values</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- J/P -->
+                        <div class="space-y-3">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Structure</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="J" data-group="jp">
+                                    <span class="text-2xl font-bold block mb-1">J</span>
+                                    <span class="text-xs text-gray-400 block">判断 / Plan</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="P" data-group="jp">
+                                    <span class="text-2xl font-bold block mb-1">P</span>
+                                    <span class="text-xs text-gray-400 block">知覚 / Adapt</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- S/N -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <span class="font-bold text-lg w-full sm:w-auto sm:text-right">情報の捉え方</span>
-                    <div class="flex-grow grid grid-cols-2 gap-2 w-full max-w-md">
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="S" data-group="sn">感覚 (S)<br><span class="text-xs">事実と現実</span></button>
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="N" data-group="sn">直観 (N)<br><span class="text-xs">可能性と全体像</span></button>
-                    </div>
-                </div>
-                <!-- T/F -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <span class="font-bold text-lg w-full sm:w-auto sm:text-right">意思決定</span>
-                    <div class="flex-grow grid grid-cols-2 gap-2 w-full max-w-md">
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="T" data-group="tf">思考 (T)<br><span class="text-xs">論理と客観性</span></button>
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="F" data-group="tf">感情 (F)<br><span class="text-xs">価値観と調和</span></button>
-                    </div>
-                </div>
-                <!-- J/P -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <span class="font-bold text-lg w-full sm:w-auto sm:text-right">外界への接し方</span>
-                    <div class="flex-grow grid grid-cols-2 gap-2 w-full max-w-md">
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="J" data-group="jp">判断 (J)<br><span class="text-xs">計画と秩序</span></button>
-                        <button class="mbti-btn p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-type="P" data-group="jp">知覚 (P)<br><span class="text-xs">柔軟と自発性</span></button>
+                    
+                    <!-- Reset Button -->
+                    <div class="flex justify-center pt-6 border-t border-white/10">
+                        <button id="reset-btn" class="btn-valo btn-reset px-8 py-3 text-sm font-bold tracking-widest flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            RESET SEQUENCE
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Results Section -->
-        <section id="results" class="mb-12 md:mb-20 min-h-[300px]">
-            <!-- Dynamic content will be injected here -->
-            <div id="results-placeholder" class="text-center py-10 px-6 bg-white rounded-xl shadow-lg">
-                <h3 class="text-2xl font-bold mb-4 text-gray-800">あなたへのおすすめエージェント</h3>
-                <p class="text-gray-500">上のボタンであなたのタイプを選択すると、ここに結果が表示されます。</p>
+        <section id="results" class="mb-24 min-h-[200px]">
+            <div id="results-placeholder" class="border-2 border-dashed border-white/10 rounded-lg p-12 text-center">
+                <div class="text-valo-red text-6xl font-header mb-4 opacity-50">///</div>
+                <h3 class="text-2xl font-bold mb-2 uppercase font-header tracking-widest">Awaiting Input</h3>
+                <p class="text-gray-500">MBTIパラメータを入力し、適合エージェントを表示せよ。</p>
             </div>
         </section>
         
         <!-- Agent Explorer Section -->
-        <section id="explorer" class="p-6 md:p-8 bg-white rounded-xl shadow-lg">
-             <h3 class="text-2xl font-bold mb-2 text-center section-title max-w-md mx-auto">全エージェント一覧</h3>
-             <p class="text-center text-gray-600 mb-6">役割（ロール）で絞り込み、気になるエージェントの詳細を確認できます。</p>
-            <div id="role-filters" class="flex flex-wrap justify-center gap-2 mb-8">
-                <button class="role-filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-sm font-medium transition active" data-role="All">すべて</button>
-                <button class="role-filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-sm font-medium transition" data-role="デュエリスト">デュエリスト</button>
-                <button class="role-filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-sm font-medium transition" data-role="イニシエーター">イニシエーター</button>
-                <button class="role-filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-sm font-medium transition" data-role="コントローラー">コントローラー</button>
-                <button class="role-filter-btn px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 text-sm font-medium transition" data-role="センチネル">センチネル</button>
+        <section id="explorer" class="mb-12">
+            <div class="section-header">
+                <h3>// Agent Database</h3>
+                <div class="line"></div>
             </div>
-            <div id="agent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-                <!-- Agent cards will be injected here -->
+
+            <div id="role-filters" class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm active" data-role="All">ALL</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="デュエリスト">DUELIST</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="イニシエーター">INITIATOR</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="コントローラー">CONTROLLER</button>
+                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="センチネル">SENTINEL</button>
+            </div>
+
+            <div id="agent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <!-- Agent cards injected here -->
             </div>
         </section>
 
     </main>
 
     <!-- Footer -->
-    <footer class="mt-12 md:mt-20 py-8 bg-gray-800 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
-            <p class="mb-2">このアプリケーションは、公開されているVALORANTエージェントの情報とMBTI理論に関する分析レポートを基に作成されたものです。</p>
-            <p>&copy; 2025 VALORANT MBTI エージェントファインダー. All rights reserved. Riot Games, VALORANT, and any associated logos are trademarks, service marks, and/or registered trademarks of Riot Games, Inc.</p>
+    <footer class="bg-valo-dark border-t border-white/10 py-8 text-center relative z-10">
+        <div class="container mx-auto px-4 text-xs text-gray-500">
+            <p class="mb-2 tracking-widest uppercase">Valorant Protocol // MBTI Analytics Division</p>
+            <p>&copy; 2025 Unofficial Fan Project. Not affiliated with Riot Games.</p>
         </div>
     </footer>
 
     <!-- Agent Detail Modal -->
-    <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 modal-bg opacity-0 pointer-events-none">
-        <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-content transform scale-95 opacity-0">
-            <!-- Modal content injected here -->
+    <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-valo-dark/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-content-wrapper" class="bg-gray-900 border border-white/20 w-full max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 shadow-2xl clip-corner-br relative">
+            
+            <!-- Decorative header bar -->
+            <div class="h-2 w-full bg-gradient-to-r from-valo-red to-purple-900 absolute top-0 left-0"></div>
+            
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full">
+                <!-- Content injected dynamically -->
+            </div>
         </div>
     </div>
 
 
 <script>
+// Agent Data with difficulty and utility ratings (1-3 scale)
+// Difficulty: 1=Easy/Straightforward, 2=Medium, 3=Hard/Complex
+// Utility: 1=Low/Selfish, 2=Medium, 3=High/Team-oriented
 const agentData = [
-    { name: 'ブリムストーン', role: 'コントローラー', description: 'チームの経路確保、戦略的スモーク配置、エリア拒否。計画的で、チームとの連携を重視する。' },
-    { name: 'フェニックス', role: 'デュエリスト', description: '攻撃的エントリー、単独突撃を厭わず、アビリティで敵を素早く排除する。' },
-    { name: 'セージ', role: 'センチネル', description: '味方回復、敵の遅延、サイト防衛、蘇生。チームの安全地帯を作り、守護する。' },
-    { name: 'ソーヴァ', role: 'イニシエーター', description: '情報収集、敵追跡、マップコントロール。緻密なラインナップで敵の計画を妨害する。' },
-    { name: 'ヴァイパー', role: 'コントローラー', description: '戦場コントロール、視界妨害、心理戦。スモークと毒を戦略的に配置し、敵を追い詰める。' },
-    { name: 'サイファー', role: 'センチネル', description: 'エリアロックダウン、情報収集、裏取り警戒。緻密なトラップとカメラで敵の動きを監視する。' },
-    { name: 'レイナ', role: 'デュエリスト', description: '自身の戦闘パフォーマンスに能力が連動。一対一で圧倒的な強さを発揮し、キルで自己強化する。' },
-    { name: 'キルジョイ', role: 'センチネル', description: '発明品で戦場をコントロール。エリア防衛、罠設置、情報収集、サイトロックダウンを得意とする。' },
-    { name: 'ブリーチ', role: 'イニシエーター', description: '強力な地震ブラストで敵の防衛線を突破。スタンやブラインドで仲間を支援し、突破口を開く。' },
-    { name: 'オーメン', role: 'コントローラー', description: '戦場を操作し、敵を混乱させ、欺く。煙幕とテレポートで心理的プレッシャーをかける。' },
-    { name: 'ジェット', role: 'デュエリスト', description: '俊敏でとらえどころのない戦闘スタイル。高機動で敵を素早く排除するアグレッシブなエントリーフラッガー。' },
-    { name: 'レイズ', role: 'デュエリスト', description: '爆発的なダメージに特化。閉所クリア、篭っている敵を炙り出す。アビリティで敵の裏をかく計算された動き。' },
-    { name: 'スカイ', role: 'イニシエーター', description: '獣たちと共に敵への道を切り開く。敵妨害、味方回復、情報収集でチームをサポートする。' },
-    { name: 'ヨル', role: 'デュエリスト', description: '次元を移動して敵陣に潜入。戦略と攻撃性を組み合わせ、欺瞞と混乱を生み出す。' },
-    { name: 'アストラ', role: 'コントローラー', description: '宇宙のエネルギーを操り、マップ全体をコントロール。遠隔からアビリティを展開し、戦略的優位性を確立する。' },
-    { name: 'KAY/O', role: 'イニシエーター', description: '敵のアビリティを抑制し、味方に究極のアドバンテージをもたらす戦闘兵器。目的志向で効率的。' },
-    { name: 'チェンバー', role: 'センチネル', description: '完璧な戦略を軸に、カスタム武器で敵を牽制し、遠距離から狙撃。角度を保持し、サイトを固定する。' },
-    { name: 'ネオン', role: 'デュエリスト', description: '信じられないほどのスピードを活かして戦闘に突入。バイオエレクトリックラディアナイトで敵を感電させ、素早く排除する。' },
-    { name: 'フェイド', role: 'イニシエーター', description: '悪夢の力で敵の秘密を暴く。敵を狩り、罠にかけることに特化。情報収集とエリア拒否を組み合わせる。' },
-    { name: 'ハーバー', role: 'コントローラー', description: '古代のテクノロジーで水を操り、戦場に嵐を巻き起こす。味方の保護や敵への攻撃として機能し、サイト侵入を助ける。' },
-    { name: 'ゲッコー', role: 'イニシエーター', description: '「やんちゃなクリーチャーたち」を率い、共に敵を一掃。攻撃的、偵察、目標達成に焦点を当てたプレイスタイル。' },
-    { name: 'デッドロック', role: 'センチネル', description: '高度なナノワイヤー技術で戦場の要所を確保。警戒心の強い監視と容赦ない凶暴性で、敵の逃走を不可能にする。' },
-    { name: 'アイソ', role: 'デュエリスト', description: '「フロー状態」に入り、敵戦力を解体。一対一の戦闘に特化し、敵を孤立させて有利なエンゲージメントを強制する。' },
-    { name: 'クローヴ', role: 'コントローラー', description: 'スコットランドのトラブルメーカー。死後も敵にいたずらを仕掛け、戦場を操作する。予測不能な動きで敵を翻弄する。' },
-    { name: 'ヴァイス', role: 'センチネル', description: '液体金属を操り、ステルス性の罠や壁で敵を孤立させ、戦術的に罠にはめるセンチネル。攻撃的なプッシュもサポートできる柔軟性を持つ。' },
-    { name: 'テホ', role: 'イニシエーター', description: 'ドローンや誘導ミサイル、粘着グレネードといった現代兵器を駆使し、敵をあぶり出し、チームの交戦を有利に進める。効率的で計画的なアプローチを好む。' },
-    { name: 'ウェイレイ', role: 'デュエリスト', description: '光を操る高速移動とテレポートで敵陣に切り込み、行動阻害や視界妨害で敵を翻弄するデュエリスト。予測不能な奇襲と狡猾なアビリティを持つ。' },
+    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3 },
+    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2 },
+    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3 },
+    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3 },
+    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3 },
+    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3 },
+    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1 },
+    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3 },
+    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3 },
+    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3 },
+    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1 },
+    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2 },
+    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3 },
+    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2 },
+    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3 },
+    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3 },
+    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2 },
+    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。高速で敵のエイムをずらし、電撃戦を展開するスピードスター。', difficulty: 3, utility: 1 },
+    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3 },
+    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '動かせる水の壁とシールドスモーク。柔軟な射線切りが可能で、特に攻撃的なセットプレイで輝く。', difficulty: 3, utility: 3 },
+    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3 },
+    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。敵のラッシュを物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2 },
+    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1 },
+    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 3 },
+    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3 },
+    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3 },
+    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2 },
 ];
 
 const mbtiRecommendations = {
     ISTJ: {
-        title: 'ISTJ (管理者)',
+        title: 'ISTJ // THE LOGISTICIAN',
         recommendedRoles: ['センチネル', 'コントローラー'],
         agents: ['キルジョイ', 'サイファー', 'チェンバー', 'ブリムストーン', 'ヴァイス'],
-        reason: '秩序と計画性を重んじ、具体的な事実に基づいて行動することを好むISTJのプレイヤーには、緻密な罠や戦略的な配置を得意とするエージェントが最適です。彼らのアビリティの正確な運用能力は、あなたの特性と直結します。',
-        coreTraitSummary: '論理的思考と実行力、計画性、秩序を重視する傾向',
-        nigateReason: {
-            'アイソ': '精密なエイムと自己完結能力を活かし、計画的なキルを狙えるでしょう。論理的思考と実行力を重視するあなたに適しています。',
-            'KAY/O': '目的志向で効率的なアビリティ抑制で戦場の秩序を保ち、堅実なサポートが可能です。あなたの論理的思考と計画性を活かせます。'
-        }
+        reason: '事実に基づいた判断と秩序を愛するISTJには、セットアップ重視のエージェントが適合する。敵の動きを予測し、計画通りに抹殺せよ。',
+        coreTrait: 'PLANNING & ORDER'
     },
     ISFJ: {
-        title: 'ISFJ (擁護者)',
+        title: 'ISFJ // THE DEFENDER',
         recommendedRoles: ['センチネル', 'イニシエーター'],
-        agents: ['セージ', 'スカイ', 'ハーバー'],
-        reason: '他者を助け、チームの調和を保つことに喜びを感じるISFJのプレイヤーには、回復や保護、情報提供でチームを支えるエージェントがぴったりです。彼らの献身性がチームを勝利に導きます。',
-        coreTraitSummary: '献身性、思いやり、チームの調和を重視する傾向',
-        nigateReason: {
-            'フェニックス': '自己回復能力で生存力を高めつつ、チームのプッシュをサポートできます。協調性を活かしつつ攻撃的な役割も担いたいあなたに適しています。',
-            'ハーバー': '水の壁で味方を保護し、サイト侵入を助けることができます。献身的な性格のあなたに合致するでしょう。'
-        }
+        agents: ['セージ', 'スカイ', 'ハーバー', 'ゲッコー'],
+        reason: 'チームへの献身と調和を重視するISFJには、味方のカバーや回復を行えるエージェントが最適。影の立役者として勝利に貢献せよ。',
+        coreTrait: 'SUPPORT & HARMONY'
     },
     INFJ: {
-        title: 'INFJ (提唱者)',
+        title: 'INFJ // THE ADVOCATE',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
         agents: ['アストラ', 'オーメン', 'フェイド', 'テホ'],
-        reason: '深い洞察力と理想を追求するINFJのプレイヤーには、複雑な戦略や心理的な駆け引きを得意とするエージェントが魅力的でしょう。彼らの直観力が戦場の流れを読み、理想的な状況を作り出します。',
-        coreTraitSummary: '深い洞察力、理想主義、戦略的思考を持つ傾向',
-        nigateReason: {
-            'ヨル': '策略と心理戦で敵を翻弄し、予測不能なプレイで敵を出し抜けるでしょう。あなたの洞察力を活かせます。',
-            'サイファー': '情報収集と戦略的な罠設置で敵の動きを予測し、戦場を支配できます。あなたの先見の明を活かせます。'
-        }
+        reason: '全体を見通す洞察力を持つINFJ。マップ全体をコントロールし、敵の心理を読み解くプレイで戦局を操れ。',
+        coreTrait: 'INSIGHT & STRATEGY'
     },
     INTJ: {
-        title: 'INTJ (建築家)',
+        title: 'INTJ // THE ARCHITECT',
         recommendedRoles: ['コントローラー', 'センチネル'],
-        agents: ['チェンバー', 'ヴァイパー', 'アストラ', 'ソーヴァ', 'テホ'],
-        reason: '論理と効率性を重視し、独立して戦略を構築するINTJのプレイヤーには、精密なコントロールや情報収集で戦場を支配するエージェントが適しています。彼らの独創的な戦略が光ります。',
-        coreTraitSummary: '論理と効率性、独立した戦略構築を重視する傾向',
-        nigateReason: {
-            'アイソ': '精密なエイムと自己完結能力を活かし、計算されたキルを狙えるでしょう。あなたの論理的思考と効率性を活かせます。',
-            'ソーヴァ': '情報収集と精密な偵察で論理的な情報に基づいてチームを導けます。あなたの分析力を活かせます。'
-        }
+        agents: ['チェンバー', 'ヴァイパー', 'アストラ', 'ソーヴァ'],
+        reason: '冷徹なまでの論理的戦略家。リソース管理と長期的な視点で敵を詰ませる、チェックメイトを狙うプレイが適合する。',
+        coreTrait: 'LOGIC & EFFICIENCY'
     },
     ISTP: {
-        title: 'ISTP (巨匠)',
+        title: 'ISTP // THE VIRTUOSO',
         recommendedRoles: ['デュエリスト', 'センチネル'],
-        agents: ['アイソ', 'ジェット', 'レイナ', 'ウェイレイ'],
-        reason: '実践的なスキルと即座の行動を重視するISTPのプレイヤーには、個人の腕前で状況を打開する自己完結型のエージェントが最適です。彼らの行動力と判断力が直接キルに繋がります。',
-        coreTraitSummary: '実践的なスキル、即座の行動、独立性を重視する傾向',
-        nigateReason: {
-            'KAY/O': '直接的で効率的なアビリティで敵の能力を抑制し、有利な状況を作り出せるでしょう。あなたの実践的なアプローチを活かせます。',
-            'オーメン': '適応力に優れ、単独での立ち回りも可能です。あなたの即応性と戦術的な思考を活かせます。'
-        }
+        agents: ['アイソ', 'ジェット', 'レイナ', 'チェンバー'],
+        reason: '瞬時の判断とメカニクスに優れるISTP。道具を使いこなし、孤高の力で状況を打開する実力行使が光る。',
+        coreTrait: 'MECHANICS & ACTION'
     },
     ISFP: {
-        title: 'ISFP (冒険家)',
+        title: 'ISFP // THE ADVENTURER',
         recommendedRoles: ['デュエリスト', 'コントローラー'],
         agents: ['ヨル', 'クローヴ', 'レイズ', 'ウェイレイ'],
-        reason: '創造性と柔軟性を持ち、自由に行動することを好むISFPのプレイヤーには、予測不能なプレイや遊び心のある破壊を楽しむエージェントが合っています。彼らの感性が敵を翻弄します。',
-        coreTraitSummary: '創造性、柔軟性、自由な表現を好む傾向',
-        nigateReason: {
-            'ゲッコー': '遊び心があり、相棒のクリーチャーと連携してチームに貢献できます。あなたの創造性と柔軟性を活かせます。',
-            'ヴァイス': '攻撃的なプッシュもサポートできます。あなたの創造性を活かして、通常のセンチネルとは異なるユニークな罠を仕掛けられるでしょう。'
-        }
+        reason: '型にはまらない柔軟な発想。予測不能な動きと美的センスで、敵のアートを破壊するクリエイティブなプレイを。',
+        coreTrait: 'FREEDOM & CREATIVITY'
     },
     INFP: {
-        title: 'INFP (仲介者)',
+        title: 'INFP // THE MEDIATOR',
         recommendedRoles: ['イニシエーター', 'センチネル'],
-        agents: ['スカイ', 'セージ', 'ゲッコー'],
-        reason: '理想を追求し、深い共感力を持つINFPのプレイヤーには、回復やサポート、チームの絆を通じて貢献するエージェントが共鳴します。彼らの存在がチームにポジティブな影響を与えます。',
-        coreTraitSummary: '理想主義、深い共感力、創造的なサポートを重視する傾向',
-        nigateReason: {
-            'フェニックス': '自己回復能力でリスクを負いつつ、チームとの連携も可能です。協調性を活かしつつ攻撃的な役割も担いたいあなたに適しています。',
-            'ハーバー': '水の壁で味方を保護し、サイト侵入を助けることができます。献身的な性格のあなたに合致するでしょう。'
-        }
+        agents: ['スカイ', 'セージ', 'ゲッコー', 'クローヴ'],
+        reason: '理想を追い求める情熱家。独自の価値観でチームを支え、直感的なプレイで奇跡を起こすポテンシャルを秘めている。',
+        coreTrait: 'EMPATHY & IDEALISM'
     },
     INTP: {
-        title: 'INTP (論理学者)',
+        title: 'INTP // THE LOGICIAN',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agents: ['アストラ', 'ソーヴァ', 'サイファー', 'KAY/O', 'テホ'],
-        reason: '論理と分析を重視し、独創的なアイデアで問題を解決するINTPのプレイヤーには、緻密な情報収集や戦術的な優位性を築くエージェントが最適です。彼らの分析力が勝利の鍵となります。',
-        coreTraitSummary: '論理と分析、独創的なアイデア、問題解決を重視する傾向',
-        nigateReason: {
-            'アイソ': '精密なエイムと計算された動きで戦い、論理的なキルを狙えるでしょう。あなたの分析力を活かせます。',
-            'サイファー': '用心深く秘密主義で、情報収集を重視します。あなたの分析的な思考を活かし、緻密な罠で戦場を支配できます。'
-        }
+        agents: ['サイファー', 'アストラ', 'KAY/O', 'キルジョイ'],
+        reason: '飽くなき知的好奇心と分析力。敵の行動パターンを解析し、理論上の最適解を導き出すハッカー的アプローチ。',
+        coreTrait: 'ANALYSIS & THEORY'
     },
     ESTP: {
-        title: 'ESTP (起業家)',
+        title: 'ESTP // THE ENTREPRENEUR',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['フェニックス', 'レイズ', 'ネオン', 'ジェット', 'ウェイレイ', 'ブリーチ'],
-        reason: '行動的で刺激を求めるESTPのプレイヤーには、即興的な判断と高い機動力で戦闘をリードするエージェントがぴったりです。彼らのスリルを求める性質が、アグレッシブなプレイを生み出します。',
-        coreTraitSummary: '行動力、即興的な判断、刺激を求める傾向',
-        nigateReason: {
-            'ヴァイパー': '毒や壁で敵を直接的に妨害し、戦場を支配できるでしょう。あなたの攻撃的な性質を活かせます。',
-            'ヴァイス': '攻撃的なプッシュもサポートできます。あなたの行動力を活かし、従来のセンチネルとは異なるアグレッシブな防衛を築けるでしょう。',
-            'ブリーチ': '強力な地震ブラストで敵の防衛線を突破し、スタンやブラインドで仲間を支援できます。あなたの行動力と積極性を活かせるでしょう。'
-        }
+        agents: ['フェニックス', 'レイズ', 'ネオン', 'ブリーチ'],
+        reason: 'リスクを恐れないスリルシーカー。最前線で敵を撹乱し、反射神経と度胸でクラッチをもぎ取る。',
+        coreTrait: 'BOLDNESS & IMPACT'
     },
     ESFP: {
-        title: 'ESFP (エンターテイナー)',
+        title: 'ESFP // THE ENTERTAINER',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['ゲッコー', 'レイズ', 'フェニックス', 'ネオン', 'ウェイレイ'],
-        reason: '社交的で周囲を楽しませることを好むESFPのプレイヤーには、活気あるエントリーや遊び心のあるプレイでチームを盛り上げるエージェントがおすすめです。ゲームをエンターテイメントとして楽しみましょう。',
-        coreTraitSummary: '社交性、楽観性、周囲を楽しませることを好む傾向',
-        nigateReason: {
-            'クローヴ': 'いたずら好きで予測不能なアビリティで敵を混乱させながら戦場をコントロールできます。あなたの遊び心を活かせます。',
-            'ヴァイス': '攻撃的なプッシュもサポートできます。あなたの社交性を活かし、チームと連携しながらユニークな防衛を築けるでしょう。'
-        }
+        agents: ['ゲッコー', 'レイズ', 'ネオン', 'ヨル'],
+        reason: '戦場をステージに変えるスター性。派手なアビリティと勢いでチームの士気を高め、勢いで押し切る。',
+        coreTrait: 'ENERGY & SHOWMANSHIP'
     },
     ENFJ: {
-        title: 'ENFJ (主人公)',
+        title: 'ENFJ // THE PROTAGONIST',
         recommendedRoles: ['イニシエーター', 'コントローラー'],
-        agents: ['スカイ', 'ゲッコー', 'セージ', 'テホ'],
-        reason: '他者を鼓舞し、チームをまとめることに長けたENFJのプレイヤーには、回復やサポートを通じてチームの成功を第一に考えるエージェントが深く結びついています。彼らのカリスマ性がチームを一つにします。',
-        coreTraitSummary: 'リーダーシップ、協調性、他者を鼓舞することを重視する傾向',
-        nigateReason: {
-            'フェニックス': '自己回復能力でリスクを負いつつ、チームを鼓舞できます。あなたのリーダーシップを活かし、積極的にエントリーできるでしょう。',
-            'セージ': '献身的で思いやりがあります。あなたのカリスマ性を活かし、チームの安全と調和を重視するプレイが可能です。'
-        }
+        agents: ['ブリーチ', 'KAY/O', 'ハーバー', 'スカイ'],
+        reason: '天性のリーダーシップ。チームの先頭に立ち、強力なCCでチャンスメイクを行う司令塔として輝く。',
+        coreTrait: 'LEADERSHIP & CHARISMA'
     },
     ENTJ: {
-        title: 'ENTJ (指揮官)',
+        title: 'ENTJ // THE COMMANDER',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agents: ['ブリムストーン', 'アストラ', 'KAY/O', 'ヴァイパー', 'テホ'],
-        reason: 'リーダーシップを発揮し、論理的な戦略で目標達成を推進するENTJのプレイヤーには、戦場を効率的にコントロールし、チームを指揮するエージェントが最適です。彼らの指揮で勝利を掴みましょう。',
-        coreTraitSummary: '強力なリーダーシップ、論理的な戦略、目標達成を重視する傾向',
-        nigateReason: {
-            'ジェット': '直接的で効率的なエントリーを得意とします。あなたの指揮能力を活かし、迅速にサイトを確保できるでしょう。',
-            'ヴァイス': '攻撃的なプッシュもサポートできます。あなたの指揮能力を活かし、従来のセンチネルとは異なるアグレッシブな防衛を築けるでしょう。'
-        }
+        agents: ['ブリムストーン', 'ヴァイパー', 'ソーヴァ', 'フェイド'],
+        reason: '勝利への執念と統率力。盤面を支配し、味方を駒のように動かして勝利の方程式を完成させる。',
+        coreTrait: 'COMMAND & DOMINATION'
     },
     ESTJ: {
-        title: 'ESTJ (幹部)',
+        title: 'ESTJ // THE EXECUTIVE',
         recommendedRoles: ['センチネル', 'コントローラー'],
-        agents: ['キルジョイ', 'サイファー', 'デッドロック', 'ブリムストーン', 'ヴァイス'],
-        reason: '責任感が強く、組織的なアプローチを好むESTJのプレイヤーには、堅実な防衛ラインを構築・維持するエージェントが適しています。彼らの管理能力が鉄壁の守りを生み出します。',
-        coreTraitSummary: '責任感、組織力、現実的なアプローチを重視する傾向',
-        nigateReason: {
-            'アイソ': '精密なエイムと自己完結能力を活かし、計画的なキルを狙えるでしょう。あなたの実行力を活かせます。',
-            'KAY/O': '目的志向で効率的なアビリティ抑制が、戦場の秩序を保ち、あなたの堅実なサポートを可能にします。'
-        }
+        agents: ['ブリムストーン', 'キルジョイ', 'デッドロック', 'KAY/O'],
+        reason: '伝統と秩序の守護者。確立されたメソッドを遂行し、鉄壁の守りで敵の希望を粉砕する。',
+        coreTrait: 'ORDER & EXECUTION'
     },
     ESFJ: {
-        title: 'ESFJ (領事官)',
+        title: 'ESFJ // THE CONSUL',
         recommendedRoles: ['センチネル', 'イニシエーター'],
-        agents: ['セージ', 'スカイ', 'ゲッコー'],
-        reason: '社交的で他者との調和を重んじるESFJのプレイヤーには、回復やサポート、チームの結束を通じて貢献するエージェントがぴったりです。彼らの思いやりがチームの力になります。',
-        coreTraitSummary: '社交性、協調性、他者との調和を重視する傾向',
-        nigateReason: {
-            'フェニックス': '自己回復能力で生存力を高めつつ、チームとの連携も可能なプレイスタイルが、あなたの協調性を活かしつつ攻撃的な役割も担えるでしょう。',
-            'ハーバー': 'チームを守ることに特化した水の壁で味方を保護するプレイスタイルが、あなたの思いやりを表現できるでしょう。'
-        }
+        agents: ['セージ', 'スカイ', 'ゲッコー', 'デッドロック'],
+        reason: '仲間思いのサポーター。チームのリソース管理を徹底し、誰も置き去りにしない献身的なプレイを。',
+        coreTrait: 'CARE & COOPERATION'
     },
     ENFP: {
-        title: 'ENFP (運動家)',
+        title: 'ENFP // THE CAMPAIGNER',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['レイナ', 'ヨル', 'ネオン', 'クローヴ', 'ウェイレイ'],
-        reason: '創造的で予測不能な動きを好むENFPのプレイヤーには、ゲームに「楽しさ」と「刺激」を求めるエージェントがおすすめです。彼らの自発性と適応力が、誰も見たことのないプレイを生み出します。',
-        coreTraitSummary: '創造性、予測不能な動き、ゲームに楽しさを求める傾向',
-        nigateReason: {
-            'クローヴ': 'いたずら好きで予測不能なアビリティを持つプレイスタイルが、あなたの遊び心を活かし、敵を混乱させながら戦場をコントロールできるでしょう。',
-            'ヴァイス': '攻撃的なプッシュもサポートできるプレイスタイルが、あなたの創造性を活かして、通常のセンチネルとは異なるユニークな罠を仕掛けられるでしょう。'
-        }
+        agents: ['レイナ', 'ヨル', 'ネオン', 'クローヴ'],
+        reason: '情熱的で自由奔放。セオリー無視の独創的なエントリーで敵の計算を狂わせるワイルドカード。',
+        coreTrait: 'PASSION & SPONTANEITY'
     },
     ENTP: {
-        title: 'ENTP (討論者)',
-        recommendedRoles: ['イニシエーター', 'コントローラー'],
-        agents: ['ヨル', 'オーメン', 'クローヴ', 'フェイド', 'ウェイレイ'],
-        reason: '独創的なアイデアで現状打破に挑戦するENTPのプレイヤーには、心理的な駆け引きや欺瞞を楽しむエージェントが魅力的でしょう。彼らの挑戦的な姿勢が敵を混乱させます。',
-        coreTraitSummary: '独創的なアイデア、現状打破、心理的な駆け引きを楽しむ傾向',
-        nigateReason: {
-            'ウェイレイ': '大胆不敵で予測不能な動きを好み、敵を欺きながら単独で突破口を開くプレイスタイルが、あなたの挑戦的な姿勢と創造性を活かせるでしょう。',
-            'サイファー': '情報収集と複雑な罠設置を得意とするプレイスタイルが、あなたの独創的な思考を活かし、敵を出し抜く戦略を立てられるでしょう。'
-        }
+        title: 'ENTP // THE DEBATER',
+        recommendedRoles: ['イニシエーター', 'デュエリスト'],
+        agents: ['ヨル', 'オーメン', 'フェイド', 'ウェイレイ'],
+        reason: '知的な挑戦者。敵の心理を逆手に取り、誰も思いつかないような奇策でメタを破壊する。',
+        coreTrait: 'INNOVATION & CHALLENGE'
     }
 };
 
@@ -406,34 +508,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsPlaceholder = document.getElementById('results-placeholder');
     const roleFilters = document.getElementById('role-filters');
     const mbtiSelector = document.getElementById('mbti-selector');
+    const resetButton = document.getElementById('reset-btn');
     const modal = document.getElementById('agent-modal');
+    const modalBody = document.getElementById('modal-body');
     const modalContentWrapper = document.getElementById('modal-content-wrapper');
 
-    function getAgentRoleColor(role) {
-        switch (role) {
-            case 'デュエリスト': return 'bg-red-100 text-red-800';
-            case 'イニシエーター': return 'bg-blue-100 text-blue-800';
-            case 'コントローラー': return 'bg-green-100 text-green-800';
-            case 'センチネル': return 'bg-yellow-100 text-yellow-800';
-            default: return 'bg-gray-100 text-gray-800';
+    function getRoleIcon(role) {
+        // Simple shapes to represent roles
+        switch(role) {
+            case 'デュエリスト': return '<span class="text-valo-red text-lg mr-2">◆</span>';
+            case 'イニシエーター': return '<span class="text-blue-400 text-lg mr-2">⚡</span>';
+            case 'コントローラー': return '<span class="text-purple-400 text-lg mr-2">●</span>';
+            case 'センチネル': return '<span class="text-green-400 text-lg mr-2">✚</span>';
+            default: return '';
         }
+    }
+    
+    function getDifficultyBars(level) {
+        let bars = '';
+        for(let i=0; i<3; i++) {
+            const colorClass = i < level ? 'bg-valo-red' : 'bg-gray-700';
+            bars += `<div class="w-4 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
+        }
+        return bars;
+    }
+    
+    function getUtilityBars(level) {
+        let bars = '';
+        for(let i=0; i<3; i++) {
+            const colorClass = i < level ? 'bg-white' : 'bg-gray-700';
+            bars += `<div class="w-4 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
+        }
+        return bars;
     }
 
     function createAgentCard(agent) {
-        const roleColor = getAgentRoleColor(agent.role);
         const card = document.createElement('div');
-        card.className = `agent-card-item agent-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer ${agent.role}`;
+        card.className = `agent-card-item bg-gray-800 border border-white/10 overflow-hidden cursor-pointer group relative transition-all duration-300 hover:-translate-y-2 hover:border-valo-red ${agent.role}`;
         card.dataset.agentName = agent.name;
+        
+        // Gradient overlay for role
+        let gradientColor = 'from-gray-700';
+        if(agent.role === 'デュエリスト') gradientColor = 'from-red-900/50';
+        if(agent.role === 'イニシエーター') gradientColor = 'from-blue-900/50';
+        if(agent.role === 'コントローラー') gradientColor = 'from-purple-900/50';
+        if(agent.role === 'センチネル') gradientColor = 'from-emerald-900/50';
+
         card.innerHTML = `
-            <div class="agent-placeholder-image">
-                ${agent.name}
+            <div class="h-32 bg-gradient-to-b ${gradientColor} to-gray-900 flex items-center justify-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"></div>
+                <span class="font-header text-3xl font-bold text-white/10 absolute scale-150 group-hover:scale-125 transition-transform duration-500 select-none">${agent.name}</span>
+                <span class="font-header text-xl font-bold text-white relative z-10 tracking-wider group-hover:text-valo-red transition-colors">${agent.name}</span>
             </div>
-            <div class="p-3">
-                <h4 class="font-bold text-base truncate">${agent.name}</h4>
-                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${roleColor} last:mr-0 mr-1">
+            <div class="p-4 relative z-10 bg-gray-900">
+                <h4 class="font-bold text-sm text-gray-300 mb-1">${agent.jpName}</h4>
+                <div class="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ${getRoleIcon(agent.role)}
                     ${agent.role}
-                </span>
+                </div>
             </div>
+            <div class="absolute bottom-0 left-0 h-1 w-0 bg-valo-red group-hover:w-full transition-all duration-300"></div>
         `;
         card.addEventListener('click', () => showAgentModal(agent.name));
         return card;
@@ -446,116 +580,139 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function getMbtiRecommendationReason(mbtiCode) {
-        const recommendation = mbtiRecommendations[mbtiCode];
-        let fullReason = recommendation ? recommendation.reason : '';
-
-        if (recommendation && recommendation.nigateReason) {
-            fullReason += '<br><br><b>苦手ロールでもピックする場合は:</b>';
-            for (const agentName in recommendation.nigateReason) {
-                fullReason += `<br>**${agentName}**: ${recommendation.nigateReason[agentName]}`;
-            }
-        }
-        return fullReason;
-    }
-
     function renderResults() {
         const mbtiCode = (selectedMbti.ei || '') + (selectedMbti.sn || '') + (selectedMbti.tf || '') + (selectedMbti.jp || '');
+        
         if (mbtiCode.length === 4) {
             const recommendation = mbtiRecommendations[mbtiCode];
             if(resultsPlaceholder) resultsPlaceholder.style.display = 'none';
 
-            const recommendedRolesHtml = recommendation.recommendedRoles.length > 0
-                ? `<p class="text-gray-700 mb-4 text-center"><b>おすすめのロール:</b> ${recommendation.recommendedRoles.join('、')}</p>`
-                : '';
+            const agentsHtml = recommendation.agents.map(agentName => {
+                const agent = agentData.find(a => a.jpName === agentName || a.name === agentName);
+                if(agent) return createAgentCard(agent).outerHTML;
+                return '';
+            }).join('');
 
             resultsContainer.innerHTML = `
-                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                    <h3 class="text-2xl font-bold mb-4 text-center">${recommendation.title} タイプにおすすめ</h3>
-                    ${recommendedRolesHtml}
-                    <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">${getMbtiRecommendationReason(mbtiCode)}</p>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-                        ${recommendation.agents.map(agentName => {
-                            const agent = agentData.find(a => a.name === agentName);
-                            return createAgentCard(agent).outerHTML;
-                        }).join('')}
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-valo-red/30 p-8 clip-corner-br relative overflow-hidden animation-fade-in">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-header font-bold text-white pointer-events-none select-none">${mbtiCode}</div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-2">
+                            <span class="bg-valo-red text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">Match Found</span>
+                            <h3 class="text-3xl font-header font-bold text-white uppercase tracking-wider">${recommendation.title}</h3>
+                        </div>
+                        
+                        <div class="h-px w-full bg-gradient-to-r from-valo-red to-transparent mb-6"></div>
+                        
+                        <div class="grid md:grid-cols-3 gap-8 mb-8">
+                            <div class="md:col-span-2">
+                                <p class="text-gray-300 text-lg leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
+                                    ${recommendation.reason}
+                                </p>
+                                <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm">
+                                    <span class="text-valo-red text-sm font-bold uppercase">Core Trait //</span>
+                                    <span class="text-white font-header tracking-widest">${recommendation.coreTrait}</span>
+                                </div>
+                            </div>
+                            <div class="bg-black/30 p-4 rounded border border-white/5">
+                                <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Recommended Roles</span>
+                                <div class="flex flex-wrap gap-2">
+                                    ${recommendation.recommendedRoles.map(role => 
+                                        `<span class="bg-white/10 text-gray-200 text-xs px-3 py-1 font-medium hover:bg-white/20 transition cursor-default">${role}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest">Compatible Agents</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            ${agentsHtml}
+                        </div>
                     </div>
                 </div>
             `;
+            
+            // Re-attach event listeners
             resultsContainer.querySelectorAll('.agent-card-item').forEach(card => {
                 card.addEventListener('click', () => showAgentModal(card.dataset.agentName));
             });
+
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
         } else {
              if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
              resultsContainer.innerHTML = '';
              resultsContainer.appendChild(resultsPlaceholder);
         }
     }
-    
-    function getAgentModalInsight(agentName) {
-        const agent = agentData.find(a => a.name === agentName);
-        if (!agent) return 'このエージェントは、特定のプレイスタイルを持つプレイヤーに強く推奨されます。詳細な分析はレポートをご参照ください。';
 
-        let insightText = '';
-        let foundInsight = false;
+    function resetSelection() {
+        // Clear state
+        selectedMbti = { ei: null, sn: null, tf: null, jp: null };
+        
+        // Clear UI selection
+        document.querySelectorAll('.mbti-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Reset results area
+        if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
+        resultsContainer.innerHTML = '';
+        resultsContainer.appendChild(resultsPlaceholder);
 
-        // 1. エージェントが主要な推奨リストに含まれているかチェック
-        for (const mbtiType in mbtiRecommendations) {
-            const recommendation = mbtiRecommendations[mbtiType];
-            if (recommendation.agents.includes(agentName)) {
-                insightText = `このエージェントは、${recommendation.title}タイプにおすすめのロールである${agent.role}です。${agent.name}の${agent.description}というプレイスタイルは、${recommendation.coreTraitSummary}を持つこのタイプのプレイヤーに特に適しています。`;
-                foundInsight = true;
-                break;
-            }
-        }
-
-        // 2. 主要な推奨リストになければ、「苦手ロールでもピックする場合は」のセクションに含まれているかチェック
-        if (!foundInsight) {
-            for (const mbtiType in mbtiRecommendations) {
-                const recommendation = mbtiRecommendations[mbtiType];
-                if (recommendation.nigateReason && recommendation.nigateReason[agentName]) {
-                    insightText = `このエージェントは、${recommendation.title}タイプが苦手とするロールである${agent.role}でピックする場合に推奨されます。${recommendation.nigateReason[agentName]}`;
-                    foundInsight = true;
-                    break;
-                }
-            }
-        }
-
-        // 3. 適切な考察が見つからない場合のデフォルトメッセージ
-        if (!foundInsight) {
-            insightText = 'このエージェントは、特定のプレイスタイルを持つプレイヤーに強く推奨されます。詳細な分析はレポートをご参照ください。';
-        }
-        return insightText;
+        // Smooth scroll back to finder
+        document.getElementById('finder').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-
 
     function showAgentModal(agentName) {
         const agent = agentData.find(a => a.name === agentName);
         if (!agent) return;
 
-        const insightText = getAgentModalInsight(agentName);
+        let roleBg = 'bg-gray-800';
+        if(agent.role === 'デュエリスト') roleBg = 'bg-red-900/20';
+        if(agent.role === 'イニシエーター') roleBg = 'bg-blue-900/20';
+        if(agent.role === 'コントローラー') roleBg = 'bg-purple-900/20';
+        if(agent.role === 'センチネル') roleBg = 'bg-emerald-900/20';
 
-        modalContentWrapper.innerHTML = `
-            <div class="p-6 md:p-8">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-3xl font-bold text-gray-900">${agent.name}</h3>
-                        <span class="text-sm font-semibold inline-block py-1 px-2 uppercase rounded-full ${getAgentRoleColor(agent.role)}">
-                            ${agent.role}
-                        </span>
-                    </div>
-                    <button id="close-modal" class="text-gray-400 hover:text-gray-600 transition">&times;</button>
+        modalBody.innerHTML = `
+            <div class="md:col-span-2 bg-gray-800 relative min-h-[300px] md:min-h-full flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-30"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                <h2 class="text-6xl md:text-8xl font-header font-bold text-white/5 absolute z-0 tracking-tighter rotate-90 md:rotate-0 select-none">${agent.name}</h2>
+                <div class="relative z-10 text-center p-8">
+                    <h2 class="text-4xl md:text-5xl font-header font-bold text-white mb-2 tracking-wider uppercase valo-text-shadow">${agent.name}</h2>
+                    <span class="text-xl text-gray-400 font-sans font-bold block tracking-widest">${agent.jpName}</span>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <div class="modal-placeholder-image">
-                        ${agent.name}
+            </div>
+            <div class="md:col-span-3 p-8 md:p-12 flex flex-col justify-center ${roleBg}">
+                <div class="mb-8">
+                    <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-1 block">Role Designation</span>
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-2xl font-bold text-white uppercase tracking-wide">${getRoleIcon(agent.role)} ${agent.role}</h3>
+                        <div class="h-px flex-grow bg-white/10"></div>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-lg mb-2 border-b pb-2">プレイスタイル</h4>
-                        <p class="text-gray-700">${agent.description}</p>
-                        <div class="mt-6">
-                           <h4 class="font-bold text-lg mb-2 border-b pb-2">レポートからの考察</h4>
-                           <p class="text-sm text-gray-600">${insightText}</p>
+                </div>
+
+                <div class="mb-8">
+                    <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Tactical Profile</span>
+                    <p class="text-gray-300 text-lg leading-relaxed font-light border-l-2 border-white/20 pl-4">
+                        ${agent.description}
+                    </p>
+                </div>
+
+                <div class="mt-auto">
+                    <div class="grid grid-cols-2 gap-8 border-t border-white/10 pt-6">
+                         <div>
+                            <span class="block text-gray-500 text-xs uppercase tracking-widest mb-2">Difficulty</span>
+                            <div class="flex">
+                                ${getDifficultyBars(agent.difficulty)}
+                            </div>
+                        </div>
+                         <div>
+                            <span class="block text-gray-500 text-xs uppercase tracking-widest mb-2">Utility</span>
+                            <div class="flex">
+                                ${getUtilityBars(agent.utility)}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -563,26 +720,32 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         modal.classList.remove('opacity-0', 'pointer-events-none');
-        modalContentWrapper.classList.remove('scale-95', 'opacity-0');
-        document.getElementById('close-modal').addEventListener('click', hideModal);
+        modalContentWrapper.classList.remove('scale-95');
+        
+        // Close logic
+        document.getElementById('close-modal').onclick = hideModal;
     }
     
     function hideModal() {
         modal.classList.add('opacity-0', 'pointer-events-none');
-        modalContentWrapper.classList.add('scale-95', 'opacity-0');
+        modalContentWrapper.classList.add('scale-95');
     }
 
+    // Event Listeners
     mbtiSelector.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            const type = e.target.dataset.type;
-            const group = e.target.dataset.group;
+        const btn = e.target.closest('button');
+        if (btn && btn.classList.contains('mbti-btn')) {
+            const type = btn.dataset.type;
+            const group = btn.dataset.group;
             selectedMbti[group] = type;
 
-            document.querySelectorAll(`.mbti-btn[data-group="${group}"]`).forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
+            document.querySelectorAll(`.mbti-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             renderResults();
         }
     });
+
+    resetButton.addEventListener('click', resetSelection);
 
     roleFilters.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
@@ -609,6 +772,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAllAgents();
 });
 </script>
-
 </body>
 </html>
