@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VALORANT PROTOCOL: MBTI AGENT FINDER (Patch 11.10)</title>
+    <title>valorant-mbti-finder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,7 +193,7 @@
     <!-- Patch News Ticker -->
     <div class="bg-valo-red/90 text-white overflow-hidden whitespace-nowrap py-1 sticky top-2 z-50 border-b border-black/20 backdrop-blur-sm">
         <div class="inline-block animate-marquee text-xs font-bold font-header tracking-widest">
-            /// PATCH 11.10 DEPLOYED /// HARBOR COMPLETE REWORK: NEW ABILITY "STORM SURGE" ADDED /// CLOVE SIGNIFICANT NERFS /// NEW HEALING INDICATOR UI /// CONSOLE REPLAY SYSTEM LIVE /// CHECK AGENT DATABASE FOR META ANALYSIS ///
+            /// PATCH 12.06 DEPLOYED /// NEW CONTROLLER AGENT "MIKS" ADDED TO DATABASE /// WAYLAY "SATURATE" NERFED TO EQUIP CAST /// VIPER PIT TECHNICAL ADJUSTMENTS /// NEW ASSIST BANNERS UI /// CHECK AGENT DATABASE FOR LATEST META ANALYSIS ///
         </div>
     </div>
 
@@ -217,13 +217,13 @@
         <!-- Hero Section -->
         <section class="text-center mb-20 relative">
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
-                PATCH 11.10
+                PATCH 12.06
             </div>
             <h2 class="text-4xl md:text-6xl font-bold mb-6 font-header uppercase tracking-tighter valo-text-shadow">
                 <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Meta</span> <span class="text-valo-red">Analysis</span>
             </h2>
             <p class="max-w-2xl mx-auto text-valo-gray text-lg mb-8 font-medium">
-                Harborリワーク・Clove弱体化を含む Patch 11.10 (Nov 2025) 適用済み。<br>
+                新エージェント「Miks」参戦・Waylayの大幅弱体化を含む Patch 12.06 (Apr 2026) 適用済み。<br>
                 最新の戦術データを解析し、あなたのプレイスタイルに最適なエージェントを特定する。
             </p>
             <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag">
@@ -303,6 +303,20 @@
                                 </button>
                             </div>
                         </div>
+                        <!-- A/T -->
+                        <div class="space-y-3 md:col-span-2 max-w-lg mx-auto w-full">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Identity</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="A" data-group="id">
+                                    <span class="text-2xl font-bold block mb-1">A</span>
+                                    <span class="text-xs text-gray-400 block">自己主張 / Confident</span>
+                                </button>
+                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="T" data-group="id">
+                                    <span class="text-2xl font-bold block mb-1">T</span>
+                                    <span class="text-xs text-gray-400 block">慎重 / Cautious</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Reset Button -->
@@ -332,7 +346,7 @@
             <div class="section-header">
                 <h3>// Agent Database</h3>
                 <div class="line"></div>
-                <span class="text-xs font-mono text-valo-gray ml-4">VER 11.10</span>
+                <span class="text-xs font-mono text-valo-gray ml-4">VER 12.06</span>
             </div>
 
             <div id="role-filters" class="flex flex-wrap justify-center gap-4 mb-10">
@@ -354,7 +368,7 @@
     <footer class="bg-valo-dark border-t border-white/10 py-8 text-center relative z-10">
         <div class="container mx-auto px-4 text-xs text-gray-500">
             <p class="mb-2 tracking-widest uppercase">Valorant Protocol // MBTI Analytics Division</p>
-            <p>&copy; 2025 Unofficial Fan Project. Not affiliated with Riot Games.</p>
+            <p>&copy; 2026 Unofficial Fan Project. Not affiliated with Riot Games.</p>
         </div>
     </footer>
 
@@ -381,318 +395,384 @@
 
 
 <script>
-// Data with Patch 11.10 Meta Info
+// Data with Patch 12.06 Meta Info
 // Status: 'buff', 'nerf', 'adjust', 'stable', 'rework'
-// PatchNote: Text explaining the impact of 11.10 (Nov 2025)
 const agentData = [
     { 
-        name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', 
-        description: '水を操るコントローラー。11.10のリワークにより、攻撃的なエリア確保と敵の強制移動を得意とするイニシエーター的な性質を獲得した。', 
+        name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', 
+        description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', 
+        difficulty: 2, utility: 3,
+        status: 'stable',
+        patchNote: '【NEW】Patch 12.05で新規参戦し、12.06でバグ修正適用。「M-pulse」による回復とスタンの使い分けができ、これまでサポート枠だったイニシエーターや歩くスモークと呼ばれる他のコントローラーの役割を同時にこなす注目のエージェント。',
+        mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ']
+    },
+    { 
+        name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', 
+        description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', 
+        difficulty: 3, utility: 2,
+        status: 'nerf',
+        patchNote: '【NERF】12.06にて「サチュレート」が即時発動から装備式に変更された。被弾時や空中にいる際の咄嗟のカウンターとしては使えなくなり、味方との連携やより意図的なセットアップが必須となった。',
+        mbti: ['ISFP', 'ESFP', 'ENTP']
+    },
+    { 
+        name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', 
+        description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', 
         difficulty: 3, utility: 3,
-        status: 'rework',
-        patchNote: '【REWORK】完全リワーク実施。Q「コーヴ」がシグネチャー化し、新アビリティ「ストームサージ」（渦巻きによる視界悪化と鈍足）が追加。アルティメットも前方への波状攻撃に変更され、より攻撃的にエリアを切り開くエージェントへ変貌。メタ入り確実。'
+        status: 'adjust',
+        patchNote: '【ADJUST】12.06にてアルティメット「ヴァイパーズピット」の展開システムが技術的に上方修正され、意図しない不発やエラーが減少。より安定したエリアコントロールが可能に。',
+        mbti: ['INTJ', 'ENTJ', 'ISTJ']
+    },
+    { 
+        name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', 
+        description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', 
+        difficulty: 3, utility: 2,
+        status: 'nerf',
+        patchNote: '【NERF】12.05で弱体化を受け、以前のようなリスクフリーな裏取りが困難に。デコイの使い所を間違えると戦犯になりかねず、より高いプレイスキルが要求される。',
+        mbti: ['ISFP', 'ENFP', 'ENTP']
     },
     { 
         name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', 
         description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', 
         difficulty: 2, utility: 2,
         status: 'nerf',
-        patchNote: '【NERF】デス後の「ルース（スモーク）」のストックが1つに制限され、「ピック・ミー・アップ」の回復量が100→50に半減。ランクマッチでの圧倒的な継戦能力と影響力が抑制され、より慎重な立ち回りが求められるようになった。'
+        patchNote: '【NERF】12.05にてさらなる調整（弱体化）。度重なる下方修正により継戦能力が低下し、強気なピークによる無駄なデスがチームの首を絞めるようになった。',
+        mbti: ['ISFP', 'ENFP']
+    },
+    { 
+        name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', 
+        description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', 
+        difficulty: 2, utility: 3,
+        status: 'adjust',
+        patchNote: '【ADJUST】12.05での調整によりフラッシュの運用感が変化。回復枠としてMiksという新たなライバルが現れたが、索敵も兼ねるフラッシュの汎用性は健在。',
+        mbti: ['ISFJ', 'ESFJ', 'INFP']
+    },
+    { 
+        name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', 
+        description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', 
+        difficulty: 3, utility: 3,
+        status: 'stable',
+        patchNote: '過去の完全リワーク以降、安定した地位を確保。Miksの参戦によってコントローラー枠の選択肢が増えたため、より攻撃的なセットアップが必要なマップでの採用がセオリー。',
+        mbti: ['ISFJ', 'INFP', 'ENFJ']
     },
     { 
         name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', 
         description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', 
         difficulty: 1, utility: 3,
         status: 'stable',
-        patchNote: 'ハーバーのリワークにより競合が増えたが、瞬時に3つのスモークを展開できる唯一無二の性能はラッシュ構成において依然として必須級。'
+        patchNote: '新エージェントMiksのコンバットスティムと合わせることで、機動力を極限まで高める超速ラッシュ戦術が一部で研究されている。',
+        mbti: ['ISTJ', 'ENTJ', 'ESTJ']
     },
     { 
         name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', 
         description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', 
         difficulty: 1, utility: 2,
         status: 'stable',
-        patchNote: '11.10での変更はないが、前回パッチでの回復強化により勝率は安定。ハーバーとの同時ピックによる「視界阻害＋フラッシュ」のセットアップが研究され始めている。'
+        patchNote: 'メタの移り変わりの中でも勝率は安定。Waylayのナーフを受けたことで、シンプルながら自力で回復も賄えるフェニックスの評価が再浮上しつつある。',
+        mbti: ['ESTP', 'ESFP']
     },
     { 
         name: 'SAGE', jpName: 'セージ', role: 'センチネル', 
         description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', 
         difficulty: 1, utility: 3,
-        status: 'adjust',
-        patchNote: 'バグ修正により壁の判定が適正化。クローヴのナーフに伴い、確実な蘇生手段を持つセージのピック率が再び上昇傾向にある。'
+        status: 'stable',
+        patchNote: '回復スキルのライバルとしてMiksが登場したが、蘇生や「バリアオーブ」による物理的な壁の価値は唯一無二。',
+        mbti: ['ISFJ', 'ESFJ', 'INFP']
     },
     { 
         name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', 
         description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', 
         difficulty: 3, utility: 3,
         status: 'stable',
-        patchNote: 'TejoやFadeとの競合が激しいが、リコンボルトの定点情報の価値は不変。マッププールの変化にも柔軟に対応できる万能性は健在。'
-    },
-    { 
-        name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', 
-        description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: 'ハーバーのリワーク（カーテン維持能力の変化）により、ダブルコントローラー構成での相方が変化しつつある。毒ゲージの管理は依然シビア。'
+        patchNote: 'TejoやFadeなどとの定点争いは続くが、定番マップにおける「リコンボルト」の情報価値は絶対。安定のピック。',
+        mbti: ['INTJ', 'ENTJ']
     },
     { 
         name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', 
         description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', 
         difficulty: 3, utility: 3,
         status: 'stable',
-        patchNote: 'バグ修正により「ニューラルセフト」のミニマップ表示が正常化。情報系センチネルとしての地位は揺るがない。'
+        patchNote: '情報系センチネルの頂点として君臨。WaylayやYoruといった裏取りを得意とするデュエリストの弱体化により、アンチフランクとしての仕事が遂行しやすくなった。',
+        mbti: ['ISTJ', 'INTP']
     },
     { 
         name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', 
         description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', 
         difficulty: 1, utility: 1,
         status: 'stable',
-        patchNote: 'クローヴの回復量ナーフにより、自己回復最強エージェントの座を再確認。ソロランクにおけるキャリー性能はトップクラスを維持。'
+        patchNote: '自己完結性能の高さからソロランクにおいては依然トップティア。Miksのスティムと合わせることで、さらにエゴイスティックなピークが可能。',
+        mbti: ['ISTP', 'ENFP']
     },
     { 
         name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', 
         description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', 
         difficulty: 2, utility: 3,
         status: 'stable',
-        patchNote: 'アラームボットの判定修正が入った。エリア防衛の信頼性は高く、ハーバーのULTに対するカウンター（ロックダウン）としても機能する。'
+        patchNote: '盤石のエリア防衛力。ULT「ロックダウン」は変わらず強力で、相手のリテイクを強引に崩す際にも決定的な活躍をする。',
+        mbti: ['ISTJ', 'ESTJ', 'INTP']
     },
     { 
         name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', 
         description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', 
         difficulty: 3, utility: 3,
         status: 'stable',
-        patchNote: 'ハーバーの新スキル「ストームサージ」との合わせ技が強力。スタン＋鈍足のコンボで敵を完封するセットプレイが流行の兆し。'
+        patchNote: '味方のラッシュ合わせには必須のイニシエーター。Waylayのセットアップにスタンを合わせる連携などは依然脅威。',
+        mbti: ['ESTP', 'ENFJ']
     },
     { 
         name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', 
         description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', 
         difficulty: 2, utility: 3,
-        status: 'adjust',
-        patchNote: 'スペクテーター視点でのバグ修正に加え、パラノイアのミニマップ表示サイズが修正された。クローヴのナーフにより、メインコントローラーとしての採用率が復権している。'
+        status: 'stable',
+        patchNote: 'Cloveの度重なるナーフにより、メインコントローラーとしての確固たる地位を取り戻している。Viperとのダブルスモーク構成でも主軸。',
+        mbti: ['INFJ', 'INFP', 'ENTP']
     },
     { 
         name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', 
         description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', 
         difficulty: 3, utility: 1,
         status: 'stable',
-        patchNote: '環境が変化しても、オペレーター適正の高さは唯一無二。ハーバーの攻撃的なスモークに合わせてエントリーする動きが強力。'
+        patchNote: 'メタが移り変わる中でも、即座に射線を切れる「テイルウィンド」の存在によりオペレーター適正は最上位クラスを維持している。',
+        mbti: ['ISTP']
     },
     { 
         name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', 
         description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', 
         difficulty: 2, utility: 2,
         status: 'stable',
-        patchNote: '狭いエリアへの制圧力は健在。デッドロックやサイファーの罠を破壊する役割として重要度は高い。'
-    },
-    { 
-        name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', 
-        description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '情報の取れるフラッシュは依然強力。クローヴのナーフで「回復」の役割が一部彼女に戻ってきている。'
-    },
-    { 
-        name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', 
-        description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', 
-        difficulty: 3, utility: 2,
-        status: 'stable',
-        patchNote: 'クローヴ関連のバグ修正（Yoruのデコイに対する反応など）が含まれる。メタには直接影響しないが、専門家の間では評価が高い。'
+        patchNote: '狭いエリアにおける「ペイント弾」の制圧力は健在で、センチネルの罠破壊要因としてもピック理由は多い。',
+        mbti: ['ESTP', 'ESFP', 'ISFP']
     },
     { 
         name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', 
         description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', 
         difficulty: 3, utility: 3,
         status: 'stable',
-        patchNote: 'ハーバーが攻撃的になったことで、防御的なグローバルコントロール枠としての差別化が進んだ。連携の取れたチームでは最強格。'
+        patchNote: '新コントローラーMiksとは真逆の「グローバル・マップコントロール」に特化した存在として、連携したチームでの需要は高い。',
+        mbti: ['INFJ', 'INTJ', 'INTP']
     },
     { 
         name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', 
         description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', 
         difficulty: 2, utility: 3,
         status: 'stable',
-        patchNote: 'キルログのヘッドショットアイコン表示バグ修正などQoL向上。抑制スキルはハーバーのシールド展開を阻止できるため、カウンターピックとして有効。'
+        patchNote: '抑制スキルが依然として環境における強力なカウンターツールとして機能。アビリティ依存度の高いMiksの行動を止めるのにも重宝する。',
+        mbti: ['INTP', 'ESTJ', 'ENFJ']
     },
     { 
         name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', 
         description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', 
         difficulty: 2, utility: 2,
         status: 'stable',
-        patchNote: 'オペレーター環境において安定した強さを誇る。新エージェントTejoのドローンに対してツール・ド・フォースが有効なカウンター手段となる。'
+        patchNote: '安定したオペレーター運用枠。1ピック取って引くという基本戦術の強さは色褪せず、特定のマップでは不動のピック候補。',
+        mbti: ['ISTJ', 'INTJ', 'ISTP']
     },
     { 
         name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', 
         description: '圧倒的なスプリント速度とスライディング。高速で敵のエイムをずらし、電撃戦を展開するスピードスター。', 
         difficulty: 3, utility: 1,
         status: 'stable',
-        patchNote: 'ハーバーの新スキル（鈍足付与）が天敵となる可能性があるが、それを上回るスピードでのエントリーが求められる。'
+        patchNote: 'Miksのコンバットスティムや回復と合わせることで、さらに止められない速度と生存力でサイトを制圧する組み合わせが局地的に流行。',
+        mbti: ['ESTP', 'ESFP', 'ENFP']
     },
     { 
         name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', 
         description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', 
         difficulty: 2, utility: 3,
         status: 'stable',
-        patchNote: '聴覚妨害は乱戦に強い。ハーバーのULTと組み合わせた視界＆聴覚ジャックは強烈なシナジーを生む。'
+        patchNote: '「ホウント」による強制スキャンや索敵は優秀。MiksのULT（ノックバック・聴覚奪取）と組み合わせた視覚＆聴覚のダブルジャックは凶悪。',
+        mbti: ['INFJ', 'ENTJ', 'ENTP']
     },
     { 
         name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', 
         description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', 
         difficulty: 2, utility: 3,
         status: 'stable',
-        patchNote: 'クリーチャー回収の回転率は依然強力。ハーバーがエリアを広げた後の設置要員として、相性が非常に良い。'
+        patchNote: 'クリーチャー回収の回転率そのものが最強の武器。ViperのULTが12.06で安定したことで、その中でのウィングマン設置・解除の重要性も増した。',
+        mbti: ['ISFJ', 'ESFJ', 'ESFP']
     },
     { 
         name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', 
         description: '音に反応するセンサーとバリアメッシュ。敵のラッシュを物理的に阻止し、強制的な1on1を作り出す。', 
         difficulty: 2, utility: 2,
         status: 'stable',
-        patchNote: '前パッチでのULT強化（即死仕様）により、ワンピック性能が高いセンチネルとして地位を確立中。'
+        patchNote: 'バリアメッシュによる強制的な分断は依然強力で、ラッシュ構成に対するカウンターとしての運用が光る。',
+        mbti: ['ESTJ', 'ESFJ']
     },
     { 
         name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', 
         description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', 
         difficulty: 2, utility: 1,
         status: 'stable',
-        patchNote: 'キルコントラクトからの帰還バグ修正。シールドによる1回無効化は、ハーバーの鈍足エリアを強引に突破する際に役立つ。'
+        patchNote: '初弾のHSを耐えるシールドの強みは不変。Waylayナーフ後、フィジカル勝負に特化したデュエリストとしての独自性が再評価されている。',
+        mbti: ['ISTP']
     },
     { 
         name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', 
         description: '液体金属による孤立化とフラッシュ。敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', 
         difficulty: 2, utility: 3,
-        status: 'adjust',
-        patchNote: '「ブラインドサイド（フラッシュ）」のVFX修正。視認性が向上したが、メイン武器無効化の能力はラッシュ止めにおいて依然トップクラス。'
+        status: 'stable',
+        patchNote: 'メイン武器を無効化する制圧力はエコラウンドやラッシュ止めにおいてトップクラス。守りにおける安定感を保っている。',
+        mbti: ['ISTJ', 'INTJ']
     },
     { 
         name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', 
         description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', 
         difficulty: 2, utility: 3,
         status: 'stable',
-        patchNote: '11.10でハーバーとの掛け合いボイスが追加。ドローンによる索敵は、ハーバーのスモーク抜きを補助する上で非常に相性が良い。'
-    },
-    { 
-        name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', 
-        description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', 
-        difficulty: 3, utility: 2,
-        status: 'stable',
-        patchNote: 'こちらもハーバーとの掛け合いボイスが追加。ホログラムとハーバーの視界悪化エリアを組み合わせた攪乱戦法が開発されつつある。'
-    },
+        patchNote: '12.06にてターゲットUIなどの各種バグが修正され、使用感が安定。Miksの特殊な空洞スモークとの組み合わせがプロシーンでも研究されている。',
+        mbti: ['INFJ', 'ENTP']
+    }
 ];
 
 const mbtiRecommendations = {
     ISTJ: {
         title: 'ISTJ // THE LOGISTICIAN',
         recommendedRoles: ['センチネル', 'コントローラー'],
-        agents: ['キルジョイ', 'サイファー', 'チェンバー', 'ブリムストーン', 'ヴァイス'],
-        reason: '事実に基づいた判断と秩序を愛するISTJには、セットアップ重視のエージェントが適合する。敵の動きを予測し、計画通りに抹殺せよ。',
+        agentsBase: ['キルジョイ', 'ヴァイパー', 'ブリムストーン'],
+        agentsA: ['ヴァイス', 'チェンバー'],
+        agentsT: ['サイファー', 'デッドロック'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>事実に基づいた判断と秩序を愛する誠実な管理者タイプです。高い集中力と責任感を持ち、計画に沿った行動を重んじます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>敵の動きを理論的に予測し、トラップやスモークを用いた盤石な防衛線を構築する能力に優れています。不測の事態にも焦らず、定点や確実な情報によって有利なカバー体制を作ることが強みです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>12.06でより安定したViper等のセットアップ重視のコントローラーやセンチネルが最適です。完璧な予測と準備で敵を罠にハメ、チームの勝利を裏方から盤石に支えましょう。',
         coreTrait: 'PLANNING & ORDER'
     },
     ISFJ: {
         title: 'ISFJ // THE DEFENDER',
-        recommendedRoles: ['センチネル', 'イニシエーター'],
-        agents: ['セージ', 'スカイ', 'ハーバー', 'ゲッコー'],
-        reason: 'チームへの献身と調和を重視するISFJには、味方のカバーや回復を行えるエージェントが最適。ハーバーのリワークにより、味方を守る選択肢が増えた。',
+        recommendedRoles: ['センチネル', 'コントローラー'],
+        agentsBase: ['セージ', 'ミクス', 'スカイ'],
+        agentsA: ['ゲッコー', 'オーメン'],
+        agentsT: ['サイファー', 'キルジョイ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>チームへの献身と調和を最も重視する守護者です。周囲の状況をよく観察し、誰が何を必要としているかを瞬時に察知します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>味方のカバーや回復、トレードキルにおける抜群の安定感を誇ります。味方の位置と体力状況を常にマクロ視点で把握し、前線が崩れないよう即座にリソースを投資できるのが最大の武器です。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>味方を活かすサポート役が天職です。12.06で新たに参戦したサポート型コントローラー「Miks」の回復能力などは、あなたの献身的な性質に完璧にフィットします。チームの生命線として立ち回りましょう。',
         coreTrait: 'SUPPORT & HARMONY'
     },
     INFJ: {
         title: 'INFJ // THE ADVOCATE',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agents: ['アストラ', 'オーメン', 'フェイド', 'テホ'],
-        reason: '全体を見通す洞察力を持つINFJ。マップ全体をコントロールし、敵の心理を読み解くプレイで戦局を操れ。',
+        agentsBase: ['アストラ', 'オーメン', 'テホ'],
+        agentsA: ['フェイド', 'ヴァイパー'],
+        agentsT: ['サイファー', 'キルジョイ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>全体を見通す深い洞察力と強い信念を持つ提唱者です。物事の表面ではなく、その背後にある本質や相手の心理を読み解こうとします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>マップ全体のコントロールや、敵の心理を読んだ裏をかくフェイクプレーを得意とします。「敵が次に何をしたいか」を直観で理解し、それを先回りして潰すマクロ的な戦術眼が非常に高いです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>AstraやOmenのように、マップ全体に干渉できるエージェントで盤面を操りましょう。Fadeの恐怖やTejoの狙撃を使って、敵の思考を完全に支配するプレイが推奨されます。',
         coreTrait: 'INSIGHT & STRATEGY'
     },
     INTJ: {
         title: 'INTJ // THE ARCHITECT',
         recommendedRoles: ['コントローラー', 'センチネル'],
-        agents: ['チェンバー', 'ヴァイパー', 'アストラ', 'ソーヴァ'],
-        reason: '冷徹なまでの論理的戦略家。リソース管理と長期的な視点で敵を詰ませる、チェックメイトを狙うプレイが適合する。',
+        agentsBase: ['ヴァイパー', 'アストラ', 'ソーヴァ'],
+        agentsA: ['チェンバー', 'アイソ'],
+        agentsT: ['キルジョイ', 'サイファー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>冷徹なまでに論理的かつ独創的な戦略家です。長期的な目標を見据え、それを達成するための緻密なシステムを構築します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>スキルの的確なリソース管理と、後半にジワジワと敵を詰ませるチェスのようなプレイに長けています。相手のセットアップを逆算して解体し、自分たちはリスクなしで有利を取る合理性を極めています。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>アルティメットの信頼性が増したViperや、射線を支配するChamberで、計算されたチェックメイトを狙いましょう。無駄なピークは避け、圧倒的な情報と有利状況だけで敵を蹂躙してください。',
         coreTrait: 'LOGIC & EFFICIENCY'
     },
     ISTP: {
         title: 'ISTP // THE VIRTUOSO',
         recommendedRoles: ['デュエリスト', 'センチネル'],
-        agents: ['アイソ', 'ジェット', 'レイナ', 'チェンバー'],
-        reason: '瞬時の判断とメカニクスに優れるISTP。道具を使いこなし、孤高の力で状況を打開する実力行使が光る。',
+        agentsBase: ['ジェット', 'アイソ', 'チェンバー'],
+        agentsA: ['レイナ', 'フェニックス'],
+        agentsT: ['サイファー', 'キルジョイ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>冷静な分析力と、いざという時の爆発的な行動力を併せ持つ巨匠です。複雑な理論よりも、手元のツールや自身の技術（メカニクス）を信じます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>エイムやキャラコンといった純粋なフィジカルと、瞬時のアドリブ力に優れます。孤立した1v1の状況や、咄嗟のクラッチシーンにおいて、驚異的な集中力を発揮して盤面をひっくり返します。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>IsoやJettのような撃ち合いに特化したエージェントが輝きます。Waylayのような準備が必要なキャラが落ち着いた現環境において、あなたの純粋なフィジカルで状況を直接打開するアプローチが最強です。',
         coreTrait: 'MECHANICS & ACTION'
     },
     ISFP: {
         title: 'ISFP // THE ADVENTURER',
         recommendedRoles: ['デュエリスト', 'コントローラー'],
-        agents: ['ヨル', 'クローヴ', 'レイズ', 'ウェイレイ'],
-        reason: '型にはまらない柔軟な発想。クローヴはナーフされたが、その自由なプレイスタイルは依然としてISFPの創造性を刺激する。',
+        agentsBase: ['ヨル', 'クローヴ', 'ウェイレイ'],
+        agentsA: ['レイズ', 'ネオン'],
+        agentsT: ['オーメン', 'ヴァイパー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>型にはまらない柔軟な発想と、独自の美学を持つ冒険家です。その場その場の直感と感情に従い、縛られることを嫌います。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>セオリーガン無視の予測不可能な動きと、クリエイティビティ溢れるスキル活用で敵の意表を突きます。ルーズな状況に強く、乱戦に持ち込んで相手のペースを破壊するのが得意です。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>WaylayやCloveはナーフを受けましたが、その自由なプレイスタイルは依然としてあなたの創造性を刺激します。YoruのデコイやRazeのブラストパックなど、直感に従って自由にマップを暴れ回ってください。',
         coreTrait: 'FREEDOM & CREATIVITY'
     },
     INFP: {
         title: 'INFP // THE MEDIATOR',
-        recommendedRoles: ['イニシエーター', 'センチネル'],
-        agents: ['スカイ', 'セージ', 'ゲッコー', 'ハーバー'],
-        reason: '理想を追い求める情熱家。ハーバーのリワークにより、よりドラマチックに戦況を変える力が手に入った。',
+        recommendedRoles: ['イニシエーター', 'コントローラー'],
+        agentsBase: ['スカイ', 'ハーバー', 'ミクス'],
+        agentsA: ['オーメン', 'フェイド'],
+        agentsT: ['セージ', 'アストラ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>内なる理想と情熱を秘めた仲介者です。平和と調和を望みつつも、自らの信念のためには信じられないほどの力を発揮します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>味方の意図を汲み取る共感力が非常に高く、阿吽の呼吸でのスキル合わせを可能にします。また、絶望的な状況でも諦めず、戦況をドラマチックに変える起死回生のプレイを生み出す才能があります。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>あなたの優しさと想像力が最も活かされる、SkyeやMiksなどの回復＆妨害キャラがおすすめです。前線を押し上げる味方を影から支え、時に自らスキルで活路を切り開くロマン溢れる立ち回りをしましょう。',
         coreTrait: 'EMPATHY & IDEALISM'
     },
     INTP: {
         title: 'INTP // THE LOGICIAN',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agents: ['サイファー', 'アストラ', 'KAY/O', 'キルジョイ'],
-        reason: '飽くなき知的好奇心と分析力。敵の行動パターンを解析し、理論上の最適解を導き出すハッカー的アプローチ。',
+        agentsBase: ['サイファー', 'アストラ', 'KAY/O'],
+        agentsA: ['ソーヴァ', 'チェンバー'],
+        agentsT: ['キルジョイ', 'ヴァイパー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>飽くなき知的好奇心と圧倒的な分析力を持つ論理学者です。事象のパターンを見つけ出し、最適解を導き出すことをゲームのように楽しみます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>敵の行動のクセやセットアップの穴を即座に解析する、ハッカー的なアプローチが得意です。「この時間帯にスキルが来ないから、ここは手薄だ」といった理論的な仮説に基づいて、安全な裏取りやエリア確保を行います。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>CypherやKAY/Oを使い、敵の情報をすべて集めて無力化する戦法が強力です。敵の動きを完全に計算し尽くし、「すべて想定内」と笑えるような知的なプレイを目指してください。',
         coreTrait: 'ANALYSIS & THEORY'
     },
     ESTP: {
         title: 'ESTP // THE ENTREPRENEUR',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['フェニックス', 'レイズ', 'ネオン', 'ブリーチ'],
-        reason: 'リスクを恐れないスリルシーカー。最前線で敵を撹乱し、反射神経と度胸でクラッチをもぎ取る。',
+        agentsBase: ['フェニックス', 'レイズ', 'ネオン'],
+        agentsA: ['ジェット', 'レイナ'],
+        agentsT: ['ブリーチ', 'KAY/O'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>リスクを恐れず、常に刺激とアクションを求める起業家タイプです。考えるよりも先に体が動き、圧倒的な推進力で周囲を巻き込みます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>最前線で敵のヘイトを集め、戦場を撹乱する能力は全タイプ中トップです。優れた反射神経と度胸を持ち、先陣を切ってエントリーし、強気なピークでファーストブラッドをもぎ取ります。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>PhoenixやNeon、Razeなどのアグレッシブなエージェントで、とにかく前へ進んでください。Miksのスティムをもらって突撃するなど、スピードと暴力的なまでの突破力で敵陣を粉砕しましょう。',
         coreTrait: 'BOLDNESS & IMPACT'
     },
     ESFP: {
         title: 'ESFP // THE ENTERTAINER',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['ゲッコー', 'レイズ', 'ネオン', 'ヨル'],
-        reason: '戦場をステージに変えるスター性。派手なアビリティと勢いでチームの士気を高め、勢いで押し切る。',
+        agentsBase: ['ゲッコー', 'レイズ', 'ウェイレイ'],
+        agentsA: ['ネオン', 'ヨル'],
+        agentsT: ['スカイ', 'フェイド'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>周囲を明るく楽しくさせる天性のエンターテイナーです。状況の変化を楽しみ、今この瞬間を最大限に味わうことを大切にします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>戦場を自分のステージに変えるスター性を持っています。Gekkoのクリーチャーを使った奇襲や、Neonの高速スライディングなど、視覚的に派手で敵をパニックに陥れるプレイへの適応力が極めて高いです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>Waylayのサチュレート仕様変更にも即座に適応し、さらに洗練された派手な手品で部隊を導いてください。「魅せるプレイ」を意識することで、あなた自身のパフォーマンスも最高潮に達するはずです。',
         coreTrait: 'ENERGY & SHOWMANSHIP'
     },
     ENFJ: {
         title: 'ENFJ // THE PROTAGONIST',
         recommendedRoles: ['イニシエーター', 'コントローラー'],
-        agents: ['ブリーチ', 'KAY/O', 'ハーバー', 'スカイ'],
-        reason: '天性のリーダーシップ。リワークされたハーバーは、チームを先導し勝利へ導く指揮官として最適な選択肢となった。',
+        agentsBase: ['ブリーチ', 'KAY/O', 'ミクス'],
+        agentsA: ['フェニックス', 'フェイド'],
+        agentsT: ['ハーバー', 'アストラ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>天性のカリスマと共感力で人々を導く主人公タイプです。利他的であり、他者の成長やチームの成功を何よりも喜びとします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>Voice Chatを使った味方の鼓舞や、ＩＧＬ（インゲームリーダー）としての統率力に優れます。味方が動きやすいように絶妙なタイミングでフラッシュやスタンを入れ、チーム全体の火力を底上げします。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>味方へのコンバットスティムや回復を提供する新エージェントMiksは、あなたにぴったりの存在です。また、Breachで「俺に合わせろ！」と味方を奮い立たせ、勝利への道を切り拓くリーダーシップを発揮しましょう。',
         coreTrait: 'LEADERSHIP & CHARISMA'
     },
     ENTJ: {
         title: 'ENTJ // THE COMMANDER',
         recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agents: ['ブリムストーン', 'ヴァイパー', 'ソーヴァ', 'フェイド'],
-        reason: '勝利への執念と統率力。盤面を支配し、味方を駒のように動かして勝利の方程式を完成させる。',
+        agentsBase: ['ブリムストーン', 'ヴァイパー', 'ソーヴァ'],
+        agentsA: ['フェイド', 'ブリーチ'],
+        agentsT: ['キルジョイ', 'サイファー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>目標達成のためならあらゆる手段を講じる、圧倒的な統率力を持つ指揮官です。合理性と効率を極限まで追求します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>容赦ないエリア奪取と、緻密なセットアップによる盤面の完全支配能力に特徴があります。「敵がこう動くなら、ここで潰す」という勝利の方程式を事前に組み立て、それを冷酷なまでに遂行させます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>アルティメットの展開が安定した12.06のViperや、空爆を持つBrimstoneが最適です。マクロ視点でマップを支配し、相手に一切の希望を与えずに窒息させるプレイがあなたの強みを最大化します。',
         coreTrait: 'COMMAND & DOMINATION'
     },
     ESTJ: {
         title: 'ESTJ // THE EXECUTIVE',
         recommendedRoles: ['センチネル', 'コントローラー'],
-        agents: ['ブリムストーン', 'キルジョイ', 'デッドロック', 'KAY/O'],
-        reason: '伝統と秩序の守護者。確立されたメソッドを遂行し、鉄壁の守りで敵の希望を粉砕する。',
+        agentsBase: ['キルジョイ', 'ブリムストーン', 'デッドロック'],
+        agentsA: ['KAY/O', 'チェンバー'],
+        agentsT: ['サイファー', 'ヴァイパー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>伝統とルールを重んじる、実務能力に優れた幹部タイプです。曖昧さを嫌い、事実と経験に基づいた確実な方法を選択します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>セオリーに忠実で、ミスが極めて少ないのが特徴です。定点スキルや完璧な防衛セットアップなど、確立されたメソッドを正確に遂行することで、鉄壁の守りを築き上げます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>KilljoyやDeadlockで、敵のラッシュを物理的にシャットアウトしましょう。KAY/Oのゼロ/ポイントで相手のスキルという不確定要素を消し去り、純粋なタクティカルシューターの基本で圧倒するのがセオリーです。',
         coreTrait: 'ORDER & EXECUTION'
     },
     ESFJ: {
         title: 'ESFJ // THE CONSUL',
         recommendedRoles: ['センチネル', 'イニシエーター'],
-        agents: ['セージ', 'スカイ', 'ゲッコー', 'デッドロック'],
-        reason: '仲間思いのサポーター。チームのリソース管理を徹底し、誰も置き去りにしない献身的なプレイを。',
+        agentsBase: ['セージ', 'ミクス', 'ゲッコー'],
+        agentsA: ['スカイ', 'ブリーチ'],
+        agentsT: ['デッドロック', 'キルジョイ'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>人との繋がりを大切にする、思いやり溢れる領事館タイプです。チームの雰囲気を常に良好に保ち、困っている人を放っておけません。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>徹底したチームのリソース管理と、誰も置き去りにしないカバーリング能力が武器です。ヒールや蘇生、またはGekkoのウィングマンを使った安全な設置など、味方の負担を減らすサポートにおいて右に出る者はいません。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>SageやMiksといった回復持ちエージェントが最適です。味方の体力を管理し、前線が崩壊する前にリソースを注ぎ込んで戦線を維持する、献身的なプレイスタイルを極めてください。',
         coreTrait: 'CARE & COOPERATION'
     },
     ENFP: {
         title: 'ENFP // THE CAMPAIGNER',
         recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agents: ['レイナ', 'ヨル', 'ネオン', 'クローヴ'],
-        reason: '情熱的で自由奔放。ナーフされたとはいえ、クローヴの「死んでも戦う」スタイルはENFPの魂を揺さぶる。',
+        agentsBase: ['レイナ', 'ヨル', 'ネオン'],
+        agentsA: ['レイズ', 'フェニックス'],
+        agentsT: ['クローヴ', 'オーメン'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>情熱的で自由奔放、新しいアイデアに心を躍らせる広報運動家です。常に可能性を探求し、直感と感情の赴くままに行動します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>ピンチを楽しめるメンタルの強さと、常識破りのアグレッシブなプレイで敵を混乱させます。「ここでこうすれば刺さるかも！」という閃きに従った行動が、時に戦局を単騎で引っ繰り返す爆発力を生みます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>弱体化されたYoruやCloveですが、「死線で輝く」「リスクを楽しむ」という特質は変わらず彼らとリンクします。ReynaやNeonを含め、直感的な撃ち合いとスキル活用で、誰にも読めないプレイを展開しましょう。',
         coreTrait: 'PASSION & SPONTANEITY'
     },
     ENTP: {
         title: 'ENTP // THE DEBATER',
         recommendedRoles: ['イニシエーター', 'デュエリスト'],
-        agents: ['ヨル', 'オーメン', 'フェイド', 'ウェイレイ'],
-        reason: '知的な挑戦者。敵の心理を逆手に取り、誰も思いつかないような奇策でメタを破壊する。',
+        agentsBase: ['ヨル', 'オーメン', 'ウェイレイ'],
+        agentsA: ['チェンバー', 'レイナ'],
+        agentsT: ['テホ', 'サイファー'],
+        reason: '<span class="text-valo-red font-bold">【基本特性】</span>知的で好奇心旺盛な討論者であり、既存のシステムやルールに挑戦することを愛するトリックスターです。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>メタ（流行りの戦術）の裏をかくこと、いわゆる「カウンターのカウンター」を考える天才です。誰も思いつかないようなパラノイアの角度、Waylayの位置入れ替えの奇策によって、敵の思考をフリーズさせます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>即時発動の仕様が変更されたWaylayをも逆手に取り、時間をかけた心理戦で敵を罠にかけましょう。TejoのドローンやOmenのテレポートを駆使して、安全な場所から敵を弄ぶ頭脳プレイが推奨されます。',
         coreTrait: 'INNOVATION & CHALLENGE'
     }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    let selectedMbti = { ei: null, sn: null, tf: null, jp: null };
+    let selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
     const agentGrid = document.getElementById('agent-grid');
     const resultsContainer = document.getElementById('results');
     const resultsPlaceholder = document.getElementById('results-placeholder');
@@ -798,63 +878,115 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderResults() {
-        const mbtiCode = (selectedMbti.ei || '') + (selectedMbti.sn || '') + (selectedMbti.tf || '') + (selectedMbti.jp || '');
+        const baseMbti = (selectedMbti.ei || '') + (selectedMbti.sn || '') + (selectedMbti.tf || '') + (selectedMbti.jp || '');
+        const fullMbtiCode = baseMbti + (selectedMbti.id ? '-' + selectedMbti.id : '');
+        const isComplete = selectedMbti.ei && selectedMbti.sn && selectedMbti.tf && selectedMbti.jp && selectedMbti.id;
         
-        if (mbtiCode.length === 4) {
-            const recommendation = mbtiRecommendations[mbtiCode];
+        if (isComplete) {
             if(resultsPlaceholder) resultsPlaceholder.style.display = 'none';
 
-            const agentsHtml = recommendation.agents.map(agentName => {
-                const agent = agentData.find(a => a.jpName === agentName || a.name === agentName);
-                if(agent) return createAgentCard(agent).outerHTML;
-                return '';
-            }).join('');
-
+            // Custom UI: MBTI dummy loading
             resultsContainer.innerHTML = `
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-valo-red/30 p-8 clip-corner-br relative overflow-hidden animation-fade-in">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-header font-bold text-white pointer-events-none select-none">${mbtiCode}</div>
-                    
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-4 mb-2">
-                            <span class="bg-valo-red text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">Match Found</span>
-                            <h3 class="text-3xl font-header font-bold text-white uppercase tracking-wider">${recommendation.title}</h3>
-                        </div>
-                        
-                        <div class="h-px w-full bg-gradient-to-r from-valo-red to-transparent mb-6"></div>
-                        
-                        <div class="grid md:grid-cols-3 gap-8 mb-8">
-                            <div class="md:col-span-2">
-                                <p class="text-gray-300 text-lg leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
-                                    ${recommendation.reason}
-                                </p>
-                                <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm">
-                                    <span class="text-valo-red text-sm font-bold uppercase">Core Trait //</span>
-                                    <span class="text-white font-header tracking-widest">${recommendation.coreTrait}</span>
-                                </div>
-                            </div>
-                            <div class="bg-black/30 p-4 rounded border border-white/5">
-                                <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Recommended Roles</span>
-                                <div class="flex flex-wrap gap-2">
-                                    ${recommendation.recommendedRoles.map(role => 
-                                        `<span class="bg-white/10 text-gray-200 text-xs px-3 py-1 font-medium hover:bg-white/20 transition cursor-default">${role}</span>`
-                                    ).join('')}
-                                </div>
-                            </div>
-                        </div>
-
-                        <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest">Compatible Agents</h4>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            ${agentsHtml}
-                        </div>
-                    </div>
+                <div class="border border-valo-red/30 p-12 text-center relative overflow-hidden bg-gray-900 clip-corner-br min-h-[300px] flex flex-col justify-center items-center">
+                    <div class="scanline"></div>
+                    <div class="text-valo-red text-6xl font-header mb-4 animate-pulse valo-text-shadow">///</div>
+                    <h3 class="text-3xl font-bold mb-2 uppercase font-header tracking-widest text-valo-red animate-pulse">ANALYZING TACTICAL DATA</h3>
+                    <p class="text-gray-500 font-mono text-sm tracking-widest mt-4">Processing psychological parameters: [ <span class="text-white">${fullMbtiCode.replace('-', ' . ')}</span> ]</p>
                 </div>
             `;
-            
-            resultsContainer.querySelectorAll('.agent-card-item').forEach(card => {
-                card.addEventListener('click', () => showAgentModal(card.dataset.agentName));
-            });
-
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Dummy loading simulation (0.8 seconds delay)
+            setTimeout(() => {
+                const recommendation = mbtiRecommendations[baseMbti];
+
+                const targetAgents = [...recommendation.agentsBase, ...(selectedMbti.id === 'A' ? recommendation.agentsA : recommendation.agentsT)];
+                const agentsHtml = targetAgents.map(agentName => {
+                    const agent = agentData.find(a => a.jpName === agentName || a.name === agentName);
+                    if(agent) return createAgentCard(agent).outerHTML;
+                    return '';
+                }).join('');
+
+                // メンタル傾向(A/T)による追加テキスト
+                let idText = '';
+                if(selectedMbti.id === 'A') {
+                    idText = `<br><br><span class="text-valo-red font-bold">【メンタル傾向：A (自己主張型)】</span><br>あなたはプレッシャーに強く、自分の判断に絶対の自信を持っています。少々のミスやエコラウンドでもメンタルが崩れず、常に強気なピークや強引なエリアコントロールでチームを牽引できるのが最大の強みです。`;
+                } else if(selectedMbti.id === 'T') {
+                    idText = `<br><br><span class="text-valo-red font-bold">【メンタル傾向：T (慎重型)】</span><br>あなたは非常に思慮深く、常に最悪の事態を想定して動きます。その完璧主義は、クリアリングの徹底やスキルを使った確実なエリア確保に直結し、チームに「隙のない盤石なラウンド」をもたらす最強の武器となります。`;
+                }
+
+                // Map letters to their descriptions using groups to avoid T collision (Thinking vs Turbulent)
+                const paramExplanations = {
+                    ei: { 'E': 'エントリー / アクション', 'I': '後方支援 / カバー' },
+                    sn: { 'S': 'フィジカル / 即応性', 'N': 'マクロ視点 / セットアップ' },
+                    tf: { 'T': 'リソース管理 / 合理的', 'F': 'チーム連携 / サポート' },
+                    jp: { 'J': 'エリア防衛 / 定点把握', 'P': '柔軟性 / アドリブ対応' },
+                    id: { 'A': 'メンタル強者 / 自信', 'T': 'リスク管理 / 慎重' }
+                };
+
+                const traitsHtml = ['ei', 'sn', 'tf', 'jp', 'id'].map(group => {
+                    const char = selectedMbti[group];
+                    return `
+                        <div class="bg-black/30 border border-white/5 p-3 rounded flex flex-col items-center hover:border-valo-red/50 transition">
+                            <span class="text-valo-red font-header text-xl">${char}</span>
+                            <span class="text-gray-400 text-[10px] mt-1 text-center whitespace-nowrap">${paramExplanations[group][char]}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                resultsContainer.innerHTML = `
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-valo-red/30 p-8 clip-corner-br relative overflow-hidden animation-fade-in transition-opacity duration-500">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-7xl md:text-9xl font-header font-bold text-white pointer-events-none select-none">${fullMbtiCode}</div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="bg-valo-red text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">Match Found</span>
+                                <h3 class="text-3xl font-header font-bold text-white uppercase tracking-wider">${recommendation.title}</h3>
+                            </div>
+                            
+                            <div class="h-px w-full bg-gradient-to-r from-valo-red to-transparent mb-6"></div>
+                            
+                            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                                <div class="md:col-span-2">
+                                    <p class="text-gray-300 text-lg leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
+                                        ${recommendation.reason}${idText}
+                                    </p>
+                                    <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm mb-6">
+                                        <span class="text-valo-red text-sm font-bold uppercase">Core Trait //</span>
+                                        <span class="text-white font-header tracking-widest">${recommendation.coreTrait}</span>
+                                    </div>
+                                    
+                                    <!-- Add tactical parameter explanation -->
+                                    <div class="mb-4">
+                                        <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Parameter Traits</span>
+                                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                            ${traitsHtml}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="bg-black/30 p-4 rounded border border-white/5 h-fit">
+                                    <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Recommended Roles</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${recommendation.recommendedRoles.map(role => 
+                                            `<span class="bg-white/10 text-gray-200 text-xs px-3 py-1 font-medium hover:bg-white/20 transition cursor-default">${role}</span>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest mt-8">Compatible Agents</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                ${agentsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsContainer.querySelectorAll('.agent-card-item').forEach(card => {
+                    card.addEventListener('click', () => showAgentModal(card.dataset.agentName));
+                });
+            }, 800); // 演出のサクサク感を重視し0.8秒のディレイに短縮
 
         } else {
              if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
@@ -864,7 +996,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetSelection() {
-        selectedMbti = { ei: null, sn: null, tf: null, jp: null };
+        selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
         document.querySelectorAll('.mbti-btn').forEach(btn => btn.classList.remove('active'));
         if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
         resultsContainer.innerHTML = '';
@@ -885,16 +1017,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let statusHtml = '';
         let statusBorder = '';
         if(agent.status === 'buff') {
-            statusHtml = '<span class="bg-valo-green text-black font-bold px-2 py-1 text-xs uppercase tracking-widest">▲ BUFFED in 11.10</span>';
+            statusHtml = '<span class="bg-valo-green text-black font-bold px-2 py-1 text-xs uppercase tracking-widest">▲ BUFFED</span>';
             statusBorder = 'border-l-4 border-valo-green';
         } else if(agent.status === 'nerf') {
-            statusHtml = '<span class="bg-valo-red text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">▼ NERFED in 11.10</span>';
+            statusHtml = '<span class="bg-valo-red text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">▼ NERFED</span>';
             statusBorder = 'border-l-4 border-valo-red';
         } else if(agent.status === 'adjust') {
             statusHtml = '<span class="bg-yellow-400 text-black font-bold px-2 py-1 text-xs uppercase tracking-widest">⚡ ADJUSTED</span>';
             statusBorder = 'border-l-4 border-yellow-400';
         } else if(agent.status === 'rework') {
-            statusHtml = '<span class="bg-blue-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">★ REWORKED in 11.10</span>';
+            statusHtml = '<span class="bg-blue-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">★ REWORKED</span>';
             statusBorder = 'border-l-4 border-blue-500';
         }
 
@@ -910,11 +1042,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="md:col-span-3 p-8 md:p-12 flex flex-col justify-center ${roleBg}">
-                <div class="mb-8">
-                    <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-1 block">Role Designation</span>
-                    <div class="flex items-center gap-3">
-                        <h3 class="text-2xl font-bold text-white uppercase tracking-wide">${getRoleIcon(agent.role)} ${agent.role}</h3>
-                        <div class="h-px flex-grow bg-white/10"></div>
+                <div class="mb-8 flex flex-col gap-6">
+                    <div>
+                        <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-1 block">Role Designation</span>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide flex items-center">${getRoleIcon(agent.role)} ${agent.role}</h3>
+                            <div class="h-px flex-grow bg-white/10 hidden md:block"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Compatible MBTI</span>
+                        <div class="flex flex-wrap gap-2">
+                            ${agent.mbti ? agent.mbti.map(m => `<span class="bg-gray-800 text-gray-200 text-xs px-3 py-1 font-header tracking-widest hover:bg-valo-red hover:text-white transition cursor-default border border-white/5 clip-corner-diag shadow-sm">${m}</span>`).join('') : ''}
+                        </div>
                     </div>
                 </div>
 
@@ -926,10 +1066,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="bg-black/30 p-4 rounded border border-white/5 ${statusBorder}">
                         <span class="text-white font-header text-sm tracking-widest uppercase mb-1 block flex items-center gap-2">
-                            Patch 11.10 Analysis
+                            Patch 12.06 Analysis
                         </span>
                         <p class="text-sm text-gray-400 leading-relaxed">
-                            ${agent.patchNote || '現環境（Patch 11.10）において、大きな性能変更はなく安定した運用が可能です。'}
+                            ${agent.patchNote || '現環境において、大きな性能変更はなく安定した運用が可能です。'}
                         </p>
                     </div>
                 </div>
