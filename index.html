@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>valorant-mbti-finder</title>
+    <title>VALORANT PROTOCOL // MBTI TACTICAL FINDER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -21,7 +21,7 @@
                             gray: '#8B978F',
                             green: '#17e5b0',
                             yellow: '#fbbf24',
-                            blue: '#3b82f6', // For Rework
+                            blue: '#3b82f6',
                             overlay: 'rgba(15, 25, 35, 0.95)'
                         }
                     },
@@ -52,28 +52,20 @@
             color: #ECE8E1;
             background-image: radial-gradient(circle at 50% 50%, #1f2b36 0%, #0F1923 100%);
         }
+        body.modal-open {
+            overflow: hidden;
+            touch-action: none;
+        }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0F1923; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FF4655; 
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0F1923; }
+        ::-webkit-scrollbar-thumb { background: #FF4655; }
 
         /* Utility Classes for Valo Style */
-        .clip-corner {
-            clip-path: polygon(100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0);
-        }
-        .clip-corner-br {
-            clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 0);
-        }
-        .clip-corner-diag {
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-        }
+        .clip-corner { clip-path: polygon(100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 0); }
+        .clip-corner-br { clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 0); }
+        .clip-corner-diag { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
 
         .btn-valo {
             position: relative;
@@ -101,34 +93,41 @@
         .btn-valo:hover {
             border-color: #FF4655;
             color: #fff;
+            box-shadow: 0 0 15px rgba(255, 70, 85, 0.2);
         }
-        .btn-valo:hover::before {
-            width: 100%;
-        }
+        .btn-valo:hover::before { width: 100%; }
 
         .btn-valo.active {
             background-color: #FF4655;
             border-color: #FF4655;
             color: white;
+            box-shadow: 0 0 20px rgba(255, 70, 85, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+            transform: scale(1.02);
+            font-weight: 900;
+        }
+        .btn-valo:active { transform: scale(0.98); }
+
+        /* Mobile specific heights */
+        .mbti-btn {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .tactic-btn {
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        /* Reset Button Specific Style */
-        .btn-reset {
-            border-color: #4a5568;
-            color: #9ca3af;
-        }
-        .btn-reset:hover {
-            border-color: #cbd5e1;
-            color: #fff;
-        }
-        .btn-reset:hover::before {
-            background-color: #4a5568;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-4px);
-            border-color: #FF4655;
-        }
+        .btn-reset { border-color: #4a5568; color: #9ca3af; }
+        .btn-reset:hover { border-color: #cbd5e1; color: #fff; box-shadow: none; }
+        .btn-reset:hover::before { background-color: #4a5568; }
 
         .grid-bg {
             background-size: 40px 40px;
@@ -157,18 +156,13 @@
             background: #FF4655;
         }
 
-        /* Specific text styles */
-        .valo-text-shadow {
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-        }
+        .valo-text-shadow { text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
         
-        /* Status Badges */
         .status-buff { background-color: #17e5b0; color: #0F1923; }
         .status-nerf { background-color: #FF4655; color: white; }
         .status-adjust { background-color: #fbbf24; color: #0F1923; }
-        .status-rework { background-color: #3b82f6; color: white; } /* Blue for Rework */
+        .status-rework { background-color: #3b82f6; color: white; }
         
-        /* Animation */
         @keyframes scanline {
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100%); }
@@ -182,122 +176,122 @@
             pointer-events: none;
             z-index: 20;
         }
+
+        @keyframes loadingBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        .animate-loading-bar {
+            animation: loadingBar 0.8s ease-in-out forwards;
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
 
-    <!-- Background Elements -->
     <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
     <div class="fixed top-0 left-0 w-full h-2 bg-valo-red z-50"></div>
 
-    <!-- Patch News Ticker -->
     <div class="bg-valo-red/90 text-white overflow-hidden whitespace-nowrap py-1 sticky top-2 z-50 border-b border-black/20 backdrop-blur-sm">
-        <div class="inline-block animate-marquee text-xs font-bold font-header tracking-widest">
-            /// PATCH 12.06 DEPLOYED /// NEW CONTROLLER AGENT "MIKS" ADDED TO DATABASE /// WAYLAY "SATURATE" NERFED TO EQUIP CAST /// VIPER PIT TECHNICAL ADJUSTMENTS /// NEW ASSIST BANNERS UI /// CHECK AGENT DATABASE FOR LATEST META ANALYSIS ///
+        <div id="news-ticker" class="inline-block animate-marquee text-xs font-bold font-header tracking-widest">
+            /// 12.09: NEON MOBILITY TUNED /// SHOTGUN ACCURACY STANDARDIZED ///
         </div>
     </div>
 
-    <!-- Header -->
     <header class="bg-valo-dark/90 backdrop-blur-md border-b border-white/10 sticky top-8 z-40">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-valo-red flex items-center justify-center font-bold text-white font-header clip-corner">V</div>
                 <h1 class="text-xl md:text-2xl font-bold font-header tracking-wider uppercase">VALORANT <span class="text-valo-red">PROTOCOL</span></h1>
             </div>
             <nav class="hidden md:flex gap-8">
-                <a href="#finder" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Agent Finder</a>
+                <a href="#finder" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Tactical Finder</a>
                 <a href="#explorer" class="text-sm font-bold uppercase tracking-widest hover:text-valo-red transition font-header">Database</a>
             </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 flex-grow">
 
-        <!-- Hero Section -->
         <section class="text-center mb-20 relative">
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
-                PATCH 12.06
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[6rem] md:text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
+                PATCH 12.09
             </div>
             <h2 class="text-4xl md:text-6xl font-bold mb-6 font-header uppercase tracking-tighter valo-text-shadow">
-                <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Meta</span> <span class="text-valo-red">Analysis</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Cognitive</span> <span class="text-valo-red">Sync</span>
             </h2>
-            <p class="max-w-2xl mx-auto text-valo-gray text-lg mb-8 font-medium">
-                新エージェント「Miks」参戦・Waylayの大幅弱体化を含む Patch 12.06 (Apr 2026) 適用済み。<br>
-                最新の戦術データを解析し、あなたのプレイスタイルに最適なエージェントを特定する。
+            <p class="max-w-2xl mx-auto text-valo-gray text-sm md:text-lg mb-8 font-medium px-2">
+                最新パッチ(12.09 / 2026)の戦術データを完全統合済。<br>
+                深層心理とプレイスタイルを解析し、現環境における最適なエージェントを特定する。
             </p>
-            <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag">
+            <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag shadow-[0_0_20px_rgba(255,70,85,0.4)]">
                 Start Analysis
             </a>
         </section>
 
-        <!-- MBTI Finder Section -->
         <section id="finder" class="mb-24">
             <div class="section-header">
                 <h3>// Tactical Assessment</h3>
                 <div class="line"></div>
             </div>
             
-            <div class="bg-white/5 border border-white/10 p-8 clip-corner-br backdrop-blur-sm relative overflow-hidden">
-                <!-- Decoration -->
+            <div class="bg-white/5 border border-white/10 p-4 sm:p-8 clip-corner-br backdrop-blur-sm relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-2">
-                    <span class="text-[10px] text-valo-red font-mono">STATUS: ONLINE</span>
+                    <span class="text-[10px] text-valo-red font-mono animate-pulse">STATUS: STANDALONE ENGINE ONLINE</span>
                 </div>
 
                 <div id="mbti-selector" class="space-y-8 relative z-10">
-                    <!-- Questions -->
-                    <div class="grid gap-8 md:grid-cols-2">
+                    <div class="grid gap-6 md:gap-8 md:grid-cols-2">
                         <!-- E/I -->
                         <div class="space-y-3">
                             <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Energy Source</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="E" data-group="ei">
+                            <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="E" data-group="ei">
                                     <span class="text-2xl font-bold block mb-1">E</span>
                                     <span class="text-xs text-gray-400 block">外向 / Action</span>
                                 </button>
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="I" data-group="ei">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="I" data-group="ei">
                                     <span class="text-2xl font-bold block mb-1">I</span>
-                                    <span class="text-xs text-gray-400 block">内向 / Thought</span>
+                                    <span class="text-xs text-gray-400 block">内向 / Support</span>
                                 </button>
                             </div>
                         </div>
                         <!-- S/N -->
                         <div class="space-y-3">
                             <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Information</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="S" data-group="sn">
+                            <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="S" data-group="sn">
                                     <span class="text-2xl font-bold block mb-1">S</span>
-                                    <span class="text-xs text-gray-400 block">感覚 / Reality</span>
+                                    <span class="text-xs text-gray-400 block">感覚 / Physical</span>
                                 </button>
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="N" data-group="sn">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="N" data-group="sn">
                                     <span class="text-2xl font-bold block mb-1">N</span>
-                                    <span class="text-xs text-gray-400 block">直観 / Theory</span>
+                                    <span class="text-xs text-gray-400 block">直観 / Macro</span>
                                 </button>
                             </div>
                         </div>
                         <!-- T/F -->
                         <div class="space-y-3">
                             <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Decisions</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="T" data-group="tf">
+                            <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="T" data-group="tf">
                                     <span class="text-2xl font-bold block mb-1">T</span>
                                     <span class="text-xs text-gray-400 block">思考 / Logic</span>
                                 </button>
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="F" data-group="tf">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="F" data-group="tf">
                                     <span class="text-2xl font-bold block mb-1">F</span>
-                                    <span class="text-xs text-gray-400 block">感情 / Values</span>
+                                    <span class="text-xs text-gray-400 block">感情 / Teamwork</span>
                                 </button>
                             </div>
                         </div>
                         <!-- J/P -->
                         <div class="space-y-3">
                             <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Structure</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="J" data-group="jp">
+                            <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="J" data-group="jp">
                                     <span class="text-2xl font-bold block mb-1">J</span>
-                                    <span class="text-xs text-gray-400 block">判断 / Plan</span>
+                                    <span class="text-xs text-gray-400 block">判断 / Setup</span>
                                 </button>
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="P" data-group="jp">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="P" data-group="jp">
                                     <span class="text-2xl font-bold block mb-1">P</span>
                                     <span class="text-xs text-gray-400 block">知覚 / Adapt</span>
                                 </button>
@@ -305,13 +299,13 @@
                         </div>
                         <!-- A/T -->
                         <div class="space-y-3 md:col-span-2 max-w-lg mx-auto w-full">
-                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase">Identity</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="A" data-group="id">
+                            <span class="block text-valo-red font-header text-sm tracking-widest uppercase text-center md:text-left">Identity</span>
+                            <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="A" data-group="id">
                                     <span class="text-2xl font-bold block mb-1">A</span>
                                     <span class="text-xs text-gray-400 block">自己主張 / Confident</span>
                                 </button>
-                                <button class="mbti-btn btn-valo p-4 clip-corner text-left" data-type="T" data-group="id">
+                                <button class="mbti-btn btn-valo p-3 sm:p-4 clip-corner text-left" data-type="T" data-group="id">
                                     <span class="text-2xl font-bold block mb-1">T</span>
                                     <span class="text-xs text-gray-400 block">慎重 / Cautious</span>
                                 </button>
@@ -319,7 +313,24 @@
                         </div>
                     </div>
                     
-                    <!-- Reset Button -->
+                    <div class="space-y-3 max-w-2xl mx-auto w-full mt-4 border-t border-white/10 pt-6">
+                        <span class="block text-valo-red font-header text-sm tracking-widest uppercase text-center">Tactical Preference</span>
+                        <div class="grid grid-cols-3 gap-2 sm:gap-4">
+                            <button class="tactic-btn btn-valo p-2 sm:p-4 clip-corner text-center" data-tactic="physical">
+                                <span class="text-sm sm:text-xl font-bold block mb-1">PHYSICAL</span>
+                                <span class="text-[9px] sm:text-[10px] text-gray-400 block mt-1">撃ち合い・エイム</span>
+                            </button>
+                            <button class="tactic-btn btn-valo p-2 sm:p-4 clip-corner text-center" data-tactic="aggressive">
+                                <span class="text-sm sm:text-xl font-bold block mb-1">AGGRESSIVE</span>
+                                <span class="text-[9px] sm:text-[10px] text-gray-400 block mt-1">リスク・エリア拡大</span>
+                            </button>
+                            <button class="tactic-btn btn-valo p-2 sm:p-4 clip-corner text-center" data-tactic="macro">
+                                <span class="text-sm sm:text-xl font-bold block mb-1">MACRO</span>
+                                <span class="text-[9px] sm:text-[10px] text-gray-400 block mt-1">定点・盤面支配</span>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="flex justify-center pt-6 border-t border-white/10">
                         <button id="reset-btn" class="btn-valo btn-reset px-8 py-3 text-sm font-bold tracking-widest flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -332,447 +343,117 @@
             </div>
         </section>
 
-        <!-- Results Section -->
         <section id="results" class="mb-24 min-h-[200px]">
-            <div id="results-placeholder" class="border-2 border-dashed border-white/10 rounded-lg p-12 text-center">
+            <div id="results-placeholder" class="border-2 border-dashed border-white/10 rounded-lg p-12 text-center bg-black/20">
                 <div class="text-valo-red text-6xl font-header mb-4 opacity-50">///</div>
                 <h3 class="text-2xl font-bold mb-2 uppercase font-header tracking-widest">Awaiting Input</h3>
-                <p class="text-gray-500">MBTIパラメータを入力し、適合エージェントを表示せよ。</p>
+                <p class="text-gray-500 text-sm">全パラメータを入力し、最適化されたエージェント構成を抽出しろ。</p>
             </div>
         </section>
         
-        <!-- Agent Explorer Section -->
         <section id="explorer" class="mb-12">
             <div class="section-header">
                 <h3>// Agent Database</h3>
                 <div class="line"></div>
-                <span class="text-xs font-mono text-valo-gray ml-4">VER 12.06</span>
+                <span class="text-xs font-mono text-valo-gray ml-4 bg-white/10 px-2 py-1 rounded">VER 12.09 LOCAL</span>
             </div>
 
-            <div id="role-filters" class="flex flex-wrap justify-center gap-4 mb-10">
-                <button class="role-filter-btn btn-valo px-6 py-2 text-sm active" data-role="All">ALL</button>
-                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="デュエリスト">DUELIST</button>
-                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="イニシエーター">INITIATOR</button>
-                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="コントローラー">CONTROLLER</button>
-                <button class="role-filter-btn btn-valo px-6 py-2 text-sm" data-role="センチネル">SENTINEL</button>
+            <div id="role-filters" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-10">
+                <button class="role-filter-btn btn-valo px-4 sm:px-6 py-2 text-xs sm:text-sm active" data-role="All">ALL</button>
+                <button class="role-filter-btn btn-valo px-4 sm:px-6 py-2 text-xs sm:text-sm" data-role="デュエリスト">DUELIST</button>
+                <button class="role-filter-btn btn-valo px-4 sm:px-6 py-2 text-xs sm:text-sm" data-role="イニシエーター">INITIATOR</button>
+                <button class="role-filter-btn btn-valo px-4 sm:px-6 py-2 text-xs sm:text-sm" data-role="コントローラー">CONTROLLER</button>
+                <button class="role-filter-btn btn-valo px-4 sm:px-6 py-2 text-xs sm:text-sm" data-role="センチネル">SENTINEL</button>
             </div>
 
-            <div id="agent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div id="agent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                 <!-- Agent cards injected here -->
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-valo-dark border-t border-white/10 py-8 text-center relative z-10">
         <div class="container mx-auto px-4 text-xs text-gray-500">
-            <p class="mb-2 tracking-widest uppercase">Valorant Protocol // MBTI Analytics Division</p>
-            <p>&copy; 2026 Unofficial Fan Project. Not affiliated with Riot Games.</p>
+            <p class="mb-2 tracking-widest uppercase">Valorant Protocol // Tactical Analytics Division</p>
+            <p>&copy; 2026 Standalone Local Version. Patch 12.09 Embedded.</p>
         </div>
     </footer>
 
     <!-- Agent Detail Modal -->
-    <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-valo-dark/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="modal-content-wrapper" class="bg-gray-900 border border-white/20 w-full max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 shadow-2xl clip-corner-br relative">
-            
+    <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-valo-dark/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-content-wrapper" class="bg-gray-900 border border-white/20 w-full max-w-5xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 shadow-[0_0_50px_rgba(0,0,0,0.8)] clip-corner-br relative">
             <div class="scanline"></div>
-            
-            <!-- Decorative header bar -->
             <div class="h-2 w-full bg-gradient-to-r from-valo-red to-purple-900 absolute top-0 left-0 z-30"></div>
             
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition z-40 bg-black/50 rounded-full p-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button id="close-modal" class="fixed top-4 right-4 md:absolute md:top-4 md:right-4 text-gray-400 hover:text-white transition z-[60] bg-black/80 md:bg-black/50 rounded-full p-2 border border-white/10 hover:border-valo-red hover:bg-valo-red">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full">
+            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full min-h-[70vh]">
                 <!-- Content injected dynamically -->
             </div>
         </div>
     </div>
 
-
 <script>
-// Data with Patch 12.06 Meta Info
-// Status: 'buff', 'nerf', 'adjust', 'stable', 'rework'
+// Local Embedded Agent Data (Patch 12.09 Meta with Core Concepts)
 const agentData = [
-    { 
-        name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', 
-        description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '【NEW】Patch 12.05で新規参戦し、12.06でバグ修正適用。「M-pulse」による回復とスタンの使い分けができ、これまでサポート枠だったイニシエーターや歩くスモークと呼ばれる他のコントローラーの役割を同時にこなす注目のエージェント。',
-        mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ']
-    },
-    { 
-        name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', 
-        description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', 
-        difficulty: 3, utility: 2,
-        status: 'nerf',
-        patchNote: '【NERF】12.06にて「サチュレート」が即時発動から装備式に変更された。被弾時や空中にいる際の咄嗟のカウンターとしては使えなくなり、味方との連携やより意図的なセットアップが必須となった。',
-        mbti: ['ISFP', 'ESFP', 'ENTP']
-    },
-    { 
-        name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', 
-        description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', 
-        difficulty: 3, utility: 3,
-        status: 'adjust',
-        patchNote: '【ADJUST】12.06にてアルティメット「ヴァイパーズピット」の展開システムが技術的に上方修正され、意図しない不発やエラーが減少。より安定したエリアコントロールが可能に。',
-        mbti: ['INTJ', 'ENTJ', 'ISTJ']
-    },
-    { 
-        name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', 
-        description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', 
-        difficulty: 3, utility: 2,
-        status: 'nerf',
-        patchNote: '【NERF】12.05で弱体化を受け、以前のようなリスクフリーな裏取りが困難に。デコイの使い所を間違えると戦犯になりかねず、より高いプレイスキルが要求される。',
-        mbti: ['ISFP', 'ENFP', 'ENTP']
-    },
-    { 
-        name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', 
-        description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', 
-        difficulty: 2, utility: 2,
-        status: 'nerf',
-        patchNote: '【NERF】12.05にてさらなる調整（弱体化）。度重なる下方修正により継戦能力が低下し、強気なピークによる無駄なデスがチームの首を絞めるようになった。',
-        mbti: ['ISFP', 'ENFP']
-    },
-    { 
-        name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', 
-        description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', 
-        difficulty: 2, utility: 3,
-        status: 'adjust',
-        patchNote: '【ADJUST】12.05での調整によりフラッシュの運用感が変化。回復枠としてMiksという新たなライバルが現れたが、索敵も兼ねるフラッシュの汎用性は健在。',
-        mbti: ['ISFJ', 'ESFJ', 'INFP']
-    },
-    { 
-        name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', 
-        description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: '過去の完全リワーク以降、安定した地位を確保。Miksの参戦によってコントローラー枠の選択肢が増えたため、より攻撃的なセットアップが必要なマップでの採用がセオリー。',
-        mbti: ['ISFJ', 'INFP', 'ENFJ']
-    },
-    { 
-        name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', 
-        description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', 
-        difficulty: 1, utility: 3,
-        status: 'stable',
-        patchNote: '新エージェントMiksのコンバットスティムと合わせることで、機動力を極限まで高める超速ラッシュ戦術が一部で研究されている。',
-        mbti: ['ISTJ', 'ENTJ', 'ESTJ']
-    },
-    { 
-        name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', 
-        description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', 
-        difficulty: 1, utility: 2,
-        status: 'stable',
-        patchNote: 'メタの移り変わりの中でも勝率は安定。Waylayのナーフを受けたことで、シンプルながら自力で回復も賄えるフェニックスの評価が再浮上しつつある。',
-        mbti: ['ESTP', 'ESFP']
-    },
-    { 
-        name: 'SAGE', jpName: 'セージ', role: 'センチネル', 
-        description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', 
-        difficulty: 1, utility: 3,
-        status: 'stable',
-        patchNote: '回復スキルのライバルとしてMiksが登場したが、蘇生や「バリアオーブ」による物理的な壁の価値は唯一無二。',
-        mbti: ['ISFJ', 'ESFJ', 'INFP']
-    },
-    { 
-        name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', 
-        description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: 'TejoやFadeなどとの定点争いは続くが、定番マップにおける「リコンボルト」の情報価値は絶対。安定のピック。',
-        mbti: ['INTJ', 'ENTJ']
-    },
-    { 
-        name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', 
-        description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: '情報系センチネルの頂点として君臨。WaylayやYoruといった裏取りを得意とするデュエリストの弱体化により、アンチフランクとしての仕事が遂行しやすくなった。',
-        mbti: ['ISTJ', 'INTP']
-    },
-    { 
-        name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', 
-        description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', 
-        difficulty: 1, utility: 1,
-        status: 'stable',
-        patchNote: '自己完結性能の高さからソロランクにおいては依然トップティア。Miksのスティムと合わせることで、さらにエゴイスティックなピークが可能。',
-        mbti: ['ISTP', 'ENFP']
-    },
-    { 
-        name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', 
-        description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '盤石のエリア防衛力。ULT「ロックダウン」は変わらず強力で、相手のリテイクを強引に崩す際にも決定的な活躍をする。',
-        mbti: ['ISTJ', 'ESTJ', 'INTP']
-    },
-    { 
-        name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', 
-        description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: '味方のラッシュ合わせには必須のイニシエーター。Waylayのセットアップにスタンを合わせる連携などは依然脅威。',
-        mbti: ['ESTP', 'ENFJ']
-    },
-    { 
-        name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', 
-        description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: 'Cloveの度重なるナーフにより、メインコントローラーとしての確固たる地位を取り戻している。Viperとのダブルスモーク構成でも主軸。',
-        mbti: ['INFJ', 'INFP', 'ENTP']
-    },
-    { 
-        name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', 
-        description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', 
-        difficulty: 3, utility: 1,
-        status: 'stable',
-        patchNote: 'メタが移り変わる中でも、即座に射線を切れる「テイルウィンド」の存在によりオペレーター適正は最上位クラスを維持している。',
-        mbti: ['ISTP']
-    },
-    { 
-        name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', 
-        description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', 
-        difficulty: 2, utility: 2,
-        status: 'stable',
-        patchNote: '狭いエリアにおける「ペイント弾」の制圧力は健在で、センチネルの罠破壊要因としてもピック理由は多い。',
-        mbti: ['ESTP', 'ESFP', 'ISFP']
-    },
-    { 
-        name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', 
-        description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', 
-        difficulty: 3, utility: 3,
-        status: 'stable',
-        patchNote: '新コントローラーMiksとは真逆の「グローバル・マップコントロール」に特化した存在として、連携したチームでの需要は高い。',
-        mbti: ['INFJ', 'INTJ', 'INTP']
-    },
-    { 
-        name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', 
-        description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '抑制スキルが依然として環境における強力なカウンターツールとして機能。アビリティ依存度の高いMiksの行動を止めるのにも重宝する。',
-        mbti: ['INTP', 'ESTJ', 'ENFJ']
-    },
-    { 
-        name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', 
-        description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', 
-        difficulty: 2, utility: 2,
-        status: 'stable',
-        patchNote: '安定したオペレーター運用枠。1ピック取って引くという基本戦術の強さは色褪せず、特定のマップでは不動のピック候補。',
-        mbti: ['ISTJ', 'INTJ', 'ISTP']
-    },
-    { 
-        name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', 
-        description: '圧倒的なスプリント速度とスライディング。高速で敵のエイムをずらし、電撃戦を展開するスピードスター。', 
-        difficulty: 3, utility: 1,
-        status: 'stable',
-        patchNote: 'Miksのコンバットスティムや回復と合わせることで、さらに止められない速度と生存力でサイトを制圧する組み合わせが局地的に流行。',
-        mbti: ['ESTP', 'ESFP', 'ENFP']
-    },
-    { 
-        name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', 
-        description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '「ホウント」による強制スキャンや索敵は優秀。MiksのULT（ノックバック・聴覚奪取）と組み合わせた視覚＆聴覚のダブルジャックは凶悪。',
-        mbti: ['INFJ', 'ENTJ', 'ENTP']
-    },
-    { 
-        name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', 
-        description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: 'クリーチャー回収の回転率そのものが最強の武器。ViperのULTが12.06で安定したことで、その中でのウィングマン設置・解除の重要性も増した。',
-        mbti: ['ISFJ', 'ESFJ', 'ESFP']
-    },
-    { 
-        name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', 
-        description: '音に反応するセンサーとバリアメッシュ。敵のラッシュを物理的に阻止し、強制的な1on1を作り出す。', 
-        difficulty: 2, utility: 2,
-        status: 'stable',
-        patchNote: 'バリアメッシュによる強制的な分断は依然強力で、ラッシュ構成に対するカウンターとしての運用が光る。',
-        mbti: ['ESTJ', 'ESFJ']
-    },
-    { 
-        name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', 
-        description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', 
-        difficulty: 2, utility: 1,
-        status: 'stable',
-        patchNote: '初弾のHSを耐えるシールドの強みは不変。Waylayナーフ後、フィジカル勝負に特化したデュエリストとしての独自性が再評価されている。',
-        mbti: ['ISTP']
-    },
-    { 
-        name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', 
-        description: '液体金属による孤立化とフラッシュ。敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: 'メイン武器を無効化する制圧力はエコラウンドやラッシュ止めにおいてトップクラス。守りにおける安定感を保っている。',
-        mbti: ['ISTJ', 'INTJ']
-    },
-    { 
-        name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', 
-        description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', 
-        difficulty: 2, utility: 3,
-        status: 'stable',
-        patchNote: '12.06にてターゲットUIなどの各種バグが修正され、使用感が安定。Miksの特殊な空洞スモークとの組み合わせがプロシーンでも研究されている。',
-        mbti: ['INFJ', 'ENTP']
-    }
+    { name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【ADJUST】12.07にて「M-pulse」による回復量が微減。しかし音波干渉によるエリア制圧とコンバットスティムの汎用性は依然としてチームの要。', coreConcept: '音波干渉と回復・強化', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ'], tactics: ['macro'] },
+    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2, status: 'buff', patchNote: '【BUFF】12.07にて「サチュレート」の装備時間短縮により機動性が劇的改善。アグレッシブなラークとサイト内での分断工作が可能となり復権。', coreConcept: '視覚欺瞞と位置入れ替え', mbti: ['ISFP', 'ESFP', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】12.06のシステム改修を経て挙動が安定化。ダブルコントローラー構成でのエリアコントロール能力は随一。', coreConcept: '視界制圧と解除遅延', mbti: ['INTJ', 'ENTJ', 'ISTJ'], tactics: ['macro'] },
+    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2, status: 'stable', patchNote: '【STABLE】裏取りのリスクは依然高いが、フェイクの価値が高まっている。マクロ視点を持ったヨル使いの勝率は高い。', coreConcept: '欺瞞工作と裏取り', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 2, status: 'nerf', patchNote: '【NERF】度重なる下方修正によりリスクが増大。しかし「デス後のスモーク展開」という唯一無二の性能により根強い人気を誇る。', coreConcept: '死後のスモークと自己蘇生', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】索敵も兼ねるフラッシュの汎用性は健在。依然としてミッド制圧のスペシャリスト。', coreConcept: '索敵を伴うフラッシュと回復', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
+    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】特定マップにおけるラッシュ構成での刺さりは抜群。相手の視界を物理的に遮断し続ける。', coreConcept: '波による強制的なエリア奪取', mbti: ['ISFJ', 'INFP', 'ENFJ'], tactics: ['macro'] },
+    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】スティムと合わせることで、機動力を極限まで高める超速ラッシュ戦術が一部で研究されている。', coreConcept: '確実なスモークとラッシュ補助', mbti: ['ISTJ', 'ENTJ', 'ESTJ'], tactics: ['macro'] },
+    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2, status: 'stable', patchNote: '【STABLE】シンプルながら自力で回復も賄えるため、フィジカルメタにおいて評価が再浮上。', coreConcept: '自己完結型の回復と強行突破', mbti: ['ESTP', 'ESFP'], tactics: ['aggressive'] },
+    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】物理的な壁「バリアオーブ」によるラッシュ阻止や安全な設置の価値は唯一無二。', coreConcept: '壁による分断と蘇生・遅延', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
+    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】定番マップにおける「リコンボルト」の情報価値は絶対。ドローンによるクリアリングから確実なエリア奪取まで隙がない。', coreConcept: '正確な索敵と定点攻撃', mbti: ['INTJ', 'ENTJ'], tactics: ['macro'] },
+    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】情報系センチネルの頂点。アンチフランクとしての役割がさらに重要視されており、勝率共に非常に高い。', coreConcept: '絶対的な監視と裏取り警戒', mbti: ['ISTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1, status: 'stable', patchNote: '【STABLE】自己完結性能の高さからソロランクにおいては依然トップティア。エゴイスティックなピークが可能。', coreConcept: 'キルベースの自己強化と無敵', mbti: ['ISTP', 'ENFP'], tactics: ['physical'] },
+    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】盤石のエリア防衛力。ULT「ロックダウン」は変わらず強力で、相手のリテイクを強引に崩す。', coreConcept: 'タレットと罠によるエリア封鎖', mbti: ['ISTJ', 'ESTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】味方のラッシュ合わせには必須のイニシエーター。スタンを合わせる連携などは防御不能の脅威。', coreConcept: '地形貫通のスタンと強制移動', mbti: ['ESTP', 'ENFJ'], tactics: ['aggressive'] },
+    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】メインコントローラーとしての確固たる地位を維持。パラノイアによる広範囲へのデバフが強力。', coreConcept: '予測不能なテレポートと暗闇', mbti: ['INFJ', 'INFP', 'ENTP'], tactics: ['macro'] },
+    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1, status: 'stable', patchNote: '【STABLE】メタが移り変わる中でも、即座に射線を切れる「テイルウィンド」の存在によりオペレーター適正は最上位クラス。', coreConcept: '高機動と瞬時の射線切り', mbti: ['ISTP'], tactics: ['physical'] },
+    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】狭いエリアにおける「ペイント弾」の制圧力は健在で、センチネルの罠破壊要因としても必須級のピック。', coreConcept: '立体機動と範囲爆撃', mbti: ['ESTP', 'ESFP', 'ISFP'], tactics: ['aggressive'] },
+    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】「グローバル・マップコントロール」に特化した存在として、連携したチームでの需要は高い。', coreConcept: '全マップへの干渉とマクロ支配', mbti: ['INFJ', 'INTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】抑制スキルが環境における強力なカウンターツールとして機能。アビリティ依存度の高い敵の行動を止める。', coreConcept: 'アビリティ抑制と基礎戦闘の強制', mbti: ['INTP', 'ESTJ', 'ENFJ'], tactics: ['aggressive'] },
+    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】安定したオペレーター運用枠。1ピック取って引くという基本戦術の強さは色褪せず、特定のマップでは不動のピック候補。', coreConcept: '武器召喚とテレポートによる狙撃', mbti: ['ISTJ', 'INTJ', 'ISTP'], tactics: ['physical'] },
+    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。論理的なルート構築による意図的なエントリーで、電撃戦を展開する知略型スピードスター。', difficulty: 3, utility: 1, status: 'adjust', patchNote: '【ADJUST】12.09にて空中速度ボーナスが消失し、燃料管理がシビアに。またスライディングの視認性（VFX）向上により、敵から位置を特定されやすくなったリスクも追加。単なる速度の暴力ではなく、計画性（Planning）と情報（Intel）を基にした『慎重かつ意図的なエントリー』が求められる高度な知略型デュエリストへ進化。', coreConcept: '圧倒的なスプリントとスライディング', mbti: ['ESTP', 'ESFP', 'ENFP', 'ENTP', 'ISTJ'], tactics: ['physical'] },
+    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】「ホウント」による強制スキャンや索敵は優秀。視覚＆聴覚のダブルジャックは凶悪。', coreConcept: '恐怖による視覚・聴覚妨害', mbti: ['INFJ', 'ENTJ', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】クリーチャー回収の回転率そのものが最強の武器。スモークや波の中でのウィングマン設置の重要性は高い。', coreConcept: 'クリーチャー使役と設置・解除', mbti: ['ISFJ', 'ESFJ', 'ESFP'], tactics: ['macro'] },
+    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。能動的なラッシュ阻止の要として機能し、敵の進行を物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2, status: 'buff', patchNote: '【BUFF】12.08にて「バリアメッシュ」の耐久力増加と「ソニックセンサー」の反応感度向上。能動的なラッシュ阻止の要として、機動力を増した進行に対するハードカウンターとしての運用が光る。', coreConcept: '音響センサーと物理的な分断', mbti: ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'], tactics: ['macro'] },
+    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1, status: 'stable', patchNote: '【STABLE】初弾のHSを耐えるシールドの強みは不変。フィジカル勝負に特化したデュエリストとしての独自性が再評価されている。', coreConcept: '防弾シールドと強制1v1領域', mbti: ['ISTP'], tactics: ['physical'] },
+    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。エリアの完全孤立化のスペシャリストであり、敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【BUFF】12.08にて「アークローズ」の設置速度向上とフラッシュ範囲の拡大。エリアの完全孤立化のスペシャリストとして、メイン武器を無効化する制圧力はトップクラス。', coreConcept: '武器無効化と孤立化の茨', mbti: ['ISTJ', 'INTJ'], tactics: ['macro'] },
+    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】ターゲットUIなどの安定化により、狙撃精度が向上。', coreConcept: 'ドローン索敵と精密爆撃', mbti: ['INFJ', 'ENTP', 'INTJ', 'ENTJ'], tactics: ['macro'] }
 ];
 
 const mbtiRecommendations = {
-    ISTJ: {
-        title: 'ISTJ // THE LOGISTICIAN',
-        recommendedRoles: ['センチネル', 'コントローラー'],
-        agentsBase: ['キルジョイ', 'ヴァイパー', 'ブリムストーン'],
-        agentsA: ['ヴァイス', 'チェンバー'],
-        agentsT: ['サイファー', 'デッドロック'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>事実に基づいた判断と秩序を愛する誠実な管理者タイプです。高い集中力と責任感を持ち、計画に沿った行動を重んじます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>敵の動きを理論的に予測し、トラップやスモークを用いた盤石な防衛線を構築する能力に優れています。不測の事態にも焦らず、定点や確実な情報によって有利なカバー体制を作ることが強みです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>12.06でより安定したViper等のセットアップ重視のコントローラーやセンチネルが最適です。完璧な予測と準備で敵を罠にハメ、チームの勝利を裏方から盤石に支えましょう。',
-        coreTrait: 'PLANNING & ORDER'
-    },
-    ISFJ: {
-        title: 'ISFJ // THE DEFENDER',
-        recommendedRoles: ['センチネル', 'コントローラー'],
-        agentsBase: ['セージ', 'ミクス', 'スカイ'],
-        agentsA: ['ゲッコー', 'オーメン'],
-        agentsT: ['サイファー', 'キルジョイ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>チームへの献身と調和を最も重視する守護者です。周囲の状況をよく観察し、誰が何を必要としているかを瞬時に察知します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>味方のカバーや回復、トレードキルにおける抜群の安定感を誇ります。味方の位置と体力状況を常にマクロ視点で把握し、前線が崩れないよう即座にリソースを投資できるのが最大の武器です。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>味方を活かすサポート役が天職です。12.06で新たに参戦したサポート型コントローラー「Miks」の回復能力などは、あなたの献身的な性質に完璧にフィットします。チームの生命線として立ち回りましょう。',
-        coreTrait: 'SUPPORT & HARMONY'
-    },
-    INFJ: {
-        title: 'INFJ // THE ADVOCATE',
-        recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agentsBase: ['アストラ', 'オーメン', 'テホ'],
-        agentsA: ['フェイド', 'ヴァイパー'],
-        agentsT: ['サイファー', 'キルジョイ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>全体を見通す深い洞察力と強い信念を持つ提唱者です。物事の表面ではなく、その背後にある本質や相手の心理を読み解こうとします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>マップ全体のコントロールや、敵の心理を読んだ裏をかくフェイクプレーを得意とします。「敵が次に何をしたいか」を直観で理解し、それを先回りして潰すマクロ的な戦術眼が非常に高いです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>AstraやOmenのように、マップ全体に干渉できるエージェントで盤面を操りましょう。Fadeの恐怖やTejoの狙撃を使って、敵の思考を完全に支配するプレイが推奨されます。',
-        coreTrait: 'INSIGHT & STRATEGY'
-    },
-    INTJ: {
-        title: 'INTJ // THE ARCHITECT',
-        recommendedRoles: ['コントローラー', 'センチネル'],
-        agentsBase: ['ヴァイパー', 'アストラ', 'ソーヴァ'],
-        agentsA: ['チェンバー', 'アイソ'],
-        agentsT: ['キルジョイ', 'サイファー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>冷徹なまでに論理的かつ独創的な戦略家です。長期的な目標を見据え、それを達成するための緻密なシステムを構築します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>スキルの的確なリソース管理と、後半にジワジワと敵を詰ませるチェスのようなプレイに長けています。相手のセットアップを逆算して解体し、自分たちはリスクなしで有利を取る合理性を極めています。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>アルティメットの信頼性が増したViperや、射線を支配するChamberで、計算されたチェックメイトを狙いましょう。無駄なピークは避け、圧倒的な情報と有利状況だけで敵を蹂躙してください。',
-        coreTrait: 'LOGIC & EFFICIENCY'
-    },
-    ISTP: {
-        title: 'ISTP // THE VIRTUOSO',
-        recommendedRoles: ['デュエリスト', 'センチネル'],
-        agentsBase: ['ジェット', 'アイソ', 'チェンバー'],
-        agentsA: ['レイナ', 'フェニックス'],
-        agentsT: ['サイファー', 'キルジョイ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>冷静な分析力と、いざという時の爆発的な行動力を併せ持つ巨匠です。複雑な理論よりも、手元のツールや自身の技術（メカニクス）を信じます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>エイムやキャラコンといった純粋なフィジカルと、瞬時のアドリブ力に優れます。孤立した1v1の状況や、咄嗟のクラッチシーンにおいて、驚異的な集中力を発揮して盤面をひっくり返します。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>IsoやJettのような撃ち合いに特化したエージェントが輝きます。Waylayのような準備が必要なキャラが落ち着いた現環境において、あなたの純粋なフィジカルで状況を直接打開するアプローチが最強です。',
-        coreTrait: 'MECHANICS & ACTION'
-    },
-    ISFP: {
-        title: 'ISFP // THE ADVENTURER',
-        recommendedRoles: ['デュエリスト', 'コントローラー'],
-        agentsBase: ['ヨル', 'クローヴ', 'ウェイレイ'],
-        agentsA: ['レイズ', 'ネオン'],
-        agentsT: ['オーメン', 'ヴァイパー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>型にはまらない柔軟な発想と、独自の美学を持つ冒険家です。その場その場の直感と感情に従い、縛られることを嫌います。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>セオリーガン無視の予測不可能な動きと、クリエイティビティ溢れるスキル活用で敵の意表を突きます。ルーズな状況に強く、乱戦に持ち込んで相手のペースを破壊するのが得意です。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>WaylayやCloveはナーフを受けましたが、その自由なプレイスタイルは依然としてあなたの創造性を刺激します。YoruのデコイやRazeのブラストパックなど、直感に従って自由にマップを暴れ回ってください。',
-        coreTrait: 'FREEDOM & CREATIVITY'
-    },
-    INFP: {
-        title: 'INFP // THE MEDIATOR',
-        recommendedRoles: ['イニシエーター', 'コントローラー'],
-        agentsBase: ['スカイ', 'ハーバー', 'ミクス'],
-        agentsA: ['オーメン', 'フェイド'],
-        agentsT: ['セージ', 'アストラ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>内なる理想と情熱を秘めた仲介者です。平和と調和を望みつつも、自らの信念のためには信じられないほどの力を発揮します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>味方の意図を汲み取る共感力が非常に高く、阿吽の呼吸でのスキル合わせを可能にします。また、絶望的な状況でも諦めず、戦況をドラマチックに変える起死回生のプレイを生み出す才能があります。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>あなたの優しさと想像力が最も活かされる、SkyeやMiksなどの回復＆妨害キャラがおすすめです。前線を押し上げる味方を影から支え、時に自らスキルで活路を切り開くロマン溢れる立ち回りをしましょう。',
-        coreTrait: 'EMPATHY & IDEALISM'
-    },
-    INTP: {
-        title: 'INTP // THE LOGICIAN',
-        recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agentsBase: ['サイファー', 'アストラ', 'KAY/O'],
-        agentsA: ['ソーヴァ', 'チェンバー'],
-        agentsT: ['キルジョイ', 'ヴァイパー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>飽くなき知的好奇心と圧倒的な分析力を持つ論理学者です。事象のパターンを見つけ出し、最適解を導き出すことをゲームのように楽しみます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>敵の行動のクセやセットアップの穴を即座に解析する、ハッカー的なアプローチが得意です。「この時間帯にスキルが来ないから、ここは手薄だ」といった理論的な仮説に基づいて、安全な裏取りやエリア確保を行います。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>CypherやKAY/Oを使い、敵の情報をすべて集めて無力化する戦法が強力です。敵の動きを完全に計算し尽くし、「すべて想定内」と笑えるような知的なプレイを目指してください。',
-        coreTrait: 'ANALYSIS & THEORY'
-    },
-    ESTP: {
-        title: 'ESTP // THE ENTREPRENEUR',
-        recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agentsBase: ['フェニックス', 'レイズ', 'ネオン'],
-        agentsA: ['ジェット', 'レイナ'],
-        agentsT: ['ブリーチ', 'KAY/O'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>リスクを恐れず、常に刺激とアクションを求める起業家タイプです。考えるよりも先に体が動き、圧倒的な推進力で周囲を巻き込みます。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>最前線で敵のヘイトを集め、戦場を撹乱する能力は全タイプ中トップです。優れた反射神経と度胸を持ち、先陣を切ってエントリーし、強気なピークでファーストブラッドをもぎ取ります。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>PhoenixやNeon、Razeなどのアグレッシブなエージェントで、とにかく前へ進んでください。Miksのスティムをもらって突撃するなど、スピードと暴力的なまでの突破力で敵陣を粉砕しましょう。',
-        coreTrait: 'BOLDNESS & IMPACT'
-    },
-    ESFP: {
-        title: 'ESFP // THE ENTERTAINER',
-        recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agentsBase: ['ゲッコー', 'レイズ', 'ウェイレイ'],
-        agentsA: ['ネオン', 'ヨル'],
-        agentsT: ['スカイ', 'フェイド'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>周囲を明るく楽しくさせる天性のエンターテイナーです。状況の変化を楽しみ、今この瞬間を最大限に味わうことを大切にします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>戦場を自分のステージに変えるスター性を持っています。Gekkoのクリーチャーを使った奇襲や、Neonの高速スライディングなど、視覚的に派手で敵をパニックに陥れるプレイへの適応力が極めて高いです。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>Waylayのサチュレート仕様変更にも即座に適応し、さらに洗練された派手な手品で部隊を導いてください。「魅せるプレイ」を意識することで、あなた自身のパフォーマンスも最高潮に達するはずです。',
-        coreTrait: 'ENERGY & SHOWMANSHIP'
-    },
-    ENFJ: {
-        title: 'ENFJ // THE PROTAGONIST',
-        recommendedRoles: ['イニシエーター', 'コントローラー'],
-        agentsBase: ['ブリーチ', 'KAY/O', 'ミクス'],
-        agentsA: ['フェニックス', 'フェイド'],
-        agentsT: ['ハーバー', 'アストラ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>天性のカリスマと共感力で人々を導く主人公タイプです。利他的であり、他者の成長やチームの成功を何よりも喜びとします。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>Voice Chatを使った味方の鼓舞や、ＩＧＬ（インゲームリーダー）としての統率力に優れます。味方が動きやすいように絶妙なタイミングでフラッシュやスタンを入れ、チーム全体の火力を底上げします。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>味方へのコンバットスティムや回復を提供する新エージェントMiksは、あなたにぴったりの存在です。また、Breachで「俺に合わせろ！」と味方を奮い立たせ、勝利への道を切り拓くリーダーシップを発揮しましょう。',
-        coreTrait: 'LEADERSHIP & CHARISMA'
-    },
-    ENTJ: {
-        title: 'ENTJ // THE COMMANDER',
-        recommendedRoles: ['コントローラー', 'イニシエーター'],
-        agentsBase: ['ブリムストーン', 'ヴァイパー', 'ソーヴァ'],
-        agentsA: ['フェイド', 'ブリーチ'],
-        agentsT: ['キルジョイ', 'サイファー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>目標達成のためならあらゆる手段を講じる、圧倒的な統率力を持つ指揮官です。合理性と効率を極限まで追求します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>容赦ないエリア奪取と、緻密なセットアップによる盤面の完全支配能力に特徴があります。「敵がこう動くなら、ここで潰す」という勝利の方程式を事前に組み立て、それを冷酷なまでに遂行させます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>アルティメットの展開が安定した12.06のViperや、空爆を持つBrimstoneが最適です。マクロ視点でマップを支配し、相手に一切の希望を与えずに窒息させるプレイがあなたの強みを最大化します。',
-        coreTrait: 'COMMAND & DOMINATION'
-    },
-    ESTJ: {
-        title: 'ESTJ // THE EXECUTIVE',
-        recommendedRoles: ['センチネル', 'コントローラー'],
-        agentsBase: ['キルジョイ', 'ブリムストーン', 'デッドロック'],
-        agentsA: ['KAY/O', 'チェンバー'],
-        agentsT: ['サイファー', 'ヴァイパー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>伝統とルールを重んじる、実務能力に優れた幹部タイプです。曖昧さを嫌い、事実と経験に基づいた確実な方法を選択します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>セオリーに忠実で、ミスが極めて少ないのが特徴です。定点スキルや完璧な防衛セットアップなど、確立されたメソッドを正確に遂行することで、鉄壁の守りを築き上げます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>KilljoyやDeadlockで、敵のラッシュを物理的にシャットアウトしましょう。KAY/Oのゼロ/ポイントで相手のスキルという不確定要素を消し去り、純粋なタクティカルシューターの基本で圧倒するのがセオリーです。',
-        coreTrait: 'ORDER & EXECUTION'
-    },
-    ESFJ: {
-        title: 'ESFJ // THE CONSUL',
-        recommendedRoles: ['センチネル', 'イニシエーター'],
-        agentsBase: ['セージ', 'ミクス', 'ゲッコー'],
-        agentsA: ['スカイ', 'ブリーチ'],
-        agentsT: ['デッドロック', 'キルジョイ'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>人との繋がりを大切にする、思いやり溢れる領事館タイプです。チームの雰囲気を常に良好に保ち、困っている人を放っておけません。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>徹底したチームのリソース管理と、誰も置き去りにしないカバーリング能力が武器です。ヒールや蘇生、またはGekkoのウィングマンを使った安全な設置など、味方の負担を減らすサポートにおいて右に出る者はいません。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>SageやMiksといった回復持ちエージェントが最適です。味方の体力を管理し、前線が崩壊する前にリソースを注ぎ込んで戦線を維持する、献身的なプレイスタイルを極めてください。',
-        coreTrait: 'CARE & COOPERATION'
-    },
-    ENFP: {
-        title: 'ENFP // THE CAMPAIGNER',
-        recommendedRoles: ['デュエリスト', 'イニシエーター'],
-        agentsBase: ['レイナ', 'ヨル', 'ネオン'],
-        agentsA: ['レイズ', 'フェニックス'],
-        agentsT: ['クローヴ', 'オーメン'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>情熱的で自由奔放、新しいアイデアに心を躍らせる広報運動家です。常に可能性を探求し、直感と感情の赴くままに行動します。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>ピンチを楽しめるメンタルの強さと、常識破りのアグレッシブなプレイで敵を混乱させます。「ここでこうすれば刺さるかも！」という閃きに従った行動が、時に戦局を単騎で引っ繰り返す爆発力を生みます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>弱体化されたYoruやCloveですが、「死線で輝く」「リスクを楽しむ」という特質は変わらず彼らとリンクします。ReynaやNeonを含め、直感的な撃ち合いとスキル活用で、誰にも読めないプレイを展開しましょう。',
-        coreTrait: 'PASSION & SPONTANEITY'
-    },
-    ENTP: {
-        title: 'ENTP // THE DEBATER',
-        recommendedRoles: ['イニシエーター', 'デュエリスト'],
-        agentsBase: ['ヨル', 'オーメン', 'ウェイレイ'],
-        agentsA: ['チェンバー', 'レイナ'],
-        agentsT: ['テホ', 'サイファー'],
-        reason: '<span class="text-valo-red font-bold">【基本特性】</span>知的で好奇心旺盛な討論者であり、既存のシステムやルールに挑戦することを愛するトリックスターです。<br><br><span class="text-valo-red font-bold">【戦術的強み】</span>メタ（流行りの戦術）の裏をかくこと、いわゆる「カウンターのカウンター」を考える天才です。誰も思いつかないようなパラノイアの角度、Waylayの位置入れ替えの奇策によって、敵の思考をフリーズさせます。<br><br><span class="text-valo-red font-bold">【推奨プレイスタイル】</span>即時発動の仕様が変更されたWaylayをも逆手に取り、時間をかけた心理戦で敵を罠にかけましょう。TejoのドローンやOmenのテレポートを駆使して、安全な場所から敵を弄ぶ頭脳プレイが推奨されます。',
-        coreTrait: 'INNOVATION & CHALLENGE'
-    }
+    ISTJ: { title: 'ISTJ // THE LOGISTICIAN', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>情報の非対称性を利用した完璧なエリアコントロールを好む防衛の要です。事実に基づいた状況判断と、ルールの徹底を重んじます。', coreTrait: 'PLANNING & AREA CONTROL' },
+    ISFJ: { title: 'ISFJ // THE DEFENDER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>チームの生存率を極限まで高める献身的なサポート職です。味方の配置やリソース状況を常に把握し、補うべき穴を瞬時に埋めます。', coreTrait: 'SUPPORT & TRADE KILL' },
+    INFJ: { title: 'INFJ // THE ADVOCATE', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>敵の心理を読み解き、マップ全体のコントロールを握るタクティシャンです。目に見える情報だけでなく、相手の「意図」を直感で察知します。', coreTrait: 'LURK & MIND CONTROL' },
+    INTJ: { title: 'INTJ // THE ARCHITECT', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>勝利への最短ルートを計算し尽くす冷徹な戦略家です。長期的なエコノミー管理や、ULTのサイクル計算などシステム全体を俯瞰します。', coreTrait: 'ECONOMY & SYSTEMATIC' },
+    ISTP: { title: 'ISTP // THE VIRTUOSO', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>圧倒的なメカニクスで不利対面を覆すクラッチプレイヤーです。複雑な理論よりも、手元のツールや自身のエイム力を絶対的に信頼しています。', coreTrait: 'MECHANICS & CLUTCH' },
+    ISFP: { title: 'ISFP // THE ADVENTURER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>セオリーに縛られない変幻自在のトリックスターです。その場その場の直感と感情に従い、柔軟にスタイルを変化させます。', coreTrait: 'ADAPTABILITY & TRICKERY' },
+    INFP: { title: 'INFP // THE MEDIATOR', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>味方との阿吽の呼吸で戦線を支える共感力の高いサポーターです。チームの平和を望み、味方のモチベーション管理にも気を配ります。', coreTrait: 'SYNERGY & RESILIENCE' },
+    INTP: { title: 'INTP // THE LOGICIAN', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>敵の行動パターンを解析し、システムのバグを突くようなプレイを好む論理学者です。事象のパターンを見つけ出すことを楽しみます。', coreTrait: 'TIMING & EXPLOITATION' },
+    ESTP: { title: 'ESTP // THE ENTREPRENEUR', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>圧倒的なスピードと度胸で前線をこじ開ける特攻隊長です。リスクを恐れず、常に戦場の中心で火花を散らすことを求めます。', coreTrait: 'ENTRY & MOMENTUM' },
+    ESFP: { title: 'ESFP // THE ENTERTAINER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>ド派手なプレイで戦場を沸かせるスタープレイヤーです。状況の変化を楽しみ、視覚的・直感的に敵を翻弄します。', coreTrait: 'DIVERSION & PRESSURE' },
+    ENFJ: { title: 'ENFJ // THE PROTAGONIST', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>チームを鼓舞し、連携の要となるカリスマ的IGLです。利他的であり、チーム全体のパフォーマンスを最大化することに喜びを感じます。', coreTrait: 'CALLOUT & EXECUTION' },
+    ENTJ: { title: 'ENTJ // THE COMMANDER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>全てを支配下に置く、冷酷なまでのエリア制圧と進行の指揮官です。合理性と効率を極限まで追求し、勝利への道筋を強引にこじ開けます。', coreTrait: 'DOMINATION & MACRO' },
+    ESTJ: { title: 'ESTJ // THE EXECUTIVE', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>セオリーと定点を極めた、ミスのない防衛ラインの要です。確立されたメソッドとディシプリン（規律）を重んじます。', coreTrait: 'DISCIPLINE & CROSSFIRE' },
+    ESFJ: { title: 'ESFJ // THE CONSUL', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>味方のリソース管理とカバーに命を懸ける前線の守護神です。チームの雰囲気を盛り上げ、全員が気持ちよくプレイできる環境を作ります。', coreTrait: 'COORDINATION & TRADE' },
+    ENFP: { title: 'ENFP // THE CAMPAIGNER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>直感的な閃きで戦況をぶち壊す、予測不能なアタッカーです。常に新しいピークの仕方やスキルの使い方を探求します。', coreTrait: 'UNPREDICTABILITY' },
+    ENTP: { title: 'ENTP // THE DEBATER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>敵のメタを逆手に取り、メンタルを破壊する奇策の天才です。相手が嫌がることを最速で見つけ出し、それを徹底的に突きます。', coreTrait: 'MIND GAMES & COUNTER' }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     let selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
+    let selectedTactic = null;
+
     const agentGrid = document.getElementById('agent-grid');
     const resultsContainer = document.getElementById('results');
     const resultsPlaceholder = document.getElementById('results-placeholder');
@@ -797,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let bars = '';
         for(let i=0; i<3; i++) {
             const colorClass = i < level ? 'bg-valo-red' : 'bg-gray-700';
-            bars += `<div class="w-4 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
+            bars += `<div class="w-3 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
         }
         return bars;
     }
@@ -806,42 +487,95 @@ document.addEventListener('DOMContentLoaded', () => {
         let bars = '';
         for(let i=0; i<3; i++) {
             const colorClass = i < level ? 'bg-white' : 'bg-gray-700';
-            bars += `<div class="w-4 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
+            bars += `<div class="w-3 h-2 md:w-8 md:h-2 ${colorClass} mr-1"></div>`;
         }
         return bars;
     }
 
     function getStatusBadge(status) {
         if (!status || status === 'stable') return '';
-        
         let label = '';
         let className = '';
-        
         switch(status) {
-            case 'buff':
-                label = '▲ BUFF';
-                className = 'status-buff';
-                break;
-            case 'nerf':
-                label = '▼ NERF';
-                className = 'status-nerf';
-                break;
-            case 'adjust':
-                label = '⚡ ADJ';
-                className = 'status-adjust';
-                break;
-            case 'rework':
-                label = '★ REWORK';
-                className = 'status-rework';
-                break;
+            case 'buff': label = '▲ BUFF'; className = 'status-buff'; break;
+            case 'nerf': label = '▼ NERF'; className = 'status-nerf'; break;
+            case 'adjust': label = '⚡ ADJ'; className = 'status-adjust'; break;
+            case 'rework': label = '★ REWORK'; className = 'status-rework'; break;
         }
-        
         return `<span class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-sm ${className} z-20 shadow-md animate-pulse">${label}</span>`;
     }
 
-    function createAgentCard(agent) {
+    function calculateSync(mbtiBase, tactic, agent, identityId = null) {
+        const mbtiMatch = agent.mbti.includes(mbtiBase);
+        const tacticMatch = agent.tactics.includes(tactic);
+
+        let score = 0;
+        if (mbtiMatch && tacticMatch) score = 100;
+        else if (mbtiMatch && !tacticMatch) score = 85;
+        else if (!mbtiMatch && tacticMatch) score = 70;
+        else {
+            const baseHash = agent.name.charCodeAt(0) + agent.name.charCodeAt(1);
+            score = 20 + (baseHash % 25);
+        }
+
+        // 1. マクロ・シンクロ
+        if ((mbtiBase.includes('J') || mbtiBase.includes('N')) && tactic === 'macro') {
+            if (score >= 70 && score < 100) score = Math.min(score + 5, 95);
+        }
+        
+        // 2. アクション・シンクロ
+        if ((mbtiBase.includes('S') || mbtiBase.includes('P')) && (tactic === 'physical' || tactic === 'aggressive')) {
+            if (score >= 70 && score < 100) score = Math.min(score + 5, 95);
+        }
+
+        // 3. メンタル・マッチ
+        if (identityId) {
+            if (identityId === 'A' && (agent.role === 'デュエリスト' || agent.role === 'イニシエーター')) {
+                if (score < 100) score = Math.min(score + 2, 99);
+            } else if (identityId === 'T' && (agent.role === 'センチネル' || agent.role === 'コントローラー')) {
+                if (score < 100) score = Math.min(score + 2, 99);
+            }
+        }
+        return score;
+    }
+
+    function getSyncExplanation(fullMbtiCode, tactic, agent) {
+        const id = fullMbtiCode.split('-')[1]; // A or T
+        let stylePhrase = '';
+        if (id === 'A') {
+            stylePhrase = '自己主張が強く前進を恐れないあなたには';
+        } else if (id === 'T') {
+            stylePhrase = 'リスクを嫌い完璧な準備を重んじる慎重なあなたには';
+        } else {
+            stylePhrase = '独自の視点を持つあなたには';
+        }
+
+        let tacticPhrase = '';
+        if (tactic === 'physical') {
+            tacticPhrase = '圧倒的なフィジカル勝負を好む戦術嗜好と、';
+        } else if (tactic === 'aggressive') {
+            tacticPhrase = '強気にエリアをこじ開けるアグレッシブな戦術嗜好と、';
+        } else if (tactic === 'macro') {
+            tacticPhrase = '盤面をコントロールするマクロ的な戦術嗜好と、';
+        }
+
+        let shotgunWarning = '';
+        if (['NEON', 'CLOVE', 'RAZE', 'REYNA', 'JETT'].includes(agent.name)) {
+            shotgunWarning = '<div class="mt-4 p-2 bg-valo-yellow/10 border border-valo-yellow/30 rounded"><span class="text-valo-yellow text-xs font-bold font-mono tracking-widest">【12.09 TACTICAL ALERT】12.09の拡散値標準化により、空中や移動撃ちの『運』が排除されました。近距離戦闘において、武器性能の低下を補うアビリティの『意図的な運用』が不可欠です。</span></div>';
+        }
+
+        const base = fullMbtiCode.split('-')[0];
+        const log = `<span class="text-[10px] md:text-xs text-gray-500 font-mono tracking-widest block mt-4 border-t border-white/10 pt-3">SYS_LOG: [${base}] x [${tactic.toUpperCase()}] x [${id || 'UNSPECIFIED'}] => SYNERGY DETECTED</span>`;
+
+        return `${stylePhrase}、${tacticPhrase} ${agent.name}のコア・コンセプトである「${agent.coreConcept}」が驚異的なシナジーを生み出します。あなたの思考プロセスが、このエージェントのポテンシャルを最大限に引き出すことでしょう。${shotgunWarning}${log}`;
+    }
+
+    function createAgentCard(agent, syncRate = null) {
         const card = document.createElement('div');
-        card.className = `agent-card-item bg-gray-800 border border-white/10 overflow-hidden cursor-pointer group relative transition-all duration-300 hover:-translate-y-2 hover:border-valo-red ${agent.role}`;
+        const isPerfect = syncRate === 100;
+        const matchClass = isPerfect ? 'border-valo-red shadow-[0_0_20px_rgba(255,70,85,0.8)] animate-[pulse_2s_ease-in-out_infinite]' : 'border-white/10 hover:border-valo-red';
+        
+        card.className = `agent-card-item bg-gray-800 border overflow-hidden cursor-pointer group relative transition-all duration-300 hover:-translate-y-2 ${agent.role} ${matchClass}`;
         card.dataset.agentName = agent.name;
         
         let gradientColor = 'from-gray-700';
@@ -850,21 +584,40 @@ document.addEventListener('DOMContentLoaded', () => {
         if(agent.role === 'コントローラー') gradientColor = 'from-purple-900/50';
         if(agent.role === 'センチネル') gradientColor = 'from-emerald-900/50';
 
+        let syncHtml = '';
+        if (syncRate !== null) {
+            let syncColor = syncRate >= 100 ? 'text-white bg-valo-red' : (syncRate >= 85 ? 'text-black bg-valo-yellow' : (syncRate >= 70 ? 'text-yellow-400 bg-black/90' : 'text-gray-500 bg-black/90'));
+            let glowStyle = isPerfect ? 'box-shadow: 0 0 15px rgba(255,70,85,0.9);' : (syncRate >= 85 ? 'box-shadow: 0 0 10px rgba(251,191,36,0.6);' : '');
+            let syncText = isPerfect ? `<span class="animate-pulse opacity-80 mr-1">Tracking...</span>SYNC 100%` : `SYNC ${syncRate}%`;
+            syncHtml = `
+                <div class="absolute top-2 right-2 z-20 flex items-center">
+                    <span class="text-[10px] md:text-xs px-2 py-1 border border-white/10 font-mono font-bold tracking-widest select-none flex items-center ${syncColor}" style="${glowStyle}">${syncText}</span>
+                </div>
+            `;
+        } else {
+            syncHtml = `
+                <div class="absolute top-2 right-2 z-20">
+                    <span class="text-[10px] md:text-xs px-2 py-1 border border-white/10 font-mono font-bold tracking-widest select-none text-gray-600 bg-black/90">SYNC --%</span>
+                </div>
+            `;
+        }
+
         card.innerHTML = `
             ${getStatusBadge(agent.status)}
+            ${syncHtml}
             <div class="h-32 bg-gradient-to-b ${gradientColor} to-gray-900 flex items-center justify-center relative overflow-hidden">
                 <div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"></div>
                 <span class="font-header text-3xl font-bold text-white/10 absolute scale-150 group-hover:scale-125 transition-transform duration-500 select-none">${agent.name}</span>
-                <span class="font-header text-xl font-bold text-white relative z-10 tracking-wider group-hover:text-valo-red transition-colors">${agent.name}</span>
+                <span class="font-header text-xl md:text-2xl font-bold text-white relative z-10 tracking-wider group-hover:text-valo-red transition-colors">${agent.name}</span>
             </div>
-            <div class="p-4 relative z-10 bg-gray-900">
-                <h4 class="font-bold text-sm text-gray-300 mb-1">${agent.jpName}</h4>
-                <div class="flex items-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <div class="p-3 md:p-4 relative z-10 bg-gray-900">
+                <h4 class="font-bold text-xs md:text-sm text-gray-300 mb-1 truncate">${agent.jpName}</h4>
+                <div class="flex items-center text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ${getRoleIcon(agent.role)}
-                    ${agent.role}
+                    <span class="truncate">${agent.role}</span>
                 </div>
             </div>
-            <div class="absolute bottom-0 left-0 h-1 w-0 bg-valo-red group-hover:w-full transition-all duration-300"></div>
+            <div class="absolute bottom-0 left-0 h-1 w-0 bg-valo-red group-hover:w-full transition-all duration-300 shadow-[0_0_10px_#FF4655]"></div>
         `;
         card.addEventListener('click', () => showAgentModal(agent.name));
         return card;
@@ -873,49 +626,49 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAllAgents() {
         agentGrid.innerHTML = '';
         agentData.forEach(agent => {
-            agentGrid.appendChild(createAgentCard(agent));
+            agentGrid.appendChild(createAgentCard(agent, null));
         });
     }
 
     function renderResults() {
         const baseMbti = (selectedMbti.ei || '') + (selectedMbti.sn || '') + (selectedMbti.tf || '') + (selectedMbti.jp || '');
         const fullMbtiCode = baseMbti + (selectedMbti.id ? '-' + selectedMbti.id : '');
-        const isComplete = selectedMbti.ei && selectedMbti.sn && selectedMbti.tf && selectedMbti.jp && selectedMbti.id;
+        const isComplete = selectedMbti.ei && selectedMbti.sn && selectedMbti.tf && selectedMbti.jp && selectedMbti.id && selectedTactic;
         
         if (isComplete) {
             if(resultsPlaceholder) resultsPlaceholder.style.display = 'none';
 
-            // Custom UI: MBTI dummy loading
             resultsContainer.innerHTML = `
-                <div class="border border-valo-red/30 p-12 text-center relative overflow-hidden bg-gray-900 clip-corner-br min-h-[300px] flex flex-col justify-center items-center">
+                <div class="border border-valo-red/50 p-8 md:p-12 text-center relative overflow-hidden bg-gray-900 clip-corner-br min-h-[300px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(255,70,85,0.15)]">
                     <div class="scanline"></div>
-                    <div class="text-valo-red text-6xl font-header mb-4 animate-pulse valo-text-shadow">///</div>
-                    <h3 class="text-3xl font-bold mb-2 uppercase font-header tracking-widest text-valo-red animate-pulse">ANALYZING TACTICAL DATA</h3>
-                    <p class="text-gray-500 font-mono text-sm tracking-widest mt-4">Processing psychological parameters: [ <span class="text-white">${fullMbtiCode.replace('-', ' . ')}</span> ]</p>
+                    <div class="text-valo-red text-6xl font-header mb-4 animate-[pulse_0.1s_ease-in-out_infinite] valo-text-shadow">///</div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 uppercase font-header tracking-widest text-valo-red animate-[pulse_0.5s_ease-in-out_infinite]">ANALYZING TACTICAL DATA</h3>
+                    <div class="w-full max-w-md bg-gray-800 h-2 mt-6 relative overflow-hidden border border-white/10 clip-corner-br">
+                        <div class="absolute top-0 left-0 h-full bg-valo-red animate-loading-bar shadow-[0_0_10px_#FF4655]"></div>
+                    </div>
+                    <p class="text-gray-500 font-mono text-xs md:text-sm tracking-widest mt-6">Processing cognitive parameters: [ <span class="text-white animate-pulse">${fullMbtiCode.replace('-', ' . ')}</span> ]</p>
                 </div>
             `;
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            // Dummy loading simulation (0.8 seconds delay)
             setTimeout(() => {
                 const recommendation = mbtiRecommendations[baseMbti];
+                
+                const agentsWithSync = agentData.map(agent => ({
+                    ...agent,
+                    syncRate: calculateSync(baseMbti, selectedTactic, agent, selectedMbti.id)
+                })).sort((a, b) => b.syncRate - a.syncRate);
 
-                const targetAgents = [...recommendation.agentsBase, ...(selectedMbti.id === 'A' ? recommendation.agentsA : recommendation.agentsT)];
-                const agentsHtml = targetAgents.map(agentName => {
-                    const agent = agentData.find(a => a.jpName === agentName || a.name === agentName);
-                    if(agent) return createAgentCard(agent).outerHTML;
-                    return '';
+                const topAgents = agentsWithSync.slice(0, 10);
+                const agentsHtml = topAgents.map(agent => createAgentCard(agent, agent.syncRate)).outerHTML ? topAgents.map(agent => createAgentCard(agent, agent.syncRate).outerHTML).join('') : topAgents.map(agent => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.appendChild(createAgentCard(agent, agent.syncRate));
+                    return tempDiv.innerHTML;
                 }).join('');
 
-                // メンタル傾向(A/T)による追加テキスト
-                let idText = '';
-                if(selectedMbti.id === 'A') {
-                    idText = `<br><br><span class="text-valo-red font-bold">【メンタル傾向：A (自己主張型)】</span><br>あなたはプレッシャーに強く、自分の判断に絶対の自信を持っています。少々のミスやエコラウンドでもメンタルが崩れず、常に強気なピークや強引なエリアコントロールでチームを牽引できるのが最大の強みです。`;
-                } else if(selectedMbti.id === 'T') {
-                    idText = `<br><br><span class="text-valo-red font-bold">【メンタル傾向：T (慎重型)】</span><br>あなたは非常に思慮深く、常に最悪の事態を想定して動きます。その完璧主義は、クリアリングの徹底やスキルを使った確実なエリア確保に直結し、チームに「隙のない盤石なラウンド」をもたらす最強の武器となります。`;
-                }
+                const bestAgent = topAgents[0];
+                const syncExplanation = getSyncExplanation(fullMbtiCode, selectedTactic, bestAgent);
 
-                // Map letters to their descriptions using groups to avoid T collision (Thinking vs Turbulent)
                 const paramExplanations = {
                     ei: { 'E': 'エントリー / アクション', 'I': '後方支援 / カバー' },
                     sn: { 'S': 'フィジカル / 即応性', 'N': 'マクロ視点 / セットアップ' },
@@ -927,7 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const traitsHtml = ['ei', 'sn', 'tf', 'jp', 'id'].map(group => {
                     const char = selectedMbti[group];
                     return `
-                        <div class="bg-black/30 border border-white/5 p-3 rounded flex flex-col items-center hover:border-valo-red/50 transition">
+                        <div class="bg-black/30 border border-white/5 p-3 rounded flex flex-col items-center hover:border-valo-red/50 transition shadow-inner">
                             <span class="text-valo-red font-header text-xl">${char}</span>
                             <span class="text-gray-400 text-[10px] mt-1 text-center whitespace-nowrap">${paramExplanations[group][char]}</span>
                         </div>
@@ -935,48 +688,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).join('');
 
                 resultsContainer.innerHTML = `
-                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-valo-red/30 p-8 clip-corner-br relative overflow-hidden animation-fade-in transition-opacity duration-500">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 text-7xl md:text-9xl font-header font-bold text-white pointer-events-none select-none">${fullMbtiCode}</div>
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-valo-red/30 p-4 sm:p-8 clip-corner-br relative overflow-hidden animation-fade-in transition-opacity duration-500 shadow-2xl">
+                        <div class="absolute top-0 right-0 p-4 opacity-5 text-7xl md:text-9xl font-header font-bold text-white pointer-events-none select-none">${fullMbtiCode}</div>
                         
                         <div class="relative z-10">
-                            <div class="flex items-center gap-4 mb-2">
-                                <span class="bg-valo-red text-white text-xs font-bold px-2 py-1 uppercase tracking-widest">Match Found</span>
-                                <h3 class="text-3xl font-header font-bold text-white uppercase tracking-wider">${recommendation.title}</h3>
+                            <h3 class="text-3xl md:text-4xl font-header font-bold text-valo-red uppercase tracking-wider mb-2 drop-shadow-[0_0_10px_rgba(255,70,85,0.8)]">COGNITIVE SYNC COMPLETE</h3>
+                            <div class="flex items-center gap-2 md:gap-4 mb-6">
+                                <span class="bg-white/10 text-gray-300 text-xs font-bold px-2 py-1 uppercase tracking-widest shadow-sm border border-white/20">${recommendation.title}</span>
+                                <span class="text-valo-red text-xs font-bold uppercase tracking-widest block"><span class="w-1.5 h-1.5 bg-valo-red inline-block rounded-full animate-pulse mr-1"></span> ${fullMbtiCode} ALIGNED</span>
                             </div>
-                            
-                            <div class="h-px w-full bg-gradient-to-r from-valo-red to-transparent mb-6"></div>
+
+                            <div class="bg-valo-red/10 border border-valo-red/30 p-4 md:p-6 rounded-sm mb-8 relative overflow-hidden shadow-inner">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-valo-red shadow-[0_0_10px_#FF4655]"></div>
+                                <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Cognitive Synergy Report</span>
+                                <p class="text-gray-200 text-sm md:text-base leading-relaxed">
+                                    ${syncExplanation}
+                                </p>
+                            </div>
                             
                             <div class="grid md:grid-cols-3 gap-8 mb-8">
                                 <div class="md:col-span-2">
-                                    <p class="text-gray-300 text-lg leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
-                                        ${recommendation.reason}${idText}
+                                    <p class="text-gray-300 text-sm md:text-base leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
+                                        ${recommendation.basicReason}
                                     </p>
-                                    <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm mb-6">
-                                        <span class="text-valo-red text-sm font-bold uppercase">Core Trait //</span>
-                                        <span class="text-white font-header tracking-widest">${recommendation.coreTrait}</span>
+                                    <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm mb-6 shadow-inner">
+                                        <span class="text-valo-red text-xs md:text-sm font-bold uppercase">Personality Core //</span>
+                                        <span class="text-white font-header text-sm md:text-base tracking-widest">${recommendation.coreTrait}</span>
                                     </div>
                                     
-                                    <!-- Add tactical parameter explanation -->
                                     <div class="mb-4">
                                         <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Parameter Traits</span>
                                         <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
                                             ${traitsHtml}
                                         </div>
                                     </div>
-
-                                </div>
-                                <div class="bg-black/30 p-4 rounded border border-white/5 h-fit">
-                                    <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Recommended Roles</span>
-                                    <div class="flex flex-wrap gap-2">
-                                        ${recommendation.recommendedRoles.map(role => 
-                                            `<span class="bg-white/10 text-gray-200 text-xs px-3 py-1 font-medium hover:bg-white/20 transition cursor-default">${role}</span>`
-                                        ).join('')}
-                                    </div>
                                 </div>
                             </div>
 
-                            <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest mt-8">Compatible Agents</h4>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest mt-8 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-valo-red block animate-pulse"></span>
+                                Tactical Matches
+                            </h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                                 ${agentsHtml}
                             </div>
                         </div>
@@ -986,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsContainer.querySelectorAll('.agent-card-item').forEach(card => {
                     card.addEventListener('click', () => showAgentModal(card.dataset.agentName));
                 });
-            }, 800); // 演出のサクサク感を重視し0.8秒のディレイに短縮
+            }, 800);
 
         } else {
              if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
@@ -997,7 +750,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetSelection() {
         selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
+        selectedTactic = null;
         document.querySelectorAll('.mbti-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tactic-btn').forEach(btn => btn.classList.remove('active', 'bg-valo-red', 'text-white'));
         if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
         resultsContainer.innerHTML = '';
         resultsContainer.appendChild(resultsPlaceholder);
@@ -1017,18 +772,25 @@ document.addEventListener('DOMContentLoaded', () => {
         let statusHtml = '';
         let statusBorder = '';
         if(agent.status === 'buff') {
-            statusHtml = '<span class="bg-valo-green text-black font-bold px-2 py-1 text-xs uppercase tracking-widest">▲ BUFFED</span>';
+            statusHtml = '<span class="bg-valo-green text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">▲ BUFFED</span>';
             statusBorder = 'border-l-4 border-valo-green';
         } else if(agent.status === 'nerf') {
-            statusHtml = '<span class="bg-valo-red text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">▼ NERFED</span>';
+            statusHtml = '<span class="bg-valo-red text-white font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">▼ NERFED</span>';
             statusBorder = 'border-l-4 border-valo-red';
         } else if(agent.status === 'adjust') {
-            statusHtml = '<span class="bg-yellow-400 text-black font-bold px-2 py-1 text-xs uppercase tracking-widest">⚡ ADJUSTED</span>';
-            statusBorder = 'border-l-4 border-yellow-400';
+            statusHtml = '<span class="bg-valo-yellow text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">⚡ ADJUSTED</span>';
+            statusBorder = 'border-l-4 border-valo-yellow';
         } else if(agent.status === 'rework') {
-            statusHtml = '<span class="bg-blue-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest">★ REWORKED</span>';
+            statusHtml = '<span class="bg-blue-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">★ REWORKED</span>';
             statusBorder = 'border-l-4 border-blue-500';
         }
+
+        const coreConceptHtml = `
+            <div class="mt-4 pt-4 border-t border-white/10">
+                <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Ability Core Concept</span>
+                <span class="text-white text-sm md:text-base font-bold bg-black/50 px-4 py-2 inline-block border-l-4 border-valo-red shadow-sm">${agent.coreConcept}</span>
+            </div>
+        `;
 
         modalBody.innerHTML = `
             <div class="md:col-span-2 bg-gray-800 relative min-h-[300px] md:min-h-full flex items-center justify-center overflow-hidden">
@@ -1041,12 +803,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="text-xl text-gray-400 font-sans font-bold block tracking-widest">${agent.jpName}</span>
                 </div>
             </div>
-            <div class="md:col-span-3 p-8 md:p-12 flex flex-col justify-center ${roleBg}">
+            <div class="md:col-span-3 p-6 md:p-12 flex flex-col justify-center ${roleBg} relative">
+                <div class="absolute top-4 right-6 text-gray-500 font-mono text-xs tracking-widest opacity-50 hidden md:block">ROLE // ${agent.role}</div>
                 <div class="mb-8 flex flex-col gap-6">
                     <div>
                         <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-1 block">Role Designation</span>
                         <div class="flex items-center gap-3">
-                            <h3 class="text-2xl font-bold text-white uppercase tracking-wide flex items-center">${getRoleIcon(agent.role)} ${agent.role}</h3>
+                            <h3 class="text-xl md:text-2xl font-bold text-white uppercase tracking-wide flex items-center">${getRoleIcon(agent.role)} ${agent.role}</h3>
                             <div class="h-px flex-grow bg-white/10 hidden md:block"></div>
                         </div>
                     </div>
@@ -1060,22 +823,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <div class="mb-8">
                     <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Tactical Profile</span>
-                    <p class="text-gray-300 text-lg leading-relaxed font-light border-l-2 border-white/20 pl-4 mb-6">
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed font-light border-l-2 border-white/20 pl-4 mb-6">
                         ${agent.description}
                     </p>
                     
-                    <div class="bg-black/30 p-4 rounded border border-white/5 ${statusBorder}">
-                        <span class="text-white font-header text-sm tracking-widest uppercase mb-1 block flex items-center gap-2">
-                            Patch 12.06 Analysis
+                    <div class="bg-black/30 p-3 md:p-5 rounded border border-white/5 ${statusBorder} shadow-inner mt-2">
+                        <span class="text-white font-header text-xs md:text-sm tracking-widest uppercase mb-1 md:mb-2 block flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Patch 12.09 Analysis
                         </span>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            ${agent.patchNote || '現環境において、大きな性能変更はなく安定した運用が可能です。'}
+                        <p class="text-[11px] md:text-sm text-gray-400 leading-relaxed mb-1 md:mb-2">
+                            ${agent.patchNote.replace(/(12\.\d{2})/g, '<span class="font-bold text-white">$1</span>')}
                         </p>
+                        ${coreConceptHtml}
                     </div>
                 </div>
 
                 <div class="mt-auto">
-                    <div class="grid grid-cols-2 gap-8 border-t border-white/10 pt-6">
+                    <div class="grid grid-cols-2 gap-4 md:gap-8 border-t border-white/10 pt-6">
                          <div>
                             <span class="block text-gray-500 text-xs uppercase tracking-widest mb-2">Difficulty</span>
                             <div class="flex">
@@ -1093,20 +857,30 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
+        document.body.classList.add('modal-open');
         modal.classList.remove('opacity-0', 'pointer-events-none');
         modalContentWrapper.classList.remove('scale-95');
-        
         document.getElementById('close-modal').onclick = hideModal;
     }
     
     function hideModal() {
+        document.body.classList.remove('modal-open');
         modal.classList.add('opacity-0', 'pointer-events-none');
         modalContentWrapper.classList.add('scale-95');
     }
 
-    // Event Listeners
     mbtiSelector.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
+        const tacticBtn = e.target.closest('.tactic-btn');
+        if (tacticBtn) {
+            const tactic = tacticBtn.dataset.tactic;
+            selectedTactic = tactic;
+            document.querySelectorAll('.tactic-btn').forEach(b => b.classList.remove('active', 'bg-valo-red', 'text-white'));
+            tacticBtn.classList.add('active', 'bg-valo-red', 'text-white');
+            renderResults();
+            return;
+        }
+        
+        const btn = e.target.closest('.mbti-btn');
         if (btn && btn.classList.contains('mbti-btn')) {
             const type = btn.dataset.type;
             const group = btn.dataset.group;
