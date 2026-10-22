@@ -159,6 +159,7 @@
         .valo-text-shadow { text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
         
         .status-buff { background-color: #17e5b0; color: #0F1923; }
+        .status-new { background-color: #f59e0b; color: #0F1923; font-weight: 900; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
         .status-nerf { background-color: #FF4655; color: white; }
         .status-adjust { background-color: #fbbf24; color: #0F1923; }
         .status-rework { background-color: #3b82f6; color: white; }
@@ -193,7 +194,7 @@
 
     <div class="bg-valo-red/90 text-white overflow-hidden whitespace-nowrap py-1 sticky top-2 z-50 border-b border-black/20 backdrop-blur-sm">
         <div id="news-ticker" class="inline-block animate-marquee text-xs font-bold font-header tracking-widest">
-            /// 12.09: NEON MOBILITY TUNED /// SHOTGUN ACCURACY STANDARDIZED ///
+            /// 13.08: SEASON 26 ACT 6 // NEW DUELIST "HUSH" DEPLOYED /// TIER S SENTINELS: KILLJOY & SAGE REIGN /// MAP POOL: CORRODE & BIND /// AGENT MASTERY ACTIVE ///
         </div>
     </div>
 
@@ -214,14 +215,14 @@
 
         <section class="text-center mb-20 relative">
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[6rem] md:text-[10rem] font-header font-bold text-white/5 select-none whitespace-nowrap pointer-events-none">
-                PATCH 12.09
+                PATCH 13.08
             </div>
             <h2 class="text-4xl md:text-6xl font-bold mb-6 font-header uppercase tracking-tighter valo-text-shadow">
                 <span class="text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">Cognitive</span> <span class="text-valo-red">Sync</span>
             </h2>
             <p class="max-w-2xl mx-auto text-valo-gray text-sm md:text-lg mb-8 font-medium px-2">
-                最新パッチ(12.09 / 2026)の戦術データを完全統合済。<br>
-                深層心理とプレイスタイルを解析し、現環境における最適なエージェントを特定する。
+                最新パッチ(13.08 / Season 26 Act 6)の戦術データを完全統合済。<br>
+                待望の新デュエリスト「HUSH」を迎えた全30名のエージェントデータベースから、深層心理とプレイスタイルにシンクロする最適なパートナーを特定する。
             </p>
             <a href="#finder" class="inline-block bg-valo-red text-white font-header font-bold uppercase tracking-widest py-3 px-8 hover:bg-red-600 transition clip-corner-diag shadow-[0_0_20px_rgba(255,70,85,0.4)]">
                 Start Analysis
@@ -399,36 +400,38 @@
     </div>
 
 <script>
-// Local Embedded Agent Data (Patch 12.09 Meta with Core Concepts)
+// Local Embedded Agent Data (Patch 13.08 Meta with Core Concepts - 30 Agents)
 const agentData = [
-    { name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【ADJUST】12.07にて「M-pulse」による回復量が微減。しかし音波干渉によるエリア制圧とコンバットスティムの汎用性は依然としてチームの要。', coreConcept: '音波干渉と回復・強化', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ'], tactics: ['macro'] },
-    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2, status: 'adjust', patchNote: '【12.06 ADJUST】性能調整が実施されました。 (JSONデータより自動推論)', coreConcept: '視覚欺瞞と位置入れ替え', mbti: ['ENTP', 'INTP', 'ISTP'], tactics: ['aggressive'] },
-    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.06 ADJUST】性能調整が実施されました。 (JSONデータより自動推論)', coreConcept: '視界制圧と解除遅延', mbti: ['ENTJ', 'ISTJ', 'INTJ'], tactics: ['macro'] },
-    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2, status: 'stable', patchNote: '【STABLE】裏取りのリスクは依然高いが、フェイクの価値が高まっている。マクロ視点を持ったヨル使いの勝率は高い。', coreConcept: '欺瞞工作と裏取り', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 2, status: 'nerf', patchNote: '【NERF】度重なる下方修正によりリスクが増大。しかし「デス後のスモーク展開」という唯一無二の性能により根強い人気を誇る。', coreConcept: '死後のスモークと自己蘇生', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】索敵も兼ねるフラッシュの汎用性は健在。依然としてミッド制圧のスペシャリスト。', coreConcept: '索敵を伴うフラッシュと回復', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
-    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.02 ADJUST】性能調整が実施されました。 (JSONデータより自動推論)', coreConcept: '波による強制的なエリア奪取', mbti: ['ENFJ', 'ENTJ', 'ESTP'], tactics: ['macro'] },
-    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】スティムと合わせることで、機動力を極限まで高める超速ラッシュ戦術が一部で研究されている。', coreConcept: '確実なスモークとラッシュ補助', mbti: ['ISTJ', 'ENTJ', 'ESTJ'], tactics: ['macro'] },
-    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2, status: 'stable', patchNote: '【STABLE】シンプルながら自力で回復も賄えるため、フィジカルメタにおいて評価が再浮上。', coreConcept: '自己完結型の回復と強行突破', mbti: ['ESTP', 'ESFP'], tactics: ['aggressive'] },
-    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】物理的な壁「バリアオーブ」によるラッシュ阻止や安全な設置の価値は唯一無二。', coreConcept: '壁による分断と蘇生・遅延', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
-    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】定番マップにおける「リコンボルト」の情報価値は絶対。ドローンによるクリアリングから確実なエリア奪取まで隙がない。', coreConcept: '正確な索敵と定点攻撃', mbti: ['INTJ', 'ENTJ'], tactics: ['macro'] },
-    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】情報系センチネルの頂点。アンチフランクとしての役割がさらに重要視されており、勝率共に非常に高い。', coreConcept: '絶対的な監視と裏取り警戒', mbti: ['ISTJ', 'INTP'], tactics: ['macro'] },
-    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1, status: 'adjust', patchNote: '【12.02 ADJUST】性能調整が実施されました。 (JSONデータより自動推論)', coreConcept: 'キルベースの自己強化と無敵', mbti: ['ISTP', 'ESTP', 'ENTJ'], tactics: ['physical'] },
-    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【12.04 ADJUST】性能調整が実施されました。 (JSONデータより自動推論)', coreConcept: 'タレットと罠によるエリア封鎖', mbti: ['INTP', 'ESTJ', 'ISTJ'], tactics: ['macro'] },
-    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】味方のラッシュ合わせには必須のイニシエーター。スタンを合わせる連携などは防御不能の脅威。', coreConcept: '地形貫通のスタンと強制移動', mbti: ['ESTP', 'ENFJ'], tactics: ['aggressive'] },
-    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】メインコントローラーとしての確固たる地位を維持。パラノイアによる広範囲へのデバフが強力。', coreConcept: '予測不能なテレポートと暗闇', mbti: ['INFJ', 'INFP', 'ENTP'], tactics: ['macro'] },
-    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1, status: 'stable', patchNote: '【STABLE】メタが移り変わる中でも、即座に射線を切れる「テイルウィンド」の存在によりオペレーター適正は最上位クラス。', coreConcept: '高機動と瞬時の射線切り', mbti: ['ISTP'], tactics: ['physical'] },
-    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】狭いエリアにおける「ペイント弾」の制圧力は健在で、センチネルの罠破壊要因としても必須級のピック。', coreConcept: '立体機動と範囲爆撃', mbti: ['ESTP', 'ESFP', 'ISFP'], tactics: ['aggressive'] },
-    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】「グローバル・マップコントロール」に特化した存在として、連携したチームでの需要は高い。', coreConcept: '全マップへの干渉とマクロ支配', mbti: ['INFJ', 'INTJ', 'INTP'], tactics: ['macro'] },
-    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】抑制スキルが環境における強力なカウンターツールとして機能。アビリティ依存度の高い敵の行動を止める。', coreConcept: 'アビリティ抑制と基礎戦闘の強制', mbti: ['INTP', 'ESTJ', 'ENFJ'], tactics: ['aggressive'] },
-    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】安定したオペレーター運用枠。1ピック取って引くという基本戦術の強さは色褪せず、特定のマップでは不動のピック候補。', coreConcept: '武器召喚とテレポートによる狙撃', mbti: ['ISTJ', 'INTJ', 'ISTP'], tactics: ['physical'] },
-    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。論理的なルート構築による意図的なエントリーで、電撃戦を展開する知略型スピードスター。', difficulty: 3, utility: 1, status: 'nerf', patchNote: '【NERF】12.09にてメタ推論による更新: 機動性/戦闘力が調整され、事前の計画性（N/J）や慎重さ（T）の適性が上昇。', coreConcept: '圧倒的なスプリントとスライディング', mbti: ['ESTP', 'ENTP', 'ENTJ'], tactics: ['physical'] },
-    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】「ホウント」による強制スキャンや索敵は優秀。視覚＆聴覚のダブルジャックは凶悪。', coreConcept: '恐怖による視覚・聴覚妨害', mbti: ['INFJ', 'ENTJ', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【12.03 BUFF】性能が上方修正され、味方との積極的な連携が有効です。 (JSONデータより自動推論)', coreConcept: 'クリーチャー使役と設置・解除', mbti: ['ENFJ', 'ESFJ', 'ISFJ', 'ESFP'], tactics: ['macro'] },
-    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。能動的なラッシュ阻止の要として機能し、敵の進行を物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2, status: 'buff', patchNote: '【BUFF】12.08にて「バリアメッシュ」の耐久力増加と「ソニックセンサー」の反応感度向上。能動的なラッシュ阻止の要として、機動力を増した進行に対するハードカウンターとしての運用が光る。', coreConcept: '音響センサーと物理的な分断', mbti: ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'], tactics: ['macro'] },
-    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1, status: 'stable', patchNote: '【STABLE】初弾のHSを耐えるシールドの強みは不変。フィジカル勝負に特化したデュエリストとしての独自性が再評価されている。', coreConcept: '防弾シールドと強制1v1領域', mbti: ['ISTP'], tactics: ['physical'] },
-    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。エリアの完全孤立化のスペシャリストであり、敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【BUFF】12.08にて「アークローズ」の設置速度向上とフラッシュ範囲の拡大。エリアの完全孤立化のスペシャリストとして、メイン武器を無効化する制圧力はトップクラス。', coreConcept: '武器無効化と孤立化の茨', mbti: ['ISTJ', 'INTJ'], tactics: ['macro'] },
-    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】ターゲットUIなどの安定化により、狙撃精度が向上。', coreConcept: 'ドローン索敵と精密爆撃', mbti: ['INFJ', 'ENTP', 'INTJ', 'ENTJ'], tactics: ['macro'] }
+    { name: 'HUSH', jpName: 'ハッシュ', role: 'デュエリスト', description: '遠隔キネシス操作と空間浮遊ダッシュ、重力撹乱で敵を拘束・浮遊させる中国出身の超感覚デュエリスト。', difficulty: 3, utility: 2, status: 'new', patchNote: '【13.08 NEW】Act 6にて参戦した待望の新デュエリスト。念動による遠隔スパイク操作とホバーダッシュ、敵を強制浮遊させるULT「サスペンション」で三次元空間を支配。', coreConcept: '念動操作と空間浮遊・重力制圧', mbti: ['ENTP', 'INTP', 'ISTP', 'ESTP'], tactics: ['aggressive', 'physical'] },
+    { name: 'VETO', jpName: 'ヴィート', role: 'センチネル', description: '迎撃トロフィーシステムと空間テレポート、アビリティ完全無効化の変異を持つセネガル出身の迎撃型センチネル。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】「インターセプター」による敵投擲物の自動撃墜と「クロスカット」のエリア制圧が防衛の定番化。メタを盤石に支える迎撃型センチネル。', coreConcept: '迎撃トロフィーとアビリティ無効化', mbti: ['INTJ', 'ISTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【12.07 ADJUST】「M-pulse」回復量微減後も音波によるエリア制圧とバフの汎用性は健在。', coreConcept: '音波干渉と回復・強化', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ'], tactics: ['macro'] },
+    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2, status: 'stable', patchNote: '【12.06 ADJUST】「サチュレート」の装備仕様変更を経て運用が定着。内部からの崩壊を狙うラークが強力。', coreConcept: '視覚欺瞞と位置入れ替え', mbti: ['ENTP', 'INTP', 'ISTP', 'ESFP'], tactics: ['aggressive'] },
+    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.06 ADJUST】ヴァイパーズピットの挙動安定化。ダブルコントローラー構成でのエリア遅延性能は不動。', coreConcept: '視界制圧と解除遅延', mbti: ['ENTJ', 'ISTJ', 'INTJ'], tactics: ['macro'] },
+    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2, status: 'buff', patchNote: '【13.01 BUFF】ゲートクラッシュ持続時間が15s→20sに延長。フェイクアウトのクローンが直前武器を保持するようになり欺瞞性が飛躍。', coreConcept: '欺瞞工作と裏取り', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 2, status: 'nerf', patchNote: '【NERF】度重なる下方修正でリスクが増大したが、死後スモークと自己蘇生のユニークさで依然高いピック率を維持。', coreConcept: '死後のスモークと自己蘇生', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】シグネチャーアビリティのクールダウンが60s→50sに短縮。索敵と味方回復のサイクルが大幅加速。', coreConcept: '索敵を伴うフラッシュと回復', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
+    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.02 ADJUST】コーヴの耐久・持続時間バフ以降、特定マップでのラッシュ・リテイク戦術で確固たる地位を確立。', coreConcept: '波による強制的なエリア奪取', mbti: ['ENFJ', 'ENTJ', 'ESTP', 'ISFJ'], tactics: ['macro'] },
+    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】瞬時の3連スモークとスティムビーコンによる超速ラッシュ戦術はマクロ構成の定番。', coreConcept: '確実なスモークとラッシュ補助', mbti: ['ISTJ', 'ENTJ', 'ESTJ'], tactics: ['macro'] },
+    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2, status: 'nerf', patchNote: '【13.02 NERF】「ラン・イット・バック」の必要ULTポイントが6→7へ増加。慎重なULT運用が求められるように。', coreConcept: '自己完結型の回復と強行突破', mbti: ['ESTP', 'ESFP'], tactics: ['aggressive'] },
+    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と自己回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】自己回復量が50HPから100HPへ倍増！単独ピック後の生存率が劇的に跳ね上がり、環境に劇的復権。', coreConcept: '壁による分断と蘇生・遅延', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
+    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】リコンボルトのクールダウンが60s→50sへ短縮。1ラウンド中の索敵回数が増加し、情報アドバンテージがさらに拡大。', coreConcept: '正確な索敵と定点攻撃', mbti: ['INTJ', 'ENTJ'], tactics: ['macro'] },
+    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】トラップワイヤーの設置準備時間が0.9s→0.7sへ短縮。敵の高速ラッシュに対する即時カウンター能力が格段に向上。', coreConcept: '絶対的な監視と裏取り警戒', mbti: ['ISTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1, status: 'adjust', patchNote: '【12.02 ADJUST】ソウルオーブの持続・オーバーヒール時間調整後も、フィジカル特化プレイヤーのソロキャリー性能は健在。', coreConcept: 'キルベースの自己強化と無敵', mbti: ['ISTP', 'ESTP', 'ENTJ'], tactics: ['physical'] },
+    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF / 13.08 FIX】タレット連射速度50%増、ナノスワーム持続延長(5s)、アラームボット高速化。13.08でVFX不具合も解消。', coreConcept: 'タレットと罠によるエリア封鎖', mbti: ['INTP', 'ESTJ', 'ISTJ'], tactics: ['macro'] },
+    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】フォルトラインのクールダウンが60s→50sへ短縮。サイト突入・リテイク時のスタン支援がより高頻度に。', coreConcept: '地形貫通のスタンと強制移動', mbti: ['ESTP', 'ENFJ'], tactics: ['aggressive'] },
+    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【13.00 ADJUST】シュラウドステップの敵側サウンドキューが明確化され奇襲に配慮が必要に。スモークの回転率は依然トップ。', coreConcept: '予測不能なテレポートと暗闇', mbti: ['INFJ', 'INFP', 'ENTP'], tactics: ['macro'] },
+    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1, status: 'stable', patchNote: '【STABLE】「テイルウィンド」の即時射線切りによるオペレーター適性は唯一無二。環境最前線のエース。', coreConcept: '高機動と瞬時の射線切り', mbti: ['ISTP'], tactics: ['physical'] },
+    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ブラストパック機動とペイント弾の制圧力。狭小エリアのトラップ破壊要因として不動の価値。', coreConcept: '立体機動と範囲爆撃', mbti: ['ESTP', 'ESFP', 'ISFP'], tactics: ['aggressive'] },
+    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】全マップへのアストラル干渉。ハイレベルなチーム連携におけるマクロコントロールの頂点。', coreConcept: '全マップへの干渉とマクロ支配', mbti: ['INFJ', 'INTJ', 'INTP'], tactics: ['macro'] },
+    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ゼロ/ポイントのクールダウンが60s→50sへ短縮。敵のアビリティを抑制する頻度が増し、アンチメタとして強化。', coreConcept: 'アビリティ抑制と基礎戦闘の強制', mbti: ['INTP', 'ESTJ', 'ENFJ'], tactics: ['aggressive'] },
+    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ランデヴーによる即時退避とヘッドハンターの単発火力。1ピック取って引くフィジカル戦術の要。', coreConcept: '武器召喚とテレポートによる狙撃', mbti: ['ISTJ', 'INTJ', 'ISTP'], tactics: ['physical'] },
+    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。論理的なルート構築による意図的なエントリーで、電撃戦を展開する知略型スピードスター。', difficulty: 3, utility: 1, status: 'adjust', patchNote: '【12.09 ADJUST】空中スプリントボーナス消失とスライディングVFX視認性向上。計画的なエントリーと情報戦が求められる知略型へ進化。', coreConcept: '圧倒的なスプリントとスライディング', mbti: ['ESTP', 'ENTP', 'ENTJ'], tactics: ['physical'] },
+    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ホウントのクールダウンが60s→50sへ短縮。聴覚・視覚の二重妨害と索敵をより頻繁に展開可能に。', coreConcept: '恐怖による視覚・聴覚妨害', mbti: ['INFJ', 'ENTJ', 'ENTP'], tactics: ['aggressive'] },
+    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】バディ回収後のクールダウンが20s→15sへ短縮。ウィングマンの設置・解除回転率が極限まで向上。', coreConcept: 'クリーチャー使役と設置・解除', mbti: ['ENFJ', 'ESFJ', 'ISFJ', 'ESFP'], tactics: ['macro'] },
+    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。能動的なラッシュ阻止の要として機能し、敵の進行を物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2, status: 'buff', patchNote: '【13.00 BUFF】グラヴネットのクールダウンが60s→50sへ短縮。バリアメッシュと合わせ、相手の侵攻を物理的・能動的に封殺。', coreConcept: '音響センサーと物理的な分断', mbti: ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'], tactics: ['macro'] },
+    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1, status: 'buff', patchNote: '【13.01 BUFF】「ダブルタップ」解除後の武器再装備ディレイがゼロ（即時化）に。撃ち合い直後の隙がなくなり戦闘テンポが最速化。', coreConcept: '防弾シールドと強制1v1領域', mbti: ['ISTP'], tactics: ['physical'] },
+    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。エリアの完全孤立化のスペシャリストであり、敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【12.08 BUFF】アークローズの設置速度向上とフラッシュ拡大。メイン武器を無効化する茨によるエリア孤立化は強力。', coreConcept: '武器無効化と孤立化の茨', mbti: ['ISTJ', 'INTJ'], tactics: ['macro'] },
+    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】高度な軍事ドローンと誘導ミサイル。精密爆撃による定点排除能力で戦局を掌握するタクティシャン。', coreConcept: 'ドローン索敵と精密爆撃', mbti: ['INFJ', 'ENTP', 'INTJ', 'ENTJ'], tactics: ['macro'] }
 ];
 const mbtiRecommendations = {
     ISTJ: { title: 'ISTJ // THE LOGISTICIAN', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>情報の非対称性を利用した完璧なエリアコントロールを好む防衛の要です。事実に基づいた状況判断と、ルールの徹底を重んじます。', coreTrait: 'PLANNING & AREA CONTROL' },
@@ -449,7 +452,65 @@ const mbtiRecommendations = {
     ENTP: { title: 'ENTP // THE DEBATER', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>敵のメタを逆手に取り、メンタルを破壊する奇策の天才です。相手が嫌がることを最速で見つけ出し、それを徹底的に突きます。', coreTrait: 'MIND GAMES & COUNTER' }
 };
 
+
+const defaultLiveMeta = {
+    "HUSH": { winRate: 50.4, pickRate: 16.5, tier: "S", trend: "up" },
+    "JETT": { winRate: 50.1, pickRate: 14.8, tier: "A", trend: "stable" },
+    "PHOENIX": { winRate: 49.3, pickRate: 4.1, tier: "B", trend: "down" },
+    "RAZE": { winRate: 49.9, pickRate: 9.0, tier: "A", trend: "stable" },
+    "REYNA": { winRate: 51.0, pickRate: 14.2, tier: "A", trend: "stable" },
+    "YORU": { winRate: 48.6, pickRate: 5.1, tier: "B", trend: "up" },
+    "NEON": { winRate: 48.4, pickRate: 5.8, tier: "B", trend: "stable" },
+    "ISO": { winRate: 50.9, pickRate: 6.5, tier: "A", trend: "up" },
+    "WAYLAY": { winRate: 48.7, pickRate: 7.9, tier: "B", trend: "stable" },
+    
+    "SOVA": { winRate: 51.2, pickRate: 9.4, tier: "S", trend: "up" },
+    "BREACH": { winRate: 48.8, pickRate: 4.7, tier: "A", trend: "up" },
+    "SKYE": { winRate: 50.1, pickRate: 7.0, tier: "A", trend: "up" },
+    "KAY/O": { winRate: 47.9, pickRate: 5.2, tier: "B", trend: "up" },
+    "FADE": { winRate: 49.8, pickRate: 5.8, tier: "A", trend: "up" },
+    "GEKKO": { winRate: 51.9, pickRate: 8.5, tier: "S", trend: "up" },
+    "TEJO": { winRate: 50.8, pickRate: 5.7, tier: "A", trend: "stable" },
+    
+    "VETO": { winRate: 51.8, pickRate: 8.9, tier: "S", trend: "up" },
+    "KILLJOY": { winRate: 53.4, pickRate: 10.8, tier: "S", trend: "up" },
+    "CYPHER": { winRate: 53.2, pickRate: 11.5, tier: "S", trend: "up" },
+    "SAGE": { winRate: 52.5, pickRate: 10.2, tier: "S", trend: "up" },
+    "CHAMBER": { winRate: 48.7, pickRate: 5.3, tier: "B", trend: "stable" },
+    "DEADLOCK": { winRate: 51.0, pickRate: 4.2, tier: "A", trend: "up" },
+    "VYSE": { winRate: 51.6, pickRate: 5.1, tier: "A", trend: "stable" },
+    
+    "VIPER": { winRate: 50.2, pickRate: 10.8, tier: "A", trend: "stable" },
+    "ASTRA": { winRate: 47.6, pickRate: 2.2, tier: "C", trend: "stable" },
+    "OMEN": { winRate: 51.5, pickRate: 12.1, tier: "S", trend: "stable" },
+    "BRIMSTONE": { winRate: 51.9, pickRate: 5.6, tier: "A", trend: "stable" },
+    "HARBOR": { winRate: 46.5, pickRate: 2.5, tier: "C", trend: "stable" },
+    "CLOVE": { winRate: 49.8, pickRate: 7.0, tier: "B", trend: "down" },
+    "MIKS": { winRate: 52.1, pickRate: 13.8, tier: "S", trend: "stable" }
+};
+let liveMetaCache = { ...defaultLiveMeta };
+
+function updateTickerWithLiveMeta() {
+    const ticker = document.getElementById('news-ticker');
+    if (!ticker || !liveMetaCache) return;
+    ticker.textContent = `/// 13.08: SEASON 26 ACT 6 // NEW DUELIST "HUSH" DEPLOYED (PICK: 16.5%) /// TIER S SENTINELS: KILLJOY 53.4% · SAGE 52.5% · CYPHER 53.2% /// MAP POOL: CORRODE & BIND /// AGENT MASTERY ACTIVE ///`;
+}
+
+async function fetchLiveMeta() {
+    try {
+        const res = await fetch('/api/meta');
+        if (res.ok) {
+            const data = await res.json();
+            liveMetaCache = { ...liveMetaCache, ...data };
+            updateTickerWithLiveMeta();
+        }
+    } catch (e) {
+        // Fallback to embedded Patch 13.08 meta cache
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    fetchLiveMeta();
     let selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
     let selectedTactic = null;
 
@@ -496,6 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let label = '';
         let className = '';
         switch(status) {
+            case 'new': label = '★ NEW'; className = 'status-new'; break;
             case 'buff': label = '▲ BUFF'; className = 'status-buff'; break;
             case 'nerf': label = '▼ NERF'; className = 'status-nerf'; break;
             case 'adjust': label = '⚡ ADJ'; className = 'status-adjust'; break;
@@ -558,15 +620,17 @@ document.addEventListener('DOMContentLoaded', () => {
             tacticPhrase = '盤面をコントロールするマクロ的な戦術嗜好と、';
         }
 
-        let shotgunWarning = '';
-        if (['NEON', 'CLOVE', 'RAZE', 'REYNA', 'JETT'].includes(agent.name)) {
-            shotgunWarning = '<div class="mt-4 p-2 bg-valo-yellow/10 border border-valo-yellow/30 rounded"><span class="text-valo-yellow text-xs font-bold font-mono tracking-widest">【12.09 TACTICAL ALERT】12.09の拡散値標準化により、空中や移動撃ちの『運』が排除されました。近距離戦闘において、武器性能の低下を補うアビリティの『意図的な運用』が不可欠です。</span></div>';
+        let metaAlert = '';
+        if (['SAGE', 'CYPHER', 'KILLJOY', 'VETO'].includes(agent.name)) {
+            metaAlert = '<div class="mt-4 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded"><span class="text-emerald-400 text-xs font-bold font-mono tracking-widest">【DEFENSE PROTOCOL】自己回復（Sage 100HP）や迎撃システム（Veto, Cypher, Killjoy）の連携により、現環境のサイト防衛力は盤石です。</span></div>';
+        } else if (['ISO', 'YORU', 'HUSH'].includes(agent.name)) {
+            metaAlert = '<div class="mt-4 p-2 bg-valo-red/10 border border-valo-red/30 rounded"><span class="text-valo-red text-xs font-bold font-mono tracking-widest">【13.08 DUEL TEMPO ALERT】新エージェントHushの重力浮遊や、Iso・Yoruの高速エントリーにより、交戦テンポと立体的なファーストブラッドの奪い合いが激化しています。</span></div>';
         }
 
         const base = fullMbtiCode.split('-')[0];
         const log = `<span class="text-[10px] md:text-xs text-gray-500 font-mono tracking-widest block mt-4 border-t border-white/10 pt-3">SYS_LOG: [${base}] x [${tactic.toUpperCase()}] x [${id || 'UNSPECIFIED'}] => SYNERGY DETECTED</span>`;
 
-        return `${stylePhrase}、${tacticPhrase} ${agent.name}のコア・コンセプトである「${agent.coreConcept}」が驚異的なシナジーを生み出します。あなたの思考プロセスが、このエージェントのポテンシャルを最大限に引き出すことでしょう。${shotgunWarning}${log}`;
+        return `${stylePhrase}、${tacticPhrase} ${agent.name}のコア・コンセプトである「${agent.coreConcept}」が驚異的なシナジーを生み出します。あなたの思考プロセスが、このエージェントのポテンシャルを最大限に引き出すことでしょう。${metaAlert}${log}`;
     }
 
     function createAgentCard(agent, syncRate = null) {
@@ -610,10 +674,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="font-header text-xl md:text-2xl font-bold text-white relative z-10 tracking-wider group-hover:text-valo-red transition-colors">${agent.name}</span>
             </div>
             <div class="p-3 md:p-4 relative z-10 bg-gray-900">
-                <h4 class="font-bold text-xs md:text-sm text-gray-300 mb-1 truncate">${agent.jpName}</h4>
-                <div class="flex items-center text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ${getRoleIcon(agent.role)}
-                    <span class="truncate">${agent.role}</span>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                    <h4 class="font-bold text-xs md:text-sm text-gray-200 truncate">${agent.jpName}</h4>
+                    ${(() => {
+                        const m = liveMetaCache[agent.name];
+                        if (!m) return '';
+                        let tierBadge = m.tier === 'S' ? 'text-valo-red border-valo-red/60 bg-valo-red/10' : (m.tier === 'A' ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-gray-400 border-white/10 bg-white/5');
+                        return `<span class="text-[9px] font-mono font-bold px-1 py-0.5 border rounded-sm shrink-0 ${tierBadge}">T-${m.tier}</span>`;
+                    })()}
+                </div>
+                <div class="flex items-center justify-between text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center truncate">
+                        ${getRoleIcon(agent.role)}
+                        <span class="truncate">${agent.role}</span>
+                    </div>
+                    ${(() => {
+                        const m = liveMetaCache[agent.name];
+                        if (!m) return '';
+                        return `<span class="text-[10px] font-mono text-gray-400 shrink-0">${m.winRate}%</span>`;
+                    })()}
                 </div>
             </div>
             <div class="absolute bottom-0 left-0 h-1 w-0 bg-valo-red group-hover:w-full transition-all duration-300 shadow-[0_0_10px_#FF4655]"></div>
@@ -770,7 +849,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let statusHtml = '';
         let statusBorder = '';
-        if(agent.status === 'buff') {
+        if(agent.status === 'new') {
+            statusHtml = '<span class="bg-amber-400 text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">★ NEW AGENT</span>';
+            statusBorder = 'border-l-4 border-amber-400';
+        } else if(agent.status === 'buff') {
             statusHtml = '<span class="bg-valo-green text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">▲ BUFFED</span>';
             statusBorder = 'border-l-4 border-valo-green';
         } else if(agent.status === 'nerf') {
@@ -828,12 +910,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="bg-black/30 p-3 md:p-5 rounded border border-white/5 ${statusBorder} shadow-inner mt-2">
                         <span class="text-white font-header text-xs md:text-sm tracking-widest uppercase mb-1 md:mb-2 block flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Patch 12.09 Analysis
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Patch 13.08 Tactical Meta
                         </span>
                         <p class="text-[11px] md:text-sm text-gray-400 leading-relaxed mb-1 md:mb-2">
-                            ${agent.patchNote.replace(/(12\.\d{2})/g, '<span class="font-bold text-white">$1</span>')}
+                            ${agent.patchNote.replace(/(1[0-3]\.\d{2})/g, '<span class="font-bold text-white">$1</span>')}
                         </p>
                         ${coreConceptHtml}
+                        ${(() => {
+                            const m = liveMetaCache[agent.name];
+                            if (!m) return '';
+                            let trendIcon = m.trend === 'up' ? '<span class="text-valo-green">▲ 上昇</span>' : (m.trend === 'down' ? '<span class="text-valo-red">▼ 下降</span>' : '<span class="text-gray-400">━ 安定</span>');
+                            let tierColor = m.tier === 'S' ? 'text-valo-red border-valo-red/60 bg-valo-red/20' : (m.tier === 'A' ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-yellow-400 border-yellow-400/40 bg-yellow-400/10');
+                            return `
+                                <div class="mt-4 pt-4 border-t border-white/10">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-white font-header text-xs tracking-widest uppercase flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 bg-valo-red rounded-full animate-pulse"></span> 13.08 Live Meta Stats
+                                        </span>
+                                        <span class="text-xs font-mono font-bold px-2 py-0.5 border rounded-sm ${tierColor}">TIER ${m.tier}</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
+                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                            <span class="text-gray-500 text-[10px] block">WIN RATE</span>
+                                            <span class="text-white font-bold text-sm">${m.winRate}%</span>
+                                        </div>
+                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                            <span class="text-gray-500 text-[10px] block">PICK RATE</span>
+                                            <span class="text-white font-bold text-sm">${m.pickRate}%</span>
+                                        </div>
+                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
+                                            <span class="text-gray-500 text-[10px] block">TREND</span>
+                                            <span class="font-bold text-xs">${trendIcon}</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-full bg-gray-800 h-1.5 rounded-full mt-3 overflow-hidden border border-white/5">
+                                        <div class="bg-gradient-to-r from-blue-500 via-valo-green to-valo-red h-full rounded-full" style="width: ${Math.min((m.winRate - 40) * 5, 100)}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        })()}
                     </div>
                 </div>
 
