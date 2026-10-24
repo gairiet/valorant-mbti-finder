@@ -106,6 +106,12 @@
             transform: scale(1.02);
             font-weight: 900;
         }
+        .btn-valo.active span {
+            color: #ffffff !important;
+        }
+        .btn-valo.active span.text-gray-400 {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
         .btn-valo:active { transform: scale(0.98); }
 
         /* Mobile specific heights */
@@ -184,6 +190,20 @@
         }
         .animate-loading-bar {
             animation: loadingBar 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animation-fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
@@ -348,7 +368,7 @@
             <div id="results-placeholder" class="border-2 border-dashed border-white/10 rounded-lg p-12 text-center bg-black/20">
                 <div class="text-valo-red text-6xl font-header mb-4 opacity-50">///</div>
                 <h3 class="text-2xl font-bold mb-2 uppercase font-header tracking-widest">Awaiting Input</h3>
-                <p class="text-gray-500 text-sm">全パラメータを入力し、最適化されたエージェント構成を抽出しろ。</p>
+                <p class="text-gray-500 text-sm">全パラメータ（MBTI 4指標 + Identity + 戦術嗜好）を選択すると、解析シーケンスが起動します。</p>
             </div>
         </section>
         
@@ -356,7 +376,7 @@
             <div class="section-header">
                 <h3>// Agent Database</h3>
                 <div class="line"></div>
-                <span class="text-xs font-mono text-valo-gray ml-4 bg-white/10 px-2 py-1 rounded">VER 12.09 LOCAL</span>
+                <span class="text-xs font-mono text-valo-gray ml-4 bg-white/10 px-2 py-1 rounded">VER 13.08 LATEST</span>
             </div>
 
             <div id="role-filters" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-10">
@@ -377,7 +397,7 @@
     <footer class="bg-valo-dark border-t border-white/10 py-8 text-center relative z-10">
         <div class="container mx-auto px-4 text-xs text-gray-500">
             <p class="mb-2 tracking-widest uppercase">Valorant Protocol // Tactical Analytics Division</p>
-            <p>&copy; 2026 Standalone Local Version. Patch 12.09 Embedded.</p>
+            <p>&copy; 2026 Season 26 Act 6. Patch 13.08 Fully Integrated.</p>
         </div>
     </footer>
 
@@ -385,15 +405,13 @@
     <div id="agent-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-valo-dark/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
         <div id="modal-content-wrapper" class="bg-gray-900 border border-white/20 w-full max-w-5xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 shadow-[0_0_50px_rgba(0,0,0,0.8)] clip-corner-br relative">
             <div class="scanline"></div>
-            <div class="h-2 w-full bg-gradient-to-r from-valo-red to-purple-900 absolute top-0 left-0 z-30"></div>
-            
-            <button id="close-modal" class="fixed top-4 right-4 md:absolute md:top-4 md:right-4 text-gray-400 hover:text-white transition z-[60] bg-black/80 md:bg-black/50 rounded-full p-2 border border-white/10 hover:border-valo-red hover:bg-valo-red">
+            <div class="h-2 w-full bg-gradient-to-r from-valo-red to-purple-900 sticky top-0 left-0 z-30"></div>
+            <button id="close-modal" class="sticky top-4 float-right mr-4 mt-4 text-gray-400 hover:text-white transition z-[60] bg-black/80 rounded-full p-2 border border-white/10 hover:border-valo-red hover:bg-valo-red shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-
-            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full min-h-[70vh]">
+            <div id="modal-body" class="p-0 grid md:grid-cols-5 h-full min-h-[70vh] clear-both">
                 <!-- Content injected dynamically -->
             </div>
         </div>
@@ -402,36 +420,36 @@
 <script>
 // Local Embedded Agent Data (Patch 13.08 Meta with Core Concepts - 30 Agents)
 const agentData = [
-    { name: 'HUSH', jpName: 'ハッシュ', role: 'デュエリスト', description: '遠隔キネシス操作と空間浮遊ダッシュ、重力撹乱で敵を拘束・浮遊させる中国出身の超感覚デュエリスト。', difficulty: 3, utility: 2, status: 'new', patchNote: '【13.08 NEW】Act 6にて参戦した待望の新デュエリスト。念動による遠隔スパイク操作とホバーダッシュ、敵を強制浮遊させるULT「サスペンション」で三次元空間を支配。', coreConcept: '念動操作と空間浮遊・重力制圧', mbti: ['ENTP', 'INTP', 'ISTP', 'ESTP'], tactics: ['aggressive', 'physical'] },
-    { name: 'VETO', jpName: 'ヴィート', role: 'センチネル', description: '迎撃トロフィーシステムと空間テレポート、アビリティ完全無効化の変異を持つセネガル出身の迎撃型センチネル。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】「インターセプター」による敵投擲物の自動撃墜と「クロスカット」のエリア制圧が防衛の定番化。メタを盤石に支える迎撃型センチネル。', coreConcept: '迎撃トロフィーとアビリティ無効化', mbti: ['INTJ', 'ISTJ', 'INTP'], tactics: ['macro'] },
-    { name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【12.07 ADJUST】「M-pulse」回復量微減後も音波によるエリア制圧とバフの汎用性は健在。', coreConcept: '音波干渉と回復・強化', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ'], tactics: ['macro'] },
-    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2, status: 'stable', patchNote: '【12.06 ADJUST】「サチュレート」の装備仕様変更を経て運用が定着。内部からの崩壊を狙うラークが強力。', coreConcept: '視覚欺瞞と位置入れ替え', mbti: ['ENTP', 'INTP', 'ISTP', 'ESFP'], tactics: ['aggressive'] },
-    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.06 ADJUST】ヴァイパーズピットの挙動安定化。ダブルコントローラー構成でのエリア遅延性能は不動。', coreConcept: '視界制圧と解除遅延', mbti: ['ENTJ', 'ISTJ', 'INTJ'], tactics: ['macro'] },
-    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2, status: 'buff', patchNote: '【13.01 BUFF】ゲートクラッシュ持続時間が15s→20sに延長。フェイクアウトのクローンが直前武器を保持するようになり欺瞞性が飛躍。', coreConcept: '欺瞞工作と裏取り', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 2, status: 'nerf', patchNote: '【NERF】度重なる下方修正でリスクが増大したが、死後スモークと自己蘇生のユニークさで依然高いピック率を維持。', coreConcept: '死後のスモークと自己蘇生', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】シグネチャーアビリティのクールダウンが60s→50sに短縮。索敵と味方回復のサイクルが大幅加速。', coreConcept: '索敵を伴うフラッシュと回復', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
-    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.02 ADJUST】コーヴの耐久・持続時間バフ以降、特定マップでのラッシュ・リテイク戦術で確固たる地位を確立。', coreConcept: '波による強制的なエリア奪取', mbti: ['ENFJ', 'ENTJ', 'ESTP', 'ISFJ'], tactics: ['macro'] },
-    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】瞬時の3連スモークとスティムビーコンによる超速ラッシュ戦術はマクロ構成の定番。', coreConcept: '確実なスモークとラッシュ補助', mbti: ['ISTJ', 'ENTJ', 'ESTJ'], tactics: ['macro'] },
-    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2, status: 'nerf', patchNote: '【13.02 NERF】「ラン・イット・バック」の必要ULTポイントが6→7へ増加。慎重なULT運用が求められるように。', coreConcept: '自己完結型の回復と強行突破', mbti: ['ESTP', 'ESFP'], tactics: ['aggressive'] },
-    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と自己回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】自己回復量が50HPから100HPへ倍増！単独ピック後の生存率が劇的に跳ね上がり、環境に劇的復権。', coreConcept: '壁による分断と蘇生・遅延', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro'] },
-    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】リコンボルトのクールダウンが60s→50sへ短縮。1ラウンド中の索敵回数が増加し、情報アドバンテージがさらに拡大。', coreConcept: '正確な索敵と定点攻撃', mbti: ['INTJ', 'ENTJ'], tactics: ['macro'] },
-    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】トラップワイヤーの設置準備時間が0.9s→0.7sへ短縮。敵の高速ラッシュに対する即時カウンター能力が格段に向上。', coreConcept: '絶対的な監視と裏取り警戒', mbti: ['ISTJ', 'INTP'], tactics: ['macro'] },
-    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1, status: 'adjust', patchNote: '【12.02 ADJUST】ソウルオーブの持続・オーバーヒール時間調整後も、フィジカル特化プレイヤーのソロキャリー性能は健在。', coreConcept: 'キルベースの自己強化と無敵', mbti: ['ISTP', 'ESTP', 'ENTJ'], tactics: ['physical'] },
-    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF / 13.08 FIX】タレット連射速度50%増、ナノスワーム持続延長(5s)、アラームボット高速化。13.08でVFX不具合も解消。', coreConcept: 'タレットと罠によるエリア封鎖', mbti: ['INTP', 'ESTJ', 'ISTJ'], tactics: ['macro'] },
-    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】フォルトラインのクールダウンが60s→50sへ短縮。サイト突入・リテイク時のスタン支援がより高頻度に。', coreConcept: '地形貫通のスタンと強制移動', mbti: ['ESTP', 'ENFJ'], tactics: ['aggressive'] },
-    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【13.00 ADJUST】シュラウドステップの敵側サウンドキューが明確化され奇襲に配慮が必要に。スモークの回転率は依然トップ。', coreConcept: '予測不能なテレポートと暗闇', mbti: ['INFJ', 'INFP', 'ENTP'], tactics: ['macro'] },
-    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1, status: 'stable', patchNote: '【STABLE】「テイルウィンド」の即時射線切りによるオペレーター適性は唯一無二。環境最前線のエース。', coreConcept: '高機動と瞬時の射線切り', mbti: ['ISTP'], tactics: ['physical'] },
-    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ブラストパック機動とペイント弾の制圧力。狭小エリアのトラップ破壊要因として不動の価値。', coreConcept: '立体機動と範囲爆撃', mbti: ['ESTP', 'ESFP', 'ISFP'], tactics: ['aggressive'] },
-    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】全マップへのアストラル干渉。ハイレベルなチーム連携におけるマクロコントロールの頂点。', coreConcept: '全マップへの干渉とマクロ支配', mbti: ['INFJ', 'INTJ', 'INTP'], tactics: ['macro'] },
-    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ゼロ/ポイントのクールダウンが60s→50sへ短縮。敵のアビリティを抑制する頻度が増し、アンチメタとして強化。', coreConcept: 'アビリティ抑制と基礎戦闘の強制', mbti: ['INTP', 'ESTJ', 'ENFJ'], tactics: ['aggressive'] },
-    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ランデヴーによる即時退避とヘッドハンターの単発火力。1ピック取って引くフィジカル戦術の要。', coreConcept: '武器召喚とテレポートによる狙撃', mbti: ['ISTJ', 'INTJ', 'ISTP'], tactics: ['physical'] },
-    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。論理的なルート構築による意図的なエントリーで、電撃戦を展開する知略型スピードスター。', difficulty: 3, utility: 1, status: 'adjust', patchNote: '【12.09 ADJUST】空中スプリントボーナス消失とスライディングVFX視認性向上。計画的なエントリーと情報戦が求められる知略型へ進化。', coreConcept: '圧倒的なスプリントとスライディング', mbti: ['ESTP', 'ENTP', 'ENTJ'], tactics: ['physical'] },
-    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ホウントのクールダウンが60s→50sへ短縮。聴覚・視覚の二重妨害と索敵をより頻繁に展開可能に。', coreConcept: '恐怖による視覚・聴覚妨害', mbti: ['INFJ', 'ENTJ', 'ENTP'], tactics: ['aggressive'] },
-    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】バディ回収後のクールダウンが20s→15sへ短縮。ウィングマンの設置・解除回転率が極限まで向上。', coreConcept: 'クリーチャー使役と設置・解除', mbti: ['ENFJ', 'ESFJ', 'ISFJ', 'ESFP'], tactics: ['macro'] },
-    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。能動的なラッシュ阻止の要として機能し、敵の進行を物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2, status: 'buff', patchNote: '【13.00 BUFF】グラヴネットのクールダウンが60s→50sへ短縮。バリアメッシュと合わせ、相手の侵攻を物理的・能動的に封殺。', coreConcept: '音響センサーと物理的な分断', mbti: ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'], tactics: ['macro'] },
-    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1, status: 'buff', patchNote: '【13.01 BUFF】「ダブルタップ」解除後の武器再装備ディレイがゼロ（即時化）に。撃ち合い直後の隙がなくなり戦闘テンポが最速化。', coreConcept: '防弾シールドと強制1v1領域', mbti: ['ISTP'], tactics: ['physical'] },
-    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。エリアの完全孤立化のスペシャリストであり、敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【12.08 BUFF】アークローズの設置速度向上とフラッシュ拡大。メイン武器を無効化する茨によるエリア孤立化は強力。', coreConcept: '武器無効化と孤立化の茨', mbti: ['ISTJ', 'INTJ'], tactics: ['macro'] },
-    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】高度な軍事ドローンと誘導ミサイル。精密爆撃による定点排除能力で戦局を掌握するタクティシャン。', coreConcept: 'ドローン索敵と精密爆撃', mbti: ['INFJ', 'ENTP', 'INTJ', 'ENTJ'], tactics: ['macro'] }
+    { name: 'HUSH', jpName: 'ハッシュ', role: 'デュエリスト', description: '遠隔キネシス操作と空間浮遊ダッシュ、重力撹乱で敵を拘束・浮遊させる中国出身の超感覚デュエリスト。', difficulty: 3, utility: 2, status: 'new', patchNote: '【13.08 NEW】Act 6にて参戦した待望の新デュエリスト。念動による遠隔スパイク操作とホバーダッシュ、敵を強制浮遊させるULT「サスペンション」で三次元空間を支配。', coreConcept: '念動操作と空間浮遊・重力制圧', mbti: ['ENTP', 'INTP', 'ISTP', 'ESTP', 'ENFP'], tactics: ['physical', 'aggressive'] },
+    { name: 'VETO', jpName: 'ヴィート', role: 'センチネル', description: '迎撃トロフィーシステムと空間テレポート、アビリティ完全無効化の変異を持つセネガル出身の迎撃型センチネル。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】「インターセプター」による敵投擲物の自動撃墜と「クロスカット」のエリア制圧が防衛の定番化。メタを盤石に支える迎撃型センチネル。', coreConcept: '迎撃トロフィーとアビリティ無効化', mbti: ['INTJ', 'ISTJ', 'INTP', 'ESTJ'], tactics: ['physical', 'macro'] },
+    { name: 'MIKS', jpName: 'ミクス', role: 'コントローラー', description: '音波を操り、味方への回復やコンバットスティム付与を行うクロアチア出身の異色コントローラー。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【12.07 ADJUST】「M-pulse」回復量微減後も音波によるエリア制圧とバフの汎用性は健在。', coreConcept: '音波干渉と回復・強化', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'WAYLAY', jpName: 'ウェイレイ', role: 'デュエリスト', description: 'ホログラムによる視覚欺瞞と位置入れ替え。ファントムの如く現れ、敵の陣形を内部から崩壊させる。', difficulty: 3, utility: 2, status: 'stable', patchNote: '【12.06 ADJUST】「サチュレート」の装備仕様変更を経て運用が定着。内部からの崩壊を狙うラークが強力。', coreConcept: '視覚欺瞞と位置入れ替え', mbti: ['ENTP', 'INTP', 'ISTP', 'ESFP', 'ENFP'], tactics: ['aggressive', 'physical'] },
+    { name: 'VIPER', jpName: 'ヴァイパー', role: 'コントローラー', description: '視界を遮るカーテンと毒沼によるエリア制圧。設置後の解除遅延など、緻密なリソース管理で戦場を支配する。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.06 ADJUST】ヴァイパーズピットの挙動安定化。ダブルコントローラー構成でのエリア遅延性能は不動。', coreConcept: '視界制圧と解除遅延', mbti: ['ENTJ', 'ISTJ', 'INTJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'YORU', jpName: 'ヨル', role: 'デュエリスト', description: 'デコイとテレポートによる欺瞞工作。敵の裏をかき、混乱に乗じて敵陣深くに侵入するトリックスター。', difficulty: 3, utility: 2, status: 'buff', patchNote: '【13.01 BUFF】ゲートクラッシュ持続時間が15s→20sに延長。フェイクアウトのクローンが直前武器を保持するようになり欺瞞性が飛躍。', coreConcept: '欺瞞工作と裏取り', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive', 'macro'] },
+    { name: 'CLOVE', jpName: 'クローヴ', role: 'コントローラー', description: 'デス後もスモークを展開可能。自己回復と自己蘇生を持ち、リスクを恐れず前線に出られるコントローラー。', difficulty: 2, utility: 2, status: 'nerf', patchNote: '【NERF】度重なる下方修正でリスクが増大したが、死後スモークと自己蘇生のユニークさで依然高いピック率を維持。', coreConcept: '死後のスモークと自己蘇生', mbti: ['ISFP', 'ENFP', 'ENTP'], tactics: ['aggressive', 'physical'] },
+    { name: 'SKYE', jpName: 'スカイ', role: 'イニシエーター', description: '操作可能なフラッシュと回復。索敵と妨害を同時に行い、チームと連携して前線を押し上げる。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】シグネチャーアビリティのクールダウンが60s→50sに短縮。索敵と味方回復のサイクルが大幅加速。', coreConcept: '索敵を伴うフラッシュと回復', mbti: ['ISFJ', 'ESFJ', 'INFP', 'ENFP', 'ENFJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'HARBOR', jpName: 'ハーバー', role: 'コントローラー', description: '水を操る攻撃的なコントローラー。エリア確保と敵の強制移動に長けた「波」の使い手。', difficulty: 3, utility: 3, status: 'adjust', patchNote: '【12.02 ADJUST】コーヴの耐久・持続時間バフ以降、特定マップでのラッシュ・リテイク戦術で確固たる地位を確立。', coreConcept: '波による強制的なエリア奪取', mbti: ['ENFJ', 'ENTJ', 'ESTP', 'ISFJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'BRIMSTONE', jpName: 'ブリムストーン', role: 'コントローラー', description: '確実なスモーク展開とスティムビーコンによるラッシュ補助。エリアの完全掌握と時間管理に長けた指揮官。', difficulty: 1, utility: 3, status: 'stable', patchNote: '【STABLE】瞬時の3連スモークとスティムビーコンによる超速ラッシュ戦術はマクロ構成の定番。', coreConcept: '確実なスモークとラッシュ補助', mbti: ['ISTJ', 'ENTJ', 'ESTJ'], tactics: ['macro', 'physical'] },
+    { name: 'PHOENIX', jpName: 'フェニックス', role: 'デュエリスト', description: '自己完結型のフラッシュと回復能力。アグレッシブなエントリーとアルティメットによるリスクフリーな偵察を行う。', difficulty: 1, utility: 2, status: 'nerf', patchNote: '【13.02 NERF】「ラン・イット・バック」の必要ULTポイントが6→7へ増加。慎重なULT運用が求められるように。', coreConcept: '自己完結型の回復と強行突破', mbti: ['ESTP', 'ESFP', 'ISFJ', 'ESFJ', 'ENFJ'], tactics: ['aggressive', 'physical'] },
+    { name: 'SAGE', jpName: 'セージ', role: 'センチネル', description: '壁によるエリア分断とスローオーブでの遅延。味方の蘇生と自己回復によりラウンドの勝率を底上げする守護者。', difficulty: 1, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】自己回復量が50HPから100HPへ倍増！単独ピック後の生存率が劇的に跳ね上がり、環境に劇的復権。', coreConcept: '壁による分断と蘇生・遅延', mbti: ['ISFJ', 'ESFJ', 'INFP'], tactics: ['macro', 'physical'] },
+    { name: 'SOVA', jpName: 'ソーヴァ', role: 'イニシエーター', description: 'リコンボルトによる索敵とショックダーツでの定点攻撃。情報アドバンテージを確立し、壁抜きで敵を排除する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】リコンボルトのクールダウンが60s→50sへ短縮。1ラウンド中の索敵回数が増加し、情報アドバンテージがさらに拡大。', coreConcept: '正確な索敵と定点攻撃', mbti: ['INTJ', 'ENTJ'], tactics: ['macro', 'physical'] },
+    { name: 'CYPHER', jpName: 'サイファー', role: 'センチネル', description: 'カメラとトラップワイヤーによる完全監視。裏取りへの警戒と情報収集により、敵の侵攻ルートを特定する。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】トラップワイヤーの設置準備時間が0.9s→0.7sへ短縮。敵の高速ラッシュに対する即時カウンター能力が格段に向上。', coreConcept: '絶対的な監視と裏取り警戒', mbti: ['ISTJ', 'INTP', 'ISTP', 'INTJ'], tactics: ['macro', 'physical'] },
+    { name: 'REYNA', jpName: 'レイナ', role: 'デュエリスト', description: 'キルによって得られる回復と無敵化。エイム力に依存するが、スノーボール展開を作れば止まらない破壊神。', difficulty: 1, utility: 1, status: 'adjust', patchNote: '【12.02 ADJUST】ソウルオーブの持続・オーバーヒール時間調整後も、フィジカル特化プレイヤーのソロキャリー性能は健在。', coreConcept: 'キルベースの自己強化と無敵', mbti: ['ISTP', 'ESTP', 'ENTJ'], tactics: ['physical', 'aggressive'] },
+    { name: 'KILLJOY', jpName: 'キルジョイ', role: 'センチネル', description: 'タレットとナノスワームによるエリア封鎖。セットアップ完了後のサイト防衛力は最強クラスのエンジニア。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF / 13.08 FIX】タレット連射速度50%増、ナノスワーム持続延長(5s)、アラームボット高速化。13.08でVFX不具合も解消。', coreConcept: 'タレットと罠によるエリア封鎖', mbti: ['INTP', 'ESTJ', 'ISTJ'], tactics: ['macro', 'physical'] },
+    { name: 'BREACH', jpName: 'ブリーチ', role: 'イニシエーター', description: '壁を貫通するスタンとフラッシュ。強制的なポジション移動を強いることで、強固な守りをこじ開ける。', difficulty: 3, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】フォルトラインのクールダウンが60s→50sへ短縮。サイト突入・リテイク時のスタン支援がより高頻度に。', coreConcept: '地形貫通のスタンと強制移動', mbti: ['ESTP', 'ENFJ', 'ESFP', 'ENTJ'], tactics: ['aggressive', 'macro'] },
+    { name: 'OMEN', jpName: 'オーメン', role: 'コントローラー', description: '再生するスモークとパラノイア。テレポートを駆使した予測不能な立ち回りで敵の精神を揺さぶる。', difficulty: 2, utility: 3, status: 'adjust', patchNote: '【13.00 ADJUST】シュラウドステップの敵側サウンドキューが明確化され奇襲に配慮が必要に。スモークの回転率は依然トップ。', coreConcept: '予測不能なテレポートと暗闇', mbti: ['INFJ', 'INFP', 'ENTP', 'ISTP', 'INTJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'JETT', jpName: 'ジェット', role: 'デュエリスト', description: '高機動スモークとアップドラフト。オペレーター適正が高く、独自の射線を作り出すエースストライカー。', difficulty: 3, utility: 1, status: 'stable', patchNote: '【STABLE】「テイルウィンド」の即時射線切りによるオペレーター適性は唯一無二。環境最前線のエース。', coreConcept: '高機動と瞬時の射線切り', mbti: ['ISTP', 'ESTP', 'ENFP', 'ISFP'], tactics: ['physical', 'aggressive'] },
+    { name: 'RAZE', jpName: 'レイズ', role: 'デュエリスト', description: 'ブラストパックでの立体機動と範囲ダメージ。エントリー時の爆発力とクリアリング能力に優れた破壊工作員。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ブラストパック機動とペイント弾の制圧力。狭小エリアのトラップ破壊要因として不動の価値。', coreConcept: '立体機動と範囲爆撃', mbti: ['ESTP', 'ESFP', 'ISFP'], tactics: ['aggressive', 'physical'] },
+    { name: 'ASTRA', jpName: 'アストラ', role: 'コントローラー', description: 'アストラルフォームによる全マップ干渉。吸い込みとスタンを使い分け、マクロ視点で戦局をコントロールする。', difficulty: 3, utility: 3, status: 'stable', patchNote: '【STABLE】全マップへのアストラル干渉。ハイレベルなチーム連携におけるマクロコントロールの頂点。', coreConcept: '全マップへの干渉とマクロ支配', mbti: ['INFJ', 'INTJ', 'INTP'], tactics: ['macro', 'aggressive'] },
+    { name: 'KAY/O', jpName: 'KAY/O', role: 'イニシエーター', description: 'アビリティ封印（抑制）による無力化。CSスタイルに近いフラッシュとグレネードで、純粋な撃ち合いを強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ゼロ/ポイントのクールダウンが60s→50sへ短縮。敵のアビリティを抑制する頻度が増し、アンチメタとして強化。', coreConcept: 'アビリティ抑制と基礎戦闘の強制', mbti: ['INTP', 'ESTJ', 'ENFJ', 'ISTP', 'ESTP'], tactics: ['physical', 'aggressive'] },
+    { name: 'CHAMBER', jpName: 'チェンバー', role: 'センチネル', description: 'テレポートによるアグレッシブな射線維持。ツール・ド・フォースによる高火力で、防衛ラインを単独で支える。', difficulty: 2, utility: 2, status: 'stable', patchNote: '【STABLE】ランデヴーによる即時退避とヘッドハンターの単発火力。1ピック取って引くフィジカル戦術の要。', coreConcept: '武器召喚とテレポートによる狙撃', mbti: ['ISTJ', 'INTJ', 'ISTP', 'INFP', 'ISFP'], tactics: ['physical', 'macro'] },
+    { name: 'NEON', jpName: 'ネオン', role: 'デュエリスト', description: '圧倒的なスプリント速度とスライディング。論理的なルート構築による意図的なエントリーで、電撃戦を展開する知略型スピードスター。', difficulty: 3, utility: 1, status: 'adjust', patchNote: '【12.09 ADJUST】空中スプリントボーナス消失とスライディングVFX視認性向上。計画的なエントリーと情報戦が求められる知略型へ進化。', coreConcept: '圧倒的なスプリントとスライディング', mbti: ['ESTP', 'ENTP', 'ENTJ', 'ESFP', 'ENFP'], tactics: ['physical', 'aggressive'] },
+    { name: 'FADE', jpName: 'フェイド', role: 'イニシエーター', description: '恐怖による聴覚・視覚妨害。プラウラーで角待ちをクリアし、敵を拘束してキルチャンスを作る。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】ホウントのクールダウンが60s→50sへ短縮。聴覚・視覚の二重妨害と索敵をより頻繁に展開可能に。', coreConcept: '恐怖による視覚・聴覚妨害', mbti: ['INFJ', 'ENTJ', 'ENTP'], tactics: ['aggressive', 'macro'] },
+    { name: 'GEKKO', jpName: 'ゲッコー', role: 'イニシエーター', description: '回収可能なクリーチャーを使役。ウィングマンによるスパイク設置・解除により、人数有利を作り出す。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【13.00 BUFF】バディ回収後のクールダウンが20s→15sへ短縮。ウィングマンの設置・解除回転率が極限まで向上。', coreConcept: 'クリーチャー使役と設置・解除', mbti: ['ENFJ', 'ESFJ', 'ISFJ', 'ESFP', 'ENFP', 'INFP'], tactics: ['macro', 'aggressive'] },
+    { name: 'DEADLOCK', jpName: 'デッドロック', role: 'センチネル', description: '音に反応するセンサーとバリアメッシュ。能動的なラッシュ阻止の要として機能し、敵の進行を物理的に阻止し、強制的な1on1を作り出す。', difficulty: 2, utility: 2, status: 'buff', patchNote: '【13.00 BUFF】グラヴネットのクールダウンが60s→50sへ短縮。バリアメッシュと合わせ、相手の侵攻を物理的・能動的に封殺。', coreConcept: '音響センサーと物理的な分断', mbti: ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'ISO', jpName: 'アイソ', role: 'デュエリスト', description: '防弾シールドと強制1v1領域。撃ち合いに絶対の自信を持ち、フロー状態を維持して戦場を制圧する。', difficulty: 2, utility: 1, status: 'buff', patchNote: '【13.01 BUFF】「ダブルタップ」解除後の武器再装備ディレイがゼロ（即時化）に。撃ち合い直後の隙がなくなり戦闘テンポが最速化。', coreConcept: '防弾シールドと強制1v1領域', mbti: ['ISTP', 'INTJ', 'INFJ', 'ISFJ'], tactics: ['physical', 'aggressive'] },
+    { name: 'VYSE', jpName: 'ヴァイス', role: 'センチネル', description: '液体金属による孤立化とフラッシュ。エリアの完全孤立化のスペシャリストであり、敵のメイン武器を無効化する茨で、ピストルラウンドの如き状況を強制する。', difficulty: 2, utility: 3, status: 'buff', patchNote: '【12.08 BUFF】アークローズの設置速度向上とフラッシュ拡大。メイン武器を無効化する茨によるエリア孤立化は強力。', coreConcept: '武器無効化と孤立化の茨', mbti: ['ISTJ', 'INTJ'], tactics: ['macro', 'aggressive'] },
+    { name: 'TEJO', jpName: 'テホ', role: 'イニシエーター', description: '高度な軍事ドローンと誘導ミサイル。正確無比なピンポイント爆撃で、隠れた敵をあぶり出すタクティシャン。', difficulty: 2, utility: 3, status: 'stable', patchNote: '【STABLE】高度な軍事ドローンと誘導ミサイル。精密爆撃による定点排除能力で戦局を掌握するタクティシャン。', coreConcept: 'ドローン索敵と精密爆撃', mbti: ['INFJ', 'ENTP', 'INTJ', 'ENTJ'], tactics: ['macro', 'physical'] }
 ];
 const mbtiRecommendations = {
     ISTJ: { title: 'ISTJ // THE LOGISTICIAN', basicReason: '<span class="text-valo-red font-bold">【基本特性】</span>情報の非対称性を利用した完璧なエリアコントロールを好む防衛の要です。事実に基づいた状況判断と、ルールの徹底を重んじます。', coreTrait: 'PLANNING & AREA CONTROL' },
@@ -492,17 +510,22 @@ let liveMetaCache = { ...defaultLiveMeta };
 
 function updateTickerWithLiveMeta() {
     const ticker = document.getElementById('news-ticker');
-    if (!ticker || !liveMetaCache) return;
-    ticker.textContent = `/// 13.08: SEASON 26 ACT 6 // NEW DUELIST "HUSH" DEPLOYED (PICK: 16.5%) /// TIER S SENTINELS: KILLJOY 53.4% · SAGE 52.5% · CYPHER 53.2% /// MAP POOL: CORRODE & BIND /// AGENT MASTERY ACTIVE ///`;
+    if (!ticker) return;
+    ticker.textContent = `/// 13.08: SEASON 26 ACT 6 // NEW DUELIST "HUSH" DEPLOYED /// TACTICAL PROTOCOL ONLINE /// MAP POOL: CORRODE & BIND /// AGENT COGNITIVE MASTERY ACTIVE ///`;
 }
 
-async function fetchLiveMeta() {
+let currentRoleFilter = 'All';
+
+async function fetchLiveMeta(onComplete) {
     try {
         const res = await fetch('/api/meta');
         if (res.ok) {
             const data = await res.json();
             liveMetaCache = { ...liveMetaCache, ...data };
             updateTickerWithLiveMeta();
+            if (typeof onComplete === 'function') {
+                onComplete();
+            }
         }
     } catch (e) {
         // Fallback to embedded Patch 13.08 meta cache
@@ -510,9 +533,20 @@ async function fetchLiveMeta() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetchLiveMeta();
     let selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
     let selectedTactic = null;
+    let analysisTimer = null;
+    let hasCompletedOnce = false;
+
+    // 非同期フェッチ完了時の再描画トリガー
+    fetchLiveMeta(() => {
+        renderAllAgents();
+        applyRoleFilter();
+        const isComplete = selectedMbti.ei && selectedMbti.sn && selectedMbti.tf && selectedMbti.jp && selectedMbti.id && selectedTactic;
+        if (isComplete) {
+            renderResults(true);
+        }
+    });
 
     const agentGrid = document.getElementById('agent-grid');
     const resultsContainer = document.getElementById('results');
@@ -563,79 +597,195 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'adjust': label = '⚡ ADJ'; className = 'status-adjust'; break;
             case 'rework': label = '★ REWORK'; className = 'status-rework'; break;
         }
-        return `<span class="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-sm ${className} z-20 shadow-md animate-pulse">${label}</span>`;
+        return `<span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-sm ${className} z-20 shadow-md animate-pulse">${label}</span>`;
     }
 
-    function calculateSync(mbtiBase, tactic, agent, identityId = null) {
+    function calculateSync(mbtiBase, tactic, agent, identityId) {
         const mbtiMatch = agent.mbti.includes(mbtiBase);
-        const tacticMatch = agent.tactics.includes(tactic);
+        const tacticIndex = agent.tactics.indexOf(tactic);
 
-        let score = 0;
-        if (mbtiMatch && tacticMatch) score = 100;
-        else if (mbtiMatch && !tacticMatch) score = 85;
-        else if (!mbtiMatch && tacticMatch) score = 70;
-        else {
-            const baseHash = agent.name.charCodeAt(0) + agent.name.charCodeAt(1);
-            score = 20 + (baseHash % 25);
-        }
-
-        // 1. マクロ・シンクロ
-        if ((mbtiBase.includes('J') || mbtiBase.includes('N')) && tactic === 'macro') {
-            if (score >= 70 && score < 100) score = Math.min(score + 5, 95);
-        }
-        
-        // 2. アクション・シンクロ
-        if ((mbtiBase.includes('S') || mbtiBase.includes('P')) && (tactic === 'physical' || tactic === 'aggressive')) {
-            if (score >= 70 && score < 100) score = Math.min(score + 5, 95);
-        }
-
-        // 3. メンタル・マッチ
-        if (identityId) {
-            if (identityId === 'A' && (agent.role === 'デュエリスト' || agent.role === 'イニシエーター')) {
-                if (score < 100) score = Math.min(score + 2, 99);
-            } else if (identityId === 'T' && (agent.role === 'センチネル' || agent.role === 'コントローラー')) {
-                if (score < 100) score = Math.min(score + 2, 99);
+        // 1. 基本スコア（MBTI適合度 × 戦術嗜好のバランスを最適化）
+        let baseScore = 0;
+        if (mbtiMatch) {
+            if (tacticIndex === 0) {
+                baseScore = 88; // MBTI完全一致 + 第1戦術完全一致
+            } else if (tacticIndex === 1) {
+                baseScore = 82; // MBTI完全一致 + 第2戦術合致
+            } else {
+                baseScore = 68; // MBTI完全一致だが戦術不一致（戦術嗜好を尊重し68点に設定）
             }
+        } else {
+            let maxCharMatches = 0;
+            for (let agentMbti of agent.mbti) {
+                let matches = 0;
+                for (let i = 0; i < 4; i++) {
+                    if (mbtiBase[i] === agentMbti[i]) matches++;
+                }
+                maxCharMatches = Math.max(maxCharMatches, matches);
+            }
+            // 3文字一致: 62点, 2文字: 46点, 1文字: 30点, 0文字: 16点
+            const partialBase = [16, 30, 46, 62][maxCharMatches] || 16;
+            // 第1戦術一致なら+12点（3文字一致+第1戦術=74点となり、戦術不一致の68点を上回る）
+            const tacticAdd = tacticIndex === 0 ? 12 : (tacticIndex === 1 ? 7 : 0);
+            baseScore = partialBase + tacticAdd;
         }
-        return score;
+
+        // 2. 4軸認知機能×エージェント特性シンクロボーナス (各0.8点、最大 +3.2点)
+        let affinityBonus = 0;
+
+        // [E / I 軸]: 交戦主導権・前線スペース(E) vs 盤面制御・サイト防衛(I)
+        if (mbtiBase.includes('E') && (agent.role === 'デュエリスト' || agent.role === 'イニシエーター')) affinityBonus += 0.8;
+        if (mbtiBase.includes('I') && (agent.role === 'センチネル' || agent.role === 'コントローラー')) affinityBonus += 0.8;
+
+        // [S / N 軸]: 直感的ミクロ操作(S) vs 構造的マクロ思考(N) ※difficulty===2の中間下駄を公平に解消
+        if (mbtiBase.includes('S')) {
+            if (agent.difficulty === 1) affinityBonus += 0.8;
+            else if (agent.difficulty === 2) affinityBonus += 0.4;
+        }
+        if (mbtiBase.includes('N')) {
+            if (agent.difficulty === 3) affinityBonus += 0.8;
+            else if (agent.difficulty === 2) affinityBonus += 0.4;
+        }
+
+        // [T / F 軸]: 合理的損得・キルトレード(T) vs 協調的支援・チーム共感(F)
+        if (mbtiBase.includes('T') && (agent.role === 'デュエリスト' || agent.role === 'センチネル')) affinityBonus += 0.8;
+        if (mbtiBase.includes('F') && (agent.role === 'イニシエーター' || agent.role === 'コントローラー')) affinityBonus += 0.8;
+
+        // [J / P 軸]: 計画的セットアップ・定点運用(J) vs アドリブ・柔軟性(P) ※utility===2の中間下駄を公平に解消
+        if (mbtiBase.includes('J')) {
+            if (agent.utility === 3) affinityBonus += 0.8;
+            else if (agent.utility === 2) affinityBonus += 0.4;
+        }
+        if (mbtiBase.includes('P')) {
+            if (agent.utility === 1) affinityBonus += 0.8;
+            else if (agent.utility === 2) affinityBonus += 0.4;
+        }
+
+        // 3. Identity (A/T) 心理プロファイル適合ボーナス (+1.0〜3.0)
+        // ※affinityBonusとの重複加点を排除し、純粋なプレッシャー耐性と戦術適合のみを評価
+        let identityBonus = 1.0;
+        if (identityId === 'A') {
+            // A型（自己主張型）: 高負荷対面での精神的タフネス、強気なエントリー・単独打開
+            if (agent.tactics.includes('physical') || agent.tactics.includes('aggressive')) identityBonus += 1.5;
+            if (agent.tactics[0] === 'physical' || agent.tactics[0] === 'aggressive') identityBonus += 0.5;
+        } else if (identityId === 'T') {
+            // T型（慎重型）: 徹底したリスクヘッジ、不確定要素を排除するマクロセットアップ
+            if (agent.tactics.includes('macro')) identityBonus += 1.5;
+            if (agent.tactics[0] === 'macro') identityBonus += 0.5;
+        }
+
+        // 4. Live Meta Stats ボーナス (Tier / WinRate / PickRate - 内部タイブレーク用)
+        const meta = liveMetaCache[agent.name] || defaultLiveMeta[agent.name] || { winRate: 50.0, pickRate: 5.0, tier: 'B' };
+        const tierBonusMap = { 'S': 3.0, 'A': 2.2, 'B': 1.0, 'C': 0.0 };
+        const tierBonus = tierBonusMap[meta.tier] || 0.0;
+        const winRateBonus = (meta.winRate - 50.0) * 0.7;
+        const pickRateBonus = meta.pickRate * 0.04;
+
+        // 5. 完全適合トップブースト
+        let perfectSynergyBonus = 0;
+        if (mbtiMatch && tacticIndex !== -1 && identityBonus >= 2.5 && (meta.tier === 'S' || meta.tier === 'A')) {
+            perfectSynergyBonus = meta.tier === 'S' ? 2.0 : 1.5;
+        }
+
+        let rawScore = baseScore + affinityBonus + identityBonus + tierBonus + winRateBonus + pickRateBonus + perfectSynergyBonus;
+
+        return {
+            score: Math.min(100, Math.max(10, Math.round(rawScore))),
+            rawScore: Math.max(10, parseFloat(rawScore.toFixed(3))) // 100上限で切り捨てずタイブレークを機能させる
+        };
     }
 
     function getSyncExplanation(fullMbtiCode, tactic, agent) {
-        const id = fullMbtiCode.split('-')[1]; // A or T
-        let stylePhrase = '';
-        if (id === 'A') {
-            stylePhrase = '自己主張が強く前進を恐れないあなたには';
-        } else if (id === 'T') {
-            stylePhrase = 'リスクを嫌い完璧な準備を重んじる慎重なあなたには';
-        } else {
-            stylePhrase = '独自の視点を持つあなたには';
+        const [base, id] = fullMbtiCode.split('-');
+
+        // 1. Identity (A / T) 心理学的クラッチ・リスクプロファイル
+        const identityAnalysis = id === 'A'
+            ? `<div class="mb-3 p-3 bg-valo-red/10 border-l-2 border-valo-red rounded-r"><span class="text-valo-red font-bold font-mono text-xs">【IDENTITY: ASSERTIVE (A型 / 自己主張型)】</span><p class="text-xs md:text-sm text-gray-300 mt-1 leading-relaxed">勝敗を分ける高負荷クラッチや1on1対面において、躊躇のないピークと卓越したフィジカル勝負で状況を切り拓く精神的タフネスを有しています。${agent.name}のアグレッシブなアクション展開や単独打開力と完璧に共鳴します。</p></div>`
+            : `<div class="mb-3 p-3 bg-blue-500/10 border-l-2 border-blue-400 rounded-r"><span class="text-blue-400 font-bold font-mono text-xs">【IDENTITY: TURBULENT (T型 / 慎重探求型)】</span><p class="text-xs md:text-sm text-gray-300 mt-1 leading-relaxed">盤面の不確定要素を排除し、完璧なアビリティ配置と徹底したリスクヘッジによって100%有利な交戦状況を構築する知略派。${agent.name}の高ユーティリティや緻密なセットアップ運用において比類なき再現性を発揮します。</p></div>`;
+
+        // 2. MBTI 4軸認知機能 × エージェント設計（難易度 / ユーティリティ / ロール）
+        const eiTrait = base.includes('E')
+            ? `交戦の主導権を握る【外向型(E)のスペースメイク力】が前線・起点ロール（${agent.role}）の突破力と直結。`
+            : `盤面を冷静に見定める【内向型(I)の射線管理・情報集約力】が安定した防衛・制圧ロール（${agent.role}）と直結。`;
+
+        const snTrait = base.includes('S')
+            ? `鋭敏な知覚に基づく【感覚型(S)の直感的即応力】が、${agent.name}の戦闘構造（難易度 Lv.${agent.difficulty}）と噛み合い、反射的な撃ち合いで優位に立ちます。`
+            : `戦局のローテーションを先読みする【直観型(N)の構造俯瞰思考】が、${agent.name}の奥深いスキル展開（難易度 Lv.${agent.difficulty}）と噛み合い、知的な盤面支配を可能にします。`;
+
+        const tfTrait = base.includes('T')
+            ? `損得勘定とキルトレードを冷静に判断する【思考型(T)の合理的判断】`
+            : `味方の配置やリソース状況を敏感に補う【感情型(F)のカバーリング共感力】`;
+
+        const jpTrait = base.includes('J')
+            ? `事前準備と定点管理を好む【判断型(J)の計画的リソース制御】がユーティリティ（Lv.${agent.utility}）の真価を引き出し`
+            : `状況に応じて柔軟に動く【知覚型(P)のアドリブ即応性】がユーティリティ（Lv.${agent.utility}）の機動性を引き出し`;
+
+        // 3. 戦術嗜好 × コアコンセプト
+        const tacticMap = {
+            physical: `圧倒的なフィジカル対面とエイム勝負を好むプレイスタイルが、${agent.name}のコア特性「${agent.coreConcept}」と融合し、純粋な戦闘力でラウンドを粉砕。`,
+            aggressive: `強気にエリアをこじ開ける電撃戦アプローチが、${agent.name}のコア特性「${agent.coreConcept}」と融合し、敵陣形の崩壊を最速で引き起こします。`,
+            macro: `盤面全体をコントロールする緻密な戦略アプローチが、${agent.name}のコア特性「${agent.coreConcept}」と融合し、相手の選択肢を確実に削ぎ落とします。`
+        };
+        const tacticPhrase = tacticMap[tactic] || `${agent.name}のコア特性「${agent.coreConcept}」と親和性が高く、強固な戦術シナジーを形成。`;
+
+        // 4. 戦術・役割シンクロ助言 (Tactical Synchronization Advisory)
+        const roleAdvisoryBadge = `<span class="bg-valo-red/20 text-valo-red border border-valo-red/40 text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm">ROLE HARMONY: ${agent.role.toUpperCase()}</span>`;
+        const roleComment = `エージェント「${agent.name}」の特性と戦闘スタイルがあなたの認知プロファイル（${base}-${id}）と高度にシンクロ。${agent.role}としての役割遂行と選択した${tactic.toUpperCase()}戦術のテンポが自然に噛み合い、ラウンド全般で迷いのない判断と最大のパフォーマンスを発揮できます。`;
+
+        // 5. 特定エージェント・固有アラート
+        let specialNote = '';
+        if (agent.name === 'HUSH') {
+            specialNote = `<div class="mt-2 text-xs text-amber-300 font-mono bg-amber-400/10 p-2 rounded border border-amber-400/20">⚡【NEW AGENT ALERT】Act 6最新デュエリスト「ハッシュ」の3次元重力制圧とホバーダッシュは、直観的空間把握と最前線突破を志向するあなたに無上のシナジーを提供します。</div>`;
+        } else if (['VETO', 'CYPHER', 'KILLJOY', 'SAGE', 'VYSE'].includes(agent.name)) {
+            specialNote = `<div class="mt-2 text-xs text-emerald-300 font-mono bg-emerald-500/10 p-2 rounded border border-emerald-500/20">🛡️【SITE DEFENSE PROTOCOL】現環境で支配的な防衛ライン（Sageの自己回復、Vetoの投擲迎撃、Cypher/Killjoyの罠拘束）を盤石に構築可能です。</div>`;
+        } else if (['ISO', 'YORU', 'JETT', 'NEON'].includes(agent.name)) {
+            specialNote = `<div class="mt-2 text-xs text-valo-red font-mono bg-valo-red/10 p-2 rounded border border-valo-red/20">⚔️【FAST TEMPO ENGAGEMENT】ディレイゼロ化された戦闘テンポと高速エントリーにより、ファーストブラッド争奪戦で圧倒的優位を確保します。</div>`;
         }
 
-        let tacticPhrase = '';
-        if (tactic === 'physical') {
-            tacticPhrase = '圧倒的なフィジカル勝負を好む戦術嗜好と、';
-        } else if (tactic === 'aggressive') {
-            tacticPhrase = '強気にエリアをこじ開けるアグレッシブな戦術嗜好と、';
-        } else if (tactic === 'macro') {
-            tacticPhrase = '盤面をコントロールするマクロ的な戦術嗜好と、';
-        }
+        const log = `<div class="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-gray-500">
+            <span>SYS_LOG: [${base}] x [${tactic.toUpperCase()}] x [${id}] // ENGINE: VALO-MBTI-ANALYST-V3</span>
+            <span class="text-valo-red font-bold tracking-wider animate-pulse">STATUS: TOP-TIER COGNITIVE HARMONY</span>
+        </div>`;
 
-        let metaAlert = '';
-        if (['SAGE', 'CYPHER', 'KILLJOY', 'VETO'].includes(agent.name)) {
-            metaAlert = '<div class="mt-4 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded"><span class="text-emerald-400 text-xs font-bold font-mono tracking-widest">【DEFENSE PROTOCOL】自己回復（Sage 100HP）や迎撃システム（Veto, Cypher, Killjoy）の連携により、現環境のサイト防衛力は盤石です。</span></div>';
-        } else if (['ISO', 'YORU', 'HUSH'].includes(agent.name)) {
-            metaAlert = '<div class="mt-4 p-2 bg-valo-red/10 border border-valo-red/30 rounded"><span class="text-valo-red text-xs font-bold font-mono tracking-widest">【13.08 DUEL TEMPO ALERT】新エージェントHushの重力浮遊や、Iso・Yoruの高速エントリーにより、交戦テンポと立体的なファーストブラッドの奪い合いが激化しています。</span></div>';
-        }
+        return `
+            <div class="space-y-4">
+                ${identityAnalysis}
 
-        const base = fullMbtiCode.split('-')[0];
-        const log = `<span class="text-[10px] md:text-xs text-gray-500 font-mono tracking-widest block mt-4 border-t border-white/10 pt-3">SYS_LOG: [${base}] x [${tactic.toUpperCase()}] x [${id || 'UNSPECIFIED'}] => SYNERGY DETECTED</span>`;
+                <div class="p-3 bg-black/40 border border-white/10 rounded">
+                    <span class="text-valo-red font-bold font-mono text-xs block mb-1">【COGNITIVE ARCHITECTURE // 認知機能適合性】</span>
+                    <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                        ${eiTrait} さらに${snTrait} ${tfTrait}と${jpTrait}、隙のないラウンド進行を現実化します。
+                    </p>
+                </div>
 
-        return `${stylePhrase}、${tacticPhrase} ${agent.name}のコア・コンセプトである「${agent.coreConcept}」が驚異的なシナジーを生み出します。あなたの思考プロセスが、このエージェントのポテンシャルを最大限に引き出すことでしょう。${metaAlert}${log}`;
+                <div class="p-3 bg-black/40 border border-white/10 rounded">
+                    <span class="text-valo-red font-bold font-mono text-xs block mb-1">【TACTICAL SYNERGY // 戦術シナジー】</span>
+                    <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                        ${tacticPhrase}
+                    </p>
+                </div>
+
+                <div class="p-3 bg-white/5 border border-white/10 rounded">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-mono font-bold text-gray-300 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-valo-red animate-pulse"></span>TACTICAL & OPERATIONAL ADVISORY
+                        </span>
+                        ${roleAdvisoryBadge}
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-300 leading-relaxed font-sans">
+                        ${roleComment}
+                    </p>
+                    ${specialNote}
+                </div>
+
+                ${log}
+            </div>
+        `;
     }
 
     function createAgentCard(agent, syncRate = null) {
         const card = document.createElement('div');
-        const isPerfect = syncRate === 100;
+        const isPerfect = syncRate !== null && syncRate >= 98;
         const matchClass = isPerfect ? 'border-valo-red shadow-[0_0_20px_rgba(255,70,85,0.8)] animate-[pulse_2s_ease-in-out_infinite]' : 'border-white/10 hover:border-valo-red';
         
         card.className = `agent-card-item bg-gray-800 border overflow-hidden cursor-pointer group relative transition-all duration-300 hover:-translate-y-2 ${agent.role} ${matchClass}`;
@@ -649,9 +799,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let syncHtml = '';
         if (syncRate !== null) {
-            let syncColor = syncRate >= 100 ? 'text-white bg-valo-red' : (syncRate >= 85 ? 'text-black bg-valo-yellow' : (syncRate >= 70 ? 'text-yellow-400 bg-black/90' : 'text-gray-500 bg-black/90'));
-            let glowStyle = isPerfect ? 'box-shadow: 0 0 15px rgba(255,70,85,0.9);' : (syncRate >= 85 ? 'box-shadow: 0 0 10px rgba(251,191,36,0.6);' : '');
-            let syncText = isPerfect ? `<span class="animate-pulse opacity-80 mr-1">Tracking...</span>SYNC 100%` : `SYNC ${syncRate}%`;
+            let syncColor = syncRate >= 98 ? 'text-white bg-valo-red' : (syncRate >= 90 ? 'text-black bg-valo-yellow' : (syncRate >= 70 ? 'text-yellow-400 bg-black/90' : 'text-gray-500 bg-black/90'));
+            let glowStyle = isPerfect ? 'box-shadow: 0 0 15px rgba(255,70,85,0.9);' : (syncRate >= 90 ? 'box-shadow: 0 0 10px rgba(251,191,36,0.6);' : '');
+            let syncText = isPerfect ? `<span class="animate-pulse opacity-80 mr-1">TOP</span>SYNC ${syncRate}%` : `SYNC ${syncRate}%`;
             syncHtml = `
                 <div class="absolute top-2 right-2 z-20 flex items-center">
                     <span class="text-[10px] md:text-xs px-2 py-1 border border-white/10 font-mono font-bold tracking-widest select-none flex items-center ${syncColor}" style="${glowStyle}">${syncText}</span>
@@ -674,25 +824,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="font-header text-xl md:text-2xl font-bold text-white relative z-10 tracking-wider group-hover:text-valo-red transition-colors">${agent.name}</span>
             </div>
             <div class="p-3 md:p-4 relative z-10 bg-gray-900">
-                <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="mb-1">
                     <h4 class="font-bold text-xs md:text-sm text-gray-200 truncate">${agent.jpName}</h4>
-                    ${(() => {
-                        const m = liveMetaCache[agent.name];
-                        if (!m) return '';
-                        let tierBadge = m.tier === 'S' ? 'text-valo-red border-valo-red/60 bg-valo-red/10' : (m.tier === 'A' ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-gray-400 border-white/10 bg-white/5');
-                        return `<span class="text-[9px] font-mono font-bold px-1 py-0.5 border rounded-sm shrink-0 ${tierBadge}">T-${m.tier}</span>`;
-                    })()}
                 </div>
-                <div class="flex items-center justify-between text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <div class="flex items-center truncate">
-                        ${getRoleIcon(agent.role)}
-                        <span class="truncate">${agent.role}</span>
-                    </div>
-                    ${(() => {
-                        const m = liveMetaCache[agent.name];
-                        if (!m) return '';
-                        return `<span class="text-[10px] font-mono text-gray-400 shrink-0">${m.winRate}%</span>`;
-                    })()}
+                <div class="flex items-center text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ${getRoleIcon(agent.role)}
+                    <span class="truncate">${agent.role}</span>
                 </div>
             </div>
             <div class="absolute bottom-0 left-0 h-1 w-0 bg-valo-red group-hover:w-full transition-all duration-300 shadow-[0_0_10px_#FF4655]"></div>
@@ -708,37 +845,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderResults() {
+    function renderResults(immediate = false) {
         const baseMbti = (selectedMbti.ei || '') + (selectedMbti.sn || '') + (selectedMbti.tf || '') + (selectedMbti.jp || '');
         const fullMbtiCode = baseMbti + (selectedMbti.id ? '-' + selectedMbti.id : '');
+        // All 6 items (4 MBTI dimensions + Identity + Tactical Preference) must be selected
         const isComplete = selectedMbti.ei && selectedMbti.sn && selectedMbti.tf && selectedMbti.jp && selectedMbti.id && selectedTactic;
         
         if (isComplete) {
             if(resultsPlaceholder) resultsPlaceholder.style.display = 'none';
 
-            resultsContainer.innerHTML = `
-                <div class="border border-valo-red/50 p-8 md:p-12 text-center relative overflow-hidden bg-gray-900 clip-corner-br min-h-[300px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(255,70,85,0.15)]">
-                    <div class="scanline"></div>
-                    <div class="text-valo-red text-6xl font-header mb-4 animate-[pulse_0.1s_ease-in-out_infinite] valo-text-shadow">///</div>
-                    <h3 class="text-2xl md:text-3xl font-bold mb-2 uppercase font-header tracking-widest text-valo-red animate-[pulse_0.5s_ease-in-out_infinite]">ANALYZING TACTICAL DATA</h3>
-                    <div class="w-full max-w-md bg-gray-800 h-2 mt-6 relative overflow-hidden border border-white/10 clip-corner-br">
-                        <div class="absolute top-0 left-0 h-full bg-valo-red animate-loading-bar shadow-[0_0_10px_#FF4655]"></div>
-                    </div>
-                    <p class="text-gray-500 font-mono text-xs md:text-sm tracking-widest mt-6">Processing cognitive parameters: [ <span class="text-white animate-pulse">${fullMbtiCode.replace('-', ' . ')}</span> ]</p>
-                </div>
-            `;
-            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (analysisTimer) clearTimeout(analysisTimer);
 
-            setTimeout(() => {
+            const executeRender = () => {
                 const recommendation = mbtiRecommendations[baseMbti];
                 
-                const agentsWithSync = agentData.map(agent => ({
-                    ...agent,
-                    syncRate: calculateSync(baseMbti, selectedTactic, agent, selectedMbti.id)
-                })).sort((a, b) => b.syncRate - a.syncRate);
+                const agentsWithSync = agentData.map(agent => {
+                    const sync = calculateSync(baseMbti, selectedTactic, agent, selectedMbti.id);
+                    return {
+                        ...agent,
+                        syncRate: sync.score,
+                        rawScore: sync.rawScore
+                    };
+                }).sort((a, b) => b.rawScore - a.rawScore);
 
                 const topAgents = agentsWithSync.slice(0, 10);
-                const agentsHtml = topAgents.map(agent => createAgentCard(agent, agent.syncRate)).outerHTML ? topAgents.map(agent => createAgentCard(agent, agent.syncRate).outerHTML).join('') : topAgents.map(agent => {
+                const agentsHtml = topAgents.map(agent => {
                     const tempDiv = document.createElement('div');
                     tempDiv.appendChild(createAgentCard(agent, agent.syncRate));
                     return tempDiv.innerHTML;
@@ -755,7 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: { 'A': 'メンタル強者 / 自信', 'T': 'リスク管理 / 慎重' }
                 };
 
-                const traitsHtml = ['ei', 'sn', 'tf', 'jp', 'id'].map(group => {
+                const activeGroups = ['ei', 'sn', 'tf', 'jp', 'id'];
+                const traitsHtml = activeGroups.map(group => {
                     const char = selectedMbti[group];
                     return `
                         <div class="bg-black/30 border border-white/5 p-3 rounded flex flex-col items-center hover:border-valo-red/50 transition shadow-inner">
@@ -778,34 +910,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             <div class="bg-valo-red/10 border border-valo-red/30 p-4 md:p-6 rounded-sm mb-8 relative overflow-hidden shadow-inner">
                                 <div class="absolute top-0 left-0 w-1 h-full bg-valo-red shadow-[0_0_10px_#FF4655]"></div>
-                                <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block">Cognitive Synergy Report</span>
-                                <p class="text-gray-200 text-sm md:text-base leading-relaxed">
+                                <span class="text-valo-red font-header text-sm tracking-widest uppercase mb-2 block flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-valo-red rounded-full animate-ping"></span>
+                                    Cognitive Synergy Report // プロアナリスト総合解析
+                                </span>
+                                <div class="text-gray-200 text-sm md:text-base leading-relaxed">
                                     ${syncExplanation}
-                                </p>
+                                </div>
                             </div>
                             
-                            <div class="grid md:grid-cols-3 gap-8 mb-8">
-                                <div class="md:col-span-2">
-                                    <p class="text-gray-300 text-sm md:text-base leading-relaxed border-l-2 border-valo-red pl-4 mb-4">
-                                        ${recommendation.basicReason}
-                                    </p>
-                                    <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm mb-6 shadow-inner">
-                                        <span class="text-valo-red text-xs md:text-sm font-bold uppercase">Personality Core //</span>
-                                        <span class="text-white font-header text-sm md:text-base tracking-widest">${recommendation.coreTrait}</span>
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <span class="text-gray-500 text-xs uppercase tracking-widest block mb-2">Parameter Traits</span>
-                                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                                            ${traitsHtml}
-                                        </div>
+                            <div class="bg-black/30 border border-white/10 p-5 md:p-6 rounded-sm mb-8 relative shadow-inner">
+                                <p class="text-gray-300 text-sm md:text-base leading-relaxed border-l-2 border-valo-red pl-4 mb-5">
+                                    ${recommendation.basicReason}
+                                </p>
+                                <div class="inline-flex items-center gap-2 bg-white/5 px-4 py-2 rounded-sm mb-6 shadow-inner">
+                                    <span class="text-valo-red text-xs md:text-sm font-bold uppercase">Personality Core //</span>
+                                    <span class="text-white font-header text-sm md:text-base tracking-widest">${recommendation.coreTrait}</span>
+                                </div>
+                                
+                                <div>
+                                    <span class="text-gray-500 text-xs uppercase tracking-widest block mb-3 font-mono">Cognitive Parameter Traits // 認知特性プロファイル</span>
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                                        ${traitsHtml}
                                     </div>
                                 </div>
                             </div>
 
                             <h4 class="text-valo-red font-header text-xl mb-4 uppercase tracking-widest mt-8 flex items-center gap-2">
                                 <span class="w-2 h-2 bg-valo-red block animate-pulse"></span>
-                                Tactical Matches
+                                Synchronized Agent Matches // 適合エージェント一覧
                             </h4>
                             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                                 ${agentsHtml}
@@ -817,7 +950,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsContainer.querySelectorAll('.agent-card-item').forEach(card => {
                     card.addEventListener('click', () => showAgentModal(card.dataset.agentName));
                 });
-            }, 800);
+            };
+
+            if (immediate) {
+                executeRender();
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="border border-valo-red/50 p-8 md:p-12 text-center relative overflow-hidden bg-gray-900 clip-corner-br min-h-[300px] flex flex-col justify-center items-center shadow-[0_0_30px_rgba(255,70,85,0.15)]">
+                        <div class="scanline"></div>
+                        <div class="text-valo-red text-6xl font-header mb-4 animate-[pulse_0.1s_ease-in-out_infinite] valo-text-shadow">///</div>
+                        <h3 class="text-2xl md:text-3xl font-bold mb-2 uppercase font-header tracking-widest text-valo-red animate-[pulse_0.5s_ease-in-out_infinite]">ANALYZING TACTICAL DATA</h3>
+                        <div class="w-full max-w-md bg-gray-800 h-2 mt-6 relative overflow-hidden border border-white/10 clip-corner-br">
+                            <div class="absolute top-0 left-0 h-full bg-valo-red animate-loading-bar shadow-[0_0_10px_#FF4655]"></div>
+                        </div>
+                        <p class="text-gray-500 font-mono text-xs md:text-sm tracking-widest mt-6">Processing cognitive parameters: [ <span class="text-white animate-pulse">${fullMbtiCode.replace('-', ' . ')}</span> ]</p>
+                    </div>
+                `;
+                
+                // Only scroll smoothly on initial completion, do not forcefully jump when user is switching choices
+                if (!hasCompletedOnce) {
+                    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    hasCompletedOnce = true;
+                }
+
+                analysisTimer = setTimeout(executeRender, 800);
+            }
 
         } else {
              if(resultsPlaceholder) resultsPlaceholder.style.display = 'block';
@@ -827,6 +984,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetSelection() {
+        if (analysisTimer) clearTimeout(analysisTimer);
+        hasCompletedOnce = false;
         selectedMbti = { ei: null, sn: null, tf: null, jp: null, id: null };
         selectedTactic = null;
         document.querySelectorAll('.mbti-btn').forEach(btn => btn.classList.remove('active'));
@@ -859,11 +1018,11 @@ document.addEventListener('DOMContentLoaded', () => {
             statusHtml = '<span class="bg-valo-red text-white font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">▼ NERFED</span>';
             statusBorder = 'border-l-4 border-valo-red';
         } else if(agent.status === 'adjust') {
-            statusHtml = '<span class="bg-valo-yellow text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">⚡ ADJUSTED</span>';
-            statusBorder = 'border-l-4 border-valo-yellow';
+            statusHtml = '<span class="bg-yellow-400 text-black font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">⚡ ADJUSTED</span>';
+            statusBorder = 'border-l-4 border-yellow-400';
         } else if(agent.status === 'rework') {
-            statusHtml = '<span class="bg-blue-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">★ REWORKED</span>';
-            statusBorder = 'border-l-4 border-blue-500';
+            statusHtml = '<span class="bg-purple-500 text-white font-bold px-2 py-1 text-xs uppercase tracking-widest shadow-sm">★ REWORKED</span>';
+            statusBorder = 'border-l-4 border-purple-500';
         }
 
         const coreConceptHtml = `
@@ -910,45 +1069,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="bg-black/30 p-3 md:p-5 rounded border border-white/5 ${statusBorder} shadow-inner mt-2">
                         <span class="text-white font-header text-xs md:text-sm tracking-widest uppercase mb-1 md:mb-2 block flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Patch 13.08 Tactical Meta
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Tactical Protocol
                         </span>
                         <p class="text-[11px] md:text-sm text-gray-400 leading-relaxed mb-1 md:mb-2">
                             ${agent.patchNote.replace(/(1[0-3]\.\d{2})/g, '<span class="font-bold text-white">$1</span>')}
                         </p>
                         ${coreConceptHtml}
-                        ${(() => {
-                            const m = liveMetaCache[agent.name];
-                            if (!m) return '';
-                            let trendIcon = m.trend === 'up' ? '<span class="text-valo-green">▲ 上昇</span>' : (m.trend === 'down' ? '<span class="text-valo-red">▼ 下降</span>' : '<span class="text-gray-400">━ 安定</span>');
-                            let tierColor = m.tier === 'S' ? 'text-valo-red border-valo-red/60 bg-valo-red/20' : (m.tier === 'A' ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-yellow-400 border-yellow-400/40 bg-yellow-400/10');
-                            return `
-                                <div class="mt-4 pt-4 border-t border-white/10">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="text-white font-header text-xs tracking-widest uppercase flex items-center gap-1.5">
-                                            <span class="w-1.5 h-1.5 bg-valo-red rounded-full animate-pulse"></span> 13.08 Live Meta Stats
-                                        </span>
-                                        <span class="text-xs font-mono font-bold px-2 py-0.5 border rounded-sm ${tierColor}">TIER ${m.tier}</span>
-                                    </div>
-                                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono">
-                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
-                                            <span class="text-gray-500 text-[10px] block">WIN RATE</span>
-                                            <span class="text-white font-bold text-sm">${m.winRate}%</span>
-                                        </div>
-                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
-                                            <span class="text-gray-500 text-[10px] block">PICK RATE</span>
-                                            <span class="text-white font-bold text-sm">${m.pickRate}%</span>
-                                        </div>
-                                        <div class="bg-black/40 border border-white/5 p-2 rounded">
-                                            <span class="text-gray-500 text-[10px] block">TREND</span>
-                                            <span class="font-bold text-xs">${trendIcon}</span>
-                                        </div>
-                                    </div>
-                                    <div class="w-full bg-gray-800 h-1.5 rounded-full mt-3 overflow-hidden border border-white/5">
-                                        <div class="bg-gradient-to-r from-blue-500 via-valo-green to-valo-red h-full rounded-full" style="width: ${Math.min((m.winRate - 40) * 5, 100)}%"></div>
-                                    </div>
-                                </div>
-                            `;
-                        })()}
                     </div>
                 </div>
 
@@ -1008,24 +1134,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resetButton.addEventListener('click', resetSelection);
 
+    function applyRoleFilter() {
+        document.querySelectorAll('#agent-grid .agent-card-item').forEach(card => {
+            if (currentRoleFilter === 'All' || card.classList.contains(currentRoleFilter)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
     roleFilters.addEventListener('click', (e) => {
         if (e.target.tagName === 'BUTTON') {
             const role = e.target.dataset.role;
+            currentRoleFilter = role;
             document.querySelectorAll('.role-filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-
-            document.querySelectorAll('#agent-grid .agent-card-item').forEach(card => {
-                if (role === 'All' || card.classList.contains(role)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            applyRoleFilter();
         }
     });
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
+            hideModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('modal-open')) {
             hideModal();
         }
     });
